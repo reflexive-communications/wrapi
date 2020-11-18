@@ -2,6 +2,10 @@
 
 /**
  * WrAPI JSON input Processor
+ *
+ * @package  wrapi
+ * @author   Sandor Semsey <sandor@es-progress.hu>
+ * @license  AGPL-3.0
  */
 class CRM_Wrapi_Processor_JSON extends CRM_Wrapi_Processor_Base
 {
