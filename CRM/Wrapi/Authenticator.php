@@ -48,7 +48,7 @@ class CRM_Wrapi_Authenticator
      *
      * @param  string  $site_key_sent  Received site-key
      */
-    protected function authenticateSiteKey(string $site_key_sent)
+    protected function authenticateSiteKey(string $site_key_sent): void
     {
         // Get actual site-key
         $site_key_real = defined('CIVICRM_SITE_KEY') ? CIVICRM_SITE_KEY : null;
@@ -80,7 +80,7 @@ class CRM_Wrapi_Authenticator
      *
      * @throws \CRM_Core_Exception
      */
-    protected function authenticateUserKey(string $user_key)
+    protected function authenticateUserKey(string $user_key): void
     {
         $uid        = null;
         $contact_id = null;
