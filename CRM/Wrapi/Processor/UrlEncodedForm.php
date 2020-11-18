@@ -1,7 +1,7 @@
 <?php
 
 /**
- * WrAPI URL encoded form Processor
+ * WrAPI URL encoded IO Processor
  *
  * @package  wrapi
  * @author   Sandor Semsey <sandor@es-progress.hu>
@@ -12,7 +12,7 @@ class CRM_Wrapi_Processor_UrlEncodedForm extends CRM_Wrapi_Processor_Base
     /**
      * Process input
      *
-     * @return array
+     * @return array|string
      */
     public function input(): ?array
     {

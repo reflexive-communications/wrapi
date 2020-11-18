@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Base Input Processor Class
+ * Base IO Processor Class
  *
  * @package  wrapi
  * @author   Sandor Semsey <sandor@es-progress.hu>
@@ -15,7 +15,7 @@ abstract class CRM_Wrapi_Processor_Base
     public const MAX_LENGTH = 255;
 
     /**
-     * Process input
+     * Parse input
      *
      * @return mixed
      */
@@ -99,7 +99,7 @@ abstract class CRM_Wrapi_Processor_Base
      * @param  mixed  $message  Error message
      * @param  bool  $output  Should we output error message
      */
-    public function error($message, bool $output = false)
+    public function error($message, bool $output = true)
     {
         // Log error
         CRM_Core_Error::debug_log_message(
@@ -119,5 +119,56 @@ abstract class CRM_Wrapi_Processor_Base
         }
 
         CRM_Utils_System::civiExit();
+    }
+
+    /**
+     * Process request
+     *
+     * @return array|string
+     */
+    public function processInput()
+    {
+        // Get request parameters
+        $request_data = $this->input();
+
+        // Validate input
+        $this->validate($request_data);
+
+        return $request_data;
+    }
+
+    /**
+     * Validate inputs (keys, action)
+     *
+     * @param  mixed  $request_params  Request data
+     */
+    public function validate($request_params): void
+    {
+        // Get parameters
+        $site_key = $request_params['site_key'] ?? null;
+        $user_key = $request_params['user_key'] ?? null;
+        $action   = $request_params['action'] ?? null;
+
+        // Check if supplied
+        if (is_null($site_key) || empty($site_key)) {
+            $this->error('Site key missing.');
+        }
+        if (is_null($user_key) || empty($user_key)) {
+            $this->error('User key missing.');
+        }
+        if (is_null($action) || empty($action)) {
+            $this->error('Action missing.');
+        }
+
+        // Check if string
+        if (!CRM_Utils_Rule::string($site_key)) {
+            $this->error('Site key not a string.');
+        }
+        if (!CRM_Utils_Rule::string($user_key)) {
+            $this->error('User key not a string.');
+        }
+        if (!CRM_Utils_Rule::string($action)) {
+            $this->error('Action not a string.');
+        }
     }
 }

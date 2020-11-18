@@ -1,7 +1,7 @@
 <?php
 
 /**
- * WrAPI JSON input Processor
+ * WrAPI JSON IO Processor
  *
  * @package  wrapi
  * @author   Sandor Semsey <sandor@es-progress.hu>
@@ -12,9 +12,7 @@ class CRM_Wrapi_Processor_JSON extends CRM_Wrapi_Processor_Base
     /**
      * Process input
      *
-     * @return mixed|null
-     *
-     * @throws \CRM_Core_Exception
+     * @return array|string
      */
     public function input()
     {
