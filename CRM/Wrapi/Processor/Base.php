@@ -63,14 +63,8 @@ abstract class CRM_Wrapi_Processor_Base
                 $key   = CRM_Utils_String::stripSpaces($key);
                 $value = CRM_Utils_String::stripSpaces($value);
 
-                // Replace non english alpha-numeric chars in keys
-                $key = CRM_Utils_String::munge(
-                    $key,
-                    '_',
-                    self::MAX_LENGTH
-                );
-
-                // Remove potential XSS strings from values
+                // Remove potential XSS strings
+                $key   = CRM_Utils_String::purifyHTML($key);
                 $value = CRM_Utils_String::purifyHTML($value);
 
                 $sanitized[$key] = $value;
