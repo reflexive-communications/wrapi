@@ -14,7 +14,7 @@ class CRM_Wrapi_Processor_UrlEncodedForm extends CRM_Wrapi_Processor_Base
      *
      * @return array|string
      */
-    public function input(): ?array
+    public function input()
     {
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':

@@ -26,7 +26,7 @@ abstract class CRM_Wrapi_Processor_Base
      *
      * @return string
      */
-    public static function detectContentType()
+    public static function detectContentType():string
     {
         // If content-type is set use it
         if (isset($_SERVER['CONTENT_TYPE'])) {
@@ -59,19 +59,20 @@ abstract class CRM_Wrapi_Processor_Base
 
         if (is_array($input)) {
             foreach ($input as $key => $value) {
-                // Strip whitespace
+                // Sanitize key
                 $key   = CRM_Utils_String::stripSpaces($key);
-                $value = CRM_Utils_String::stripSpaces($value);
 
-                // Remove potential XSS strings
-                $key   = CRM_Utils_String::purifyHTML($key);
-                $value = CRM_Utils_String::purifyHTML($value);
+                // Sanitize value
+                if (is_array($value)) {
+                    $value=$this->sanitize($value);
+                } else {
+                    $value = CRM_Utils_String::stripSpaces($value);
+                }
 
                 $sanitized[$key] = $value;
             }
         } else {
             $sanitized = CRM_Utils_String::stripSpaces($input);
-            $sanitized = CRM_Utils_String::purifyHTML($sanitized);
         }
 
         return $sanitized;
@@ -82,7 +83,7 @@ abstract class CRM_Wrapi_Processor_Base
      *
      * @param  mixed  $result  Result to output
      */
-    public function output($result)
+    public function output($result):void
     {
         CRM_Utils_JSON::output($result);
     }
@@ -93,7 +94,7 @@ abstract class CRM_Wrapi_Processor_Base
      * @param  mixed  $message  Error message
      * @param  bool  $output  Should we output error message
      */
-    public function error($message, bool $output = true)
+    public function error($message, bool $output = true):void
     {
         // Log error
         CRM_Core_Error::debug_log_message(
