@@ -42,25 +42,28 @@ class CRM_Wrapi_Engine
 
     /**
      * Run Engine
-     *
-     * @throws \CRM_Core_Exception
      */
     public function run(): void
     {
-        // Detect content-type & instantiate correct processor
-        $this->createProcessor(CRM_Wrapi_Processor_Base::detectContentType());
+        try {
+            // Detect content-type & instantiate correct processor
+            $this->createProcessor(CRM_Wrapi_Processor_Base::detectContentType());
 
-        // Process input
-        $this->requestData = $this->processor->processInput();
+            // Process input
+            $this->requestData = $this->processor->processInput();
 
-        // Request now parsed --> authenticate
-        $this->createAuthenticator($this->processor);
-        $this->authenticator->authenticate(
-            $this->requestData['site_key'],
-            $this->requestData['user_key']
-        );
+            // Request now parsed --> authenticate
+            $this->createAuthenticator($this->processor);
+            $this->authenticator->authenticate($this->requestData['site_key'], $this->requestData['user_key']);
 
-        $this->processor->output($this->requestData);
+            $this->processor->output($this->requestData);
+        } catch (CRM_Core_Exception $ex) {
+            http_response_code(500);
+            $this->processor->error((string)$ex, false);
+        } catch (Throwable $error) {
+            http_response_code(500);
+            $this->processor->error($error->getMessage(), false);
+        }
     }
 
     /**
@@ -78,7 +81,7 @@ class CRM_Wrapi_Engine
      *
      * @param  \CRM_Wrapi_Processor_Base  $processor
      */
-    protected function createAuthenticator(CRM_Wrapi_Processor_Base $processor)
+    protected function createAuthenticator(CRM_Wrapi_Processor_Base $processor): void
     {
         $this->authenticator = new CRM_Wrapi_Authenticator($processor);
     }
