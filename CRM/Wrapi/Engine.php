@@ -31,12 +31,20 @@ class CRM_Wrapi_Engine
     protected ?CRM_Wrapi_Authenticator $authenticator;
 
     /**
+     * Router
+     *
+     * @var CRM_Wrapi_Router|null
+     */
+    protected ?CRM_Wrapi_Router $router;
+
+    /**
      * CRM_Wrapi_Engine constructor
      */
     public function __construct()
     {
         $this->processor = null;
         $this->authenticator = null;
+        $this->router = null;
         $this->requestData = null;
     }
 
@@ -46,23 +54,26 @@ class CRM_Wrapi_Engine
     public function run(): void
     {
         try {
-            // Detect content-type & instantiate correct processor
+            // Detect content-type & process input
             $this->createProcessor(CRM_Wrapi_Processor_Base::detectContentType());
-
-            // Process input
             $this->requestData = $this->processor->processInput();
 
             // Request now parsed --> authenticate
             $this->createAuthenticator($this->processor);
             $this->authenticator->authenticate($this->requestData['site_key'], $this->requestData['user_key']);
 
+            // Civi bootstrapped --> route request
+            $this->createRouter($this->processor);
+            $handler=$this->router->route($this->requestData['action']);
+
+
             $this->processor->output($this->requestData);
         } catch (CRM_Core_Exception $ex) {
             http_response_code(500);
-            $this->processor->error((string)$ex, false);
+            $this->processor->error((string)$ex, true);
         } catch (Throwable $error) {
             http_response_code(500);
-            $this->processor->error($error->getMessage(), false);
+            $this->processor->error($error->getMessage(), true);
         }
     }
 
@@ -84,5 +95,10 @@ class CRM_Wrapi_Engine
     protected function createAuthenticator(CRM_Wrapi_Processor_Base $processor): void
     {
         $this->authenticator = new CRM_Wrapi_Authenticator($processor);
+    }
+
+    protected function createRouter(CRM_Wrapi_Processor_Base $processor):void
+    {
+        $this->router=new CRM_Wrapi_Router($processor);
     }
 }
