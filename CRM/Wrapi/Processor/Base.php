@@ -66,7 +66,7 @@ abstract class CRM_Wrapi_Processor_Base
                     self::MAX_LENGTH
                 );
 
-                // Remove potential XSS strings
+                // Remove potential XSS strings from values
                 $value = CRM_Utils_String::purifyHTML($value);
 
                 $sanitized[$key] = $value;
