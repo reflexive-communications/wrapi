@@ -5,7 +5,10 @@
  */
 abstract class CRM_Wrapi_Processor_Base
 {
-    public const KEYS_MAX_LENGTH = 255;
+    /**
+     * Values max length in request
+     */
+    public const MAX_LENGTH = 255;
 
     /**
      * Process input
@@ -60,7 +63,7 @@ abstract class CRM_Wrapi_Processor_Base
                 $key = CRM_Utils_String::munge(
                     $key,
                     '_',
-                    self::KEYS_MAX_LENGTH
+                    self::MAX_LENGTH
                 );
 
                 // Remove potential XSS strings
