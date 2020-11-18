@@ -19,14 +19,14 @@ class CRM_Wrapi_Engine
     /**
      * IO Processor
      *
-     * @var \CRM_Wrapi_Processor_Base|null $processor
+     * @var CRM_Wrapi_Processor_Base|null $processor
      */
     protected ?CRM_Wrapi_Processor_Base $processor;
 
     /**
      * Authenticator
      *
-     * @var \CRM_Wrapi_Authenticator|null
+     * @var CRM_Wrapi_Authenticator|null
      */
     protected ?CRM_Wrapi_Authenticator $authenticator;
 
@@ -35,9 +35,9 @@ class CRM_Wrapi_Engine
      */
     public function __construct()
     {
-        $this->processor     = null;
+        $this->processor = null;
         $this->authenticator = null;
-        $this->requestData   = null;
+        $this->requestData = null;
     }
 
     /**
@@ -69,7 +69,7 @@ class CRM_Wrapi_Engine
     /**
      * Create Processor
      *
-     * @param  string  $processor_class  Processor class name
+     * @param string $processor_class Processor class name
      */
     protected function createProcessor(string $processor_class): void
     {
@@ -79,7 +79,7 @@ class CRM_Wrapi_Engine
     /**
      * Create Authenticator
      *
-     * @param  \CRM_Wrapi_Processor_Base  $processor
+     * @param CRM_Wrapi_Processor_Base $processor
      */
     protected function createAuthenticator(CRM_Wrapi_Processor_Base $processor): void
     {

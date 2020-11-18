@@ -12,14 +12,14 @@ class CRM_Wrapi_Authenticator
     /**
      * IO processor
      *
-     * @var \CRM_Wrapi_Processor_Base
+     * @var CRM_Wrapi_Processor_Base
      */
     protected CRM_Wrapi_Processor_Base $processor;
 
     /**
      * CRM_Wrapi_Authenticator constructor.
      *
-     * @param  \CRM_Wrapi_Processor_Base  $processor
+     * @param CRM_Wrapi_Processor_Base $processor
      */
     public function __construct(CRM_Wrapi_Processor_Base $processor)
     {
@@ -29,10 +29,10 @@ class CRM_Wrapi_Authenticator
     /**
      * Authenticate request
      *
-     * @param  string  $site_key  Received site-key
-     * @param  string  $user_key  Received user-key
+     * @param string $site_key Received site-key
+     * @param string $user_key Received user-key
      *
-     * @throws \CRM_Core_Exception
+     * @throws CRM_Core_Exception
      */
     public function authenticate(string $site_key, string $user_key): void
     {
@@ -46,7 +46,7 @@ class CRM_Wrapi_Authenticator
     /**
      * Authenticate site-key
      *
-     * @param  string  $site_key_sent  Received site-key
+     * @param string $site_key_sent Received site-key
      */
     protected function authenticateSiteKey(string $site_key_sent): void
     {
@@ -76,13 +76,13 @@ class CRM_Wrapi_Authenticator
     /**
      * Authenticate user key (API-key)
      *
-     * @param  string  $user_key  User-key (API-key) received
+     * @param string $user_key User-key (API-key) received
      *
-     * @throws \CRM_Core_Exception
+     * @throws CRM_Core_Exception
      */
     protected function authenticateUserKey(string $user_key): void
     {
-        $uid        = null;
+        $uid = null;
         $contact_id = null;
 
         // Get contact ID with matching API key (user-key)

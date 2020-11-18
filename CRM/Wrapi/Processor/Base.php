@@ -26,7 +26,7 @@ abstract class CRM_Wrapi_Processor_Base
      *
      * @return string
      */
-    public static function detectContentType():string
+    public static function detectContentType(): string
     {
         // If content-type is set use it
         if (isset($_SERVER['CONTENT_TYPE'])) {
@@ -49,7 +49,7 @@ abstract class CRM_Wrapi_Processor_Base
     /**
      * Perform basic input sanitization
      *
-     * @param  mixed  $input  Input to sanitize
+     * @param mixed $input Input to sanitize
      *
      * @return array|string
      */
@@ -60,11 +60,11 @@ abstract class CRM_Wrapi_Processor_Base
         if (is_array($input)) {
             foreach ($input as $key => $value) {
                 // Sanitize key
-                $key   = CRM_Utils_String::stripSpaces($key);
+                $key = CRM_Utils_String::stripSpaces($key);
 
                 // Sanitize value
                 if (is_array($value)) {
-                    $value=$this->sanitize($value);
+                    $value = $this->sanitize($value);
                 } else {
                     $value = CRM_Utils_String::stripSpaces($value);
                 }
@@ -81,9 +81,9 @@ abstract class CRM_Wrapi_Processor_Base
     /**
      * Return output to client in JSON format
      *
-     * @param  mixed  $result  Result to output
+     * @param mixed $result Result to output
      */
-    public function output($result):void
+    public function output($result): void
     {
         CRM_Utils_JSON::output($result);
     }
@@ -91,10 +91,10 @@ abstract class CRM_Wrapi_Processor_Base
     /**
      * Log and optionally return error message to client then exit
      *
-     * @param  mixed  $message  Error message
-     * @param  bool  $output  Should we output error message
+     * @param mixed $message Error message
+     * @param bool $output Should we output error message
      */
-    public function error($message, bool $output = true):void
+    public function error($message, bool $output = true): void
     {
         // Log error
         CRM_Core_Error::debug_log_message(
@@ -107,7 +107,7 @@ abstract class CRM_Wrapi_Processor_Base
         // Should we output error message?
         if ($output) {
             $response = [
-                'error'   => true,
+                'error' => true,
                 'message' => $message,
             ];
             $this->output($response);
@@ -135,14 +135,14 @@ abstract class CRM_Wrapi_Processor_Base
     /**
      * Validate inputs (keys, action)
      *
-     * @param  mixed  $request_params  Request data
+     * @param mixed $request_params Request data
      */
     public function validate($request_params): void
     {
         // Get parameters
         $site_key = $request_params['site_key'] ?? null;
         $user_key = $request_params['user_key'] ?? null;
-        $action   = $request_params['action'] ?? null;
+        $action = $request_params['action'] ?? null;
 
         // Check if supplied
         if (is_null($site_key) || empty($site_key)) {
