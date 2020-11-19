@@ -1,7 +1,7 @@
 <?php
 
 /**
- * WrAPI Handler Form controller
+ * WrAPI Route Form controller
  *
  * @see https://docs.civicrm.org/dev/en/latest/framework/quickform/
  *
@@ -9,7 +9,7 @@
  * @author   Sandor Semsey <sandor@es-progress.hu>
  * @license  AGPL-3.0
  */
-class CRM_Wrapi_Form_Handler extends CRM_Core_Form
+class CRM_Wrapi_Form_Route extends CRM_Core_Form
 {
     /**
      * Current WrAPI config
@@ -35,7 +35,7 @@ class CRM_Wrapi_Form_Handler extends CRM_Core_Form
     public function buildQuickForm()
     {
         // Add form elements
-        $this->add('text', 'name', ts('Handler Name'), [], true);
+        $this->add('text', 'name', ts('Route Name'), [], true);
         $this->add('text', 'action', ts('Action'), [], true);
         $this->add('text', 'handler_class', ts('Handler Class'), [], true);
         $this->addButtons(
@@ -56,9 +56,9 @@ class CRM_Wrapi_Form_Handler extends CRM_Core_Form
      */
     public function addRules()
     {
-        $this->addFormRule(['CRM_Wrapi_Form_Handler', 'validateTextFields']);
-        $this->addFormRule(['CRM_Wrapi_Form_Handler', 'validateAction'], $this->config);
-        $this->addFormRule(['CRM_Wrapi_Form_Handler', 'validateHandler']);
+        $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateTextFields']);
+        $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateAction'], $this->config);
+        $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateHandler']);
     }
 
     /**
@@ -104,7 +104,7 @@ class CRM_Wrapi_Form_Handler extends CRM_Core_Form
         foreach ($options['routing_table'] as $route) {
             if ($route['action'] == $values['action']) {
                 $errors['action'] = ts(
-                    'There is already an action saved with this name: %1',
+                    'There is already a route with this action: %1',
                     ['1' => $values['action'],]
                 );
 
@@ -156,7 +156,7 @@ class CRM_Wrapi_Form_Handler extends CRM_Core_Form
         };
 
         // Show success & redirect back to main
-        CRM_Core_Session::setStatus(ts('New handler added'), '', 'success', ['expires' => 5000,]);
+        CRM_Core_Session::setStatus(ts('New route added'), '', 'success', ['expires' => 5000,]);
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/wrapi/main'));
     }
 }

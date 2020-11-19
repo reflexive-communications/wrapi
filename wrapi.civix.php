@@ -206,10 +206,10 @@ function _wrapi_civix_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
 }
 
 /**
- * @return CRM_Wrapi_Upgrader
+ * @return CRM_Wrapi_Installer
  */
 function _wrapi_civix_upgrader() {
-  if (!file_exists(__DIR__ . '/CRM/Wrapi/Upgrader.php')) {
+  if (!file_exists(__DIR__ . '/CRM/Wrapi/Installer.php')) {
     return NULL;
   }
   else {

@@ -14,7 +14,7 @@
     </div>
 </div>
 <div class="action-link">
-    <a class="button new-option" href="{$add_handler_url}">
-        <span><i class="crm-i fa-plus-circle"></i> {ts}Add Handler{/ts}</span>
+    <a class="button new-option" href="{$add_route_url}">
+        <span><i class="crm-i fa-plus-circle"></i> {ts}Add Route{/ts}</span>
     </a>
 </div>

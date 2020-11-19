@@ -7,9 +7,9 @@
     <access_arguments>administer CiviCRM</access_arguments>
   </item>
   <item>
-    <path>civicrm/wrapi/handler</path>
-    <page_callback>CRM_Wrapi_Form_Handler</page_callback>
-    <title>Handler</title>
+    <path>civicrm/wrapi/route</path>
+    <page_callback>CRM_Wrapi_Form_Route</page_callback>
+    <title>Route</title>
     <access_arguments>administer CiviCRM</access_arguments>
   </item>
 </menu>

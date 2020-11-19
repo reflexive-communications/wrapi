@@ -62,8 +62,11 @@ class CRM_Wrapi_Form_Main extends CRM_Core_Form
         );
 
         // Add handler button
-        $add_handler_url = CRM_Utils_System::url('civicrm/wrapi/handler');
-        $this->assign('add_handler_url', $add_handler_url);
+        $add_handler_url = CRM_Utils_System::url('civicrm/wrapi/route');
+        $this->assign('add_route_url', $add_handler_url);
+
+        // Export routes to template
+        $this->assign('routes',$this->config['routing_table']);
 
         parent::buildQuickForm();
     }
