@@ -17,8 +17,11 @@ class CRM_Wrapi_Upgrader extends CRM_Wrapi_Upgrader_Base
      */
     public const DEFAULT_SETTINGS = [
         self::EXTENSION_PREFIX => [
+            'next_id' => 1,
             'routing_table' => [],
-            'debug' => false,
+            'config' => [
+                'debug' => false,
+            ],
         ],
     ];
 
