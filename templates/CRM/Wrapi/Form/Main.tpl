@@ -1,14 +1,17 @@
 <div class="help">
     Here you can view and manage WrAPI routes
 </div>
+
 <div class="crm-block crm-form-block">
-    <div class="crm-accordion-wrapper civirule-view-wrapper">
+    <div class="crm-accordion-wrapper collapsed">
         <div class="crm-accordion-header crm-master-accordion-header">{ts}Settings{/ts}</div>
         <div class="crm-accordion-body">
-            <table class="form-layout-compressed civirule-view-table">
-                <tr>
+            <table class="form-layout-compressed">
+                <tr class="crm-path-form-block-uploadDir">
                     <td class="label">{$form.enable_debug.label}</td>
-                    <td class="content">{$form.enable_debug.html}</td>
+                    <td class="content">{$form.enable_debug.html}<br/>
+                        <span class="description">{ts}Produce verbose error messages to the request. Don't enable in production!{/ts}</span>
+                    </td>
                 </tr>
             </table>
             <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
@@ -20,16 +23,17 @@
         </a>
     </div>
 </div>
+
 <h3>Routes</h3>
 <div id="wrapi-route-wrapper" class="crm-search-results">
     {include file="CRM/common/jsortable.tpl"}
     <table id="wrapi-routes" class="row-highlight display">
-        <thead>
+        <thead class="sticky">
         <tr>
-            <th>{ts}ID{/ts}</th>
-            <th>{ts}Name{/ts}</th>
-            <th>{ts}Action{/ts}</th>
-            <th>{ts}Handler{/ts}</th>
+            <th id="sortable">{ts}ID{/ts}</th>
+            <th id="sortable">{ts}Name{/ts}</th>
+            <th id="sortable">{ts}Action{/ts}</th>
+            <th id="sortable">{ts}Handler{/ts}</th>
             <th></th>
         </tr>
         </thead>
@@ -41,7 +45,12 @@
                 <td>{$row.name}</td>
                 <td>{$row.action}</td>
                 <td>{$row.handler}</td>
-                <td></td>
+                <td>
+                    <a class="action-item crm-hover-button no-popup"
+                       href="{crmURL p='civicrm/wrapi/route' q="id=`$row.id`"}" title="majomlali">{ts}Edit{/ts}</a>
+                    <a class="action-item crm-hover-button no-popup"
+                       href="{crmURL p='civicrm/wrapi/route' q="id=`$row.id`"}" title="majomlali">{ts}Delete{/ts}</a>
+                </td>
             </tr>
         {/foreach}
         </tbody>

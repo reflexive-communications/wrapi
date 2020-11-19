@@ -23,6 +23,9 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
      */
     public function preProcess()
     {
+        // Add main page to the stack so cancel return to the main page
+        CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/wrapi/main'));
+
         // Get current settings
         $this->config = CRM_Wrapi_ConfigManager::loadConfig();
     }
@@ -40,6 +43,10 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
         $this->add('text', 'handler_class', ts('Handler Class'), [], true);
         $this->addButtons(
             [
+                [
+                    'type' => 'cancel',
+                    'name' => ts('Cancel'),
+                ],
                 [
                     'type' => 'done',
                     'name' => ts('Save'),
