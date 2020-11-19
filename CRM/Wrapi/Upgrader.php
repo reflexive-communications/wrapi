@@ -13,24 +13,14 @@ class CRM_Wrapi_Upgrader extends CRM_Wrapi_Upgrader_Base
     public const EXTENSION_PREFIX = 'extension_'.E::SHORT_NAME;
 
     /**
-     * Default settings
-     */
-    public const DEFAULT_SETTINGS = [
-        self::EXTENSION_PREFIX => [
-            'next_id' => 1,
-            'routing_table' => [],
-            'config' => [
-                'debug' => false,
-            ],
-        ],
-    ];
-
-    /**
      * Install process
      */
     public function install(): void
     {
-        Civi::settings()->add(self::DEFAULT_SETTINGS);
+        // Create default configs
+        if (!CRM_Wrapi_ConfigManager::createConfig()) {
+            throw new CRM_Core_Exception(ts('WrAPI could not create configs in database.'));
+        };
     }
 
     /**
@@ -38,6 +28,9 @@ class CRM_Wrapi_Upgrader extends CRM_Wrapi_Upgrader_Base
      */
     public function uninstall(): void
     {
-        Civi::settings()->revert(self::EXTENSION_PREFIX);
+        // Remove configs
+        if (!CRM_Wrapi_ConfigManager::removeConfig()) {
+            throw new CRM_Core_Exception(ts('WrAPI could not remove configs from database.'));
+        };
     }
 }
