@@ -3,76 +3,104 @@
 use CRM_Wrapi_ExtensionUtil as E;
 
 /**
- * Form controller class
+ * WrAPI Main Form controller class
  *
  * @see https://docs.civicrm.org/dev/en/latest/framework/quickform/
  */
-class CRM_Wrapi_Form_Main extends CRM_Core_Form {
-  public function buildQuickForm() {
+class CRM_Wrapi_Form_Main extends CRM_Core_Form
+{
+    /**
+     * Current WrAPI settings
+     *
+     * @var array|null
+     */
+    protected ?array $settings;
 
-    // add form elements
-    $this->add(
-      'select', // field type
-      'favorite_color', // field name
-      'Favorite Color', // field label
-      $this->getColorOptions(), // list of options
-      TRUE // is required
-    );
-    $this->addButtons(array(
-      array(
-        'type' => 'submit',
-        'name' => E::ts('Submit'),
-        'isDefault' => TRUE,
-      ),
-    ));
+    /**
+     * Enable debug
+     *
+     * @var bool
+     */
+    protected bool $debug;
 
-    // export form elements
-    $this->assign('elementNames', $this->getRenderableElementNames());
-    parent::buildQuickForm();
-  }
+    /**
+     * This virtual function is used to set the default values of various form elements.
+     *
+     * @return array|NULL
+     *   reference to the array of default values
+     */
+    public function setDefaultValues()
+    {
+        if (!$this->_defaults) {
+            $this->_defaults = [];
 
-  public function postProcess() {
-    $values = $this->exportValues();
-    $options = $this->getColorOptions();
-    CRM_Core_Session::setStatus(E::ts('You picked color "%1"', array(
-      1 => $options[$values['favorite_color']],
-    )));
-    parent::postProcess();
-  }
+            $this->_defaults['enable_debug'] = $this->debug ? 1 : 0;
+        }
 
-  public function getColorOptions() {
-    $options = array(
-      '' => E::ts('- select -'),
-      '#f00' => E::ts('Red'),
-      '#0f0' => E::ts('Green'),
-      '#00f' => E::ts('Blue'),
-      '#f0f' => E::ts('Purple'),
-    );
-    foreach (array('1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e') as $f) {
-      $options["#{$f}{$f}{$f}"] = E::ts('Grey (%1)', array(1 => $f));
+        return $this->_defaults;
     }
-    return $options;
-  }
 
-  /**
-   * Get the fields/elements defined in this form.
-   *
-   * @return array (string)
-   */
-  public function getRenderableElementNames() {
-    // The _elements list includes some items which should not be
-    // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
-    // items don't have labels.  We'll identify renderable by filtering on
-    // the 'label'.
-    $elementNames = array();
-    foreach ($this->_elements as $element) {
-      /** @var HTML_QuickForm_Element $element */
-      $label = $element->getLabel();
-      if (!empty($label)) {
-        $elementNames[] = $element->getName();
-      }
+    /**
+     * Preprocess form
+     */
+    public function preProcess()
+    {
+        // Get current settings
+        $this->settings = Civi::settings()->get(CRM_Wrapi_Upgrader::EXTENSION_PREFIX);
+        $this->debug = $this->settings['debug'] ?? false;
     }
-    return $elementNames;
-  }
+
+    /**
+     * Build form
+     */
+    public function buildQuickForm()
+    {
+        // Add form elements
+        $this->addYesNo('enable_debug', 'Enable debug', false, true,);
+        $this->addButtons(
+            [
+                [
+                    'type' => 'submit',
+                    'name' => E::ts('Update settings'),
+                    'isDefault' => true,
+                ],
+            ]
+        );
+
+        // Export form elements to template engine
+//        $this->assign('enable_debug', $this->getRenderableElementNames());
+        parent::buildQuickForm();
+    }
+
+    function addRules()
+    {
+        $this->addFormRule(
+            [
+                'CRM_Wrapi_Form_Main',
+                'validateEnableDebug',
+            ]
+        );
+
+    }
+
+    public function validateEnableDebug($values)
+    {
+        $errors = [];
+
+        $debug = $values['enable_debug'];
+        if ($debug != "0" && $debug != "1") {
+            $errors['enable_debug'] = ts('Please select yes or no');
+        }
+
+        return empty($errors) ? true : $errors;
+    }
+
+    public function postProcess()
+    {
+        if ($this->_submitValues['enable_debug'] xor $this->debug) {
+            $this->settings['debug']=(bool)$this->_submitValues['enable_debug'];
+            Civi::settings()->set(CRM_Wrapi_Upgrader::EXTENSION_PREFIX,$this->settings);
+        }
+    }
 
 }

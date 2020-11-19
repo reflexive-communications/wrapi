@@ -1,27 +1,15 @@
-{* HEADER *}
-
-<div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="top"}
+<h1>WrAPI</h1>
+<div class="crm-block crm-form-block">
+<div class="crm-accordion-wrapper civirule-view-wrapper">
+    <div class="crm-accordion-header crm-master-accordion-header">{ts}Settings{/ts}</div>
+    <div class="crm-accordion-body">
+        <table class="form-layout-compressed civirule-view-table">
+            <tr>
+                <td class="label">{$form.enable_debug.label}</td>
+                <td class="content">{$form.enable_debug.html}</td>
+            </tr>
+        </table>
+        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl"}</div>
+    </div>
 </div>
-
-{* FIELD EXAMPLE: OPTION 1 (AUTOMATIC LAYOUT) *}
-
-{foreach from=$elementNames item=elementName}
-  <div class="crm-section">
-    <div class="label">{$form.$elementName.label}</div>
-    <div class="content">{$form.$elementName.html}</div>
-    <div class="clear"></div>
-  </div>
-{/foreach}
-
-{* FIELD EXAMPLE: OPTION 2 (MANUAL LAYOUT)
-
-  <div>
-    <span>{$form.favorite_color.label}</span>
-    <span>{$form.favorite_color.html}</span>
-  </div>
-
-{* FOOTER *}
-<div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>
