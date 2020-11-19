@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <menu>
   <item>
-    <path>civicrm/extensions/wrapi/main</path>
+    <path>civicrm/wrapi/main</path>
     <page_callback>CRM_Wrapi_Form_Main</page_callback>
     <title>WrAPI</title>
     <access_arguments>administer CiviCRM</access_arguments>

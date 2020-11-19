@@ -175,7 +175,7 @@ function wrapi_civicrm_navigationMenu(&$menu)
         [
             'label' => E::ts('WrAPI'),
             'name' => 'wrapi_main',
-            'url' => 'civicrm/extensions/wrapi/main',
+            'url' => 'civicrm/wrapi/main',
             'permission' => 'administer CiviCRM',
             'separator' => 2,
             'active' => 1,
