@@ -13,7 +13,7 @@ class CRM_Wrapi_ConfigManager
      * Default configuration
      */
     public const DEFAULT_CONFIG = [
-        CRM_Wrapi_Upgrader::EXTENSION_PREFIX => [
+        CRM_Wrapi_Installer::EXTENSION_PREFIX => [
             'next_id' => 1,
             'routing_table' => [],
             'config' => [
@@ -33,8 +33,8 @@ class CRM_Wrapi_ConfigManager
         Civi::settings()->add(self::DEFAULT_CONFIG);
 
         // Check if properly saved
-        $cfg = Civi::settings()->get(CRM_Wrapi_Upgrader::EXTENSION_PREFIX);
-        if ($cfg !== self::DEFAULT_CONFIG[CRM_Wrapi_Upgrader::EXTENSION_PREFIX]) {
+        $cfg = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
+        if ($cfg !== self::DEFAULT_CONFIG[CRM_Wrapi_Installer::EXTENSION_PREFIX]) {
             return false;
         }
 
@@ -49,10 +49,10 @@ class CRM_Wrapi_ConfigManager
     public static function removeConfig(): bool
     {
         // Remove config
-        Civi::settings()->revert(CRM_Wrapi_Upgrader::EXTENSION_PREFIX);
+        Civi::settings()->revert(CRM_Wrapi_Installer::EXTENSION_PREFIX);
 
         // Check if remove properly
-        $cfg = Civi::settings()->get(CRM_Wrapi_Upgrader::EXTENSION_PREFIX);
+        $cfg = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
         if (!is_null($cfg)) {
             return false;
         }
@@ -70,7 +70,7 @@ class CRM_Wrapi_ConfigManager
     public static function loadConfig(): array
     {
         // Load configs
-        $config = Civi::settings()->get(CRM_Wrapi_Upgrader::EXTENSION_PREFIX);
+        $config = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
 
         // Check if loaded
         if (is_null($config) || !is_array($config)) {
@@ -90,10 +90,10 @@ class CRM_Wrapi_ConfigManager
     public static function saveConfig(array $config): bool
     {
         // Save config
-        Civi::settings()->set(CRM_Wrapi_Upgrader::EXTENSION_PREFIX, $config);
+        Civi::settings()->set(CRM_Wrapi_Installer::EXTENSION_PREFIX, $config);
 
         // Check if properly saved
-        $saved = Civi::settings()->get(CRM_Wrapi_Upgrader::EXTENSION_PREFIX);
+        $saved = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
         if ($saved !== $config) {
             return false;
         }

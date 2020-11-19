@@ -59,7 +59,7 @@ class CRM_Wrapi_Router
      */
     protected function loadRoutingTable(): void
     {
-        $settings = Civi::settings()->get(CRM_Wrapi_Upgrader::EXTENSION_PREFIX);
+        $settings = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
         $this->routingTable = $settings['routing_table'];
     }
 }

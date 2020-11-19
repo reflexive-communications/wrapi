@@ -5,7 +5,7 @@ use CRM_Wrapi_ExtensionUtil as E;
 /**
  * Collection of upgrade steps.
  */
-class CRM_Wrapi_Upgrader extends CRM_Wrapi_Upgrader_Base
+class CRM_Wrapi_Installer extends CRM_Wrapi_Upgrader_Base
 {
     /**
      * Extension prefix
