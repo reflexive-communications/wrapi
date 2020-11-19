@@ -10,11 +10,6 @@
 abstract class CRM_Wrapi_Processor_Base
 {
     /**
-     * Values max length in request
-     */
-    public const MAX_LENGTH = 255;
-
-    /**
      * Parse input
      *
      * @return mixed
