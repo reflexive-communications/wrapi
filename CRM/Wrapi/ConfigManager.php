@@ -63,11 +63,11 @@ class CRM_Wrapi_ConfigManager
     /**
      * Load configs
      *
-     * @return array|mixed Config
+     * @return array Config
      *
      * @throws CRM_Core_Exception
      */
-    public static function loadConfig()
+    public static function loadConfig(): array
     {
         // Load configs
         $config = Civi::settings()->get(CRM_Wrapi_Upgrader::EXTENSION_PREFIX);
