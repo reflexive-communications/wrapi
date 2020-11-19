@@ -41,12 +41,16 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
         $this->addButtons(
             [
                 [
-                    'type' => 'submit',
-                    'name' => ts('Done'),
+                    'type' => 'done',
+                    'name' => ts('Save'),
                     'isDefault' => true,
                 ],
             ]
         );
+
+        // Back to main form
+        $main_form_url = CRM_Utils_System::url('civicrm/wrapi/main');
+        $this->assign('main_form_url', $main_form_url);
 
         parent::buildQuickForm();
     }

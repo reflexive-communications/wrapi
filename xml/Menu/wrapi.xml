@@ -9,7 +9,7 @@
   <item>
     <path>civicrm/wrapi/route</path>
     <page_callback>CRM_Wrapi_Form_Route</page_callback>
-    <title>Route</title>
+    <title>WrAPI - Route</title>
     <access_arguments>administer CiviCRM</access_arguments>
   </item>
 </menu>
