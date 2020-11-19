@@ -79,4 +79,25 @@ class CRM_Wrapi_ConfigManager
 
         return $config;
     }
+
+    /**
+     * Save config
+     *
+     * @param array $config
+     *
+     * @return bool success
+     */
+    public static function saveConfig(array $config): bool
+    {
+        // Save config
+        Civi::settings()->set(CRM_Wrapi_Upgrader::EXTENSION_PREFIX, $config);
+
+        // Check if properly saved
+        $saved = Civi::settings()->get(CRM_Wrapi_Upgrader::EXTENSION_PREFIX);
+        if ($saved !== $config) {
+            return false;
+        }
+
+        return true;
+    }
 }
