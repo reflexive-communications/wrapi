@@ -1,7 +1,5 @@
 <?php
 
-use CRM_Wrapi_ExtensionUtil as E;
-
 /**
  * WrAPI Main Form controller
  *
