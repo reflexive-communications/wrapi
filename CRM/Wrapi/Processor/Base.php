@@ -135,18 +135,18 @@ abstract class CRM_Wrapi_Processor_Base
     public function validate($request_params): void
     {
         // Get parameters
-        $site_key = $request_params['site_key'] ?? null;
-        $user_key = $request_params['user_key'] ?? null;
-        $action = $request_params['action'] ?? null;
+        $site_key = $request_params['site_key'] ?? "";
+        $user_key = $request_params['user_key'] ?? "";
+        $action = $request_params['action'] ?? "";
 
         // Check if supplied
-        if (is_null($site_key) || empty($site_key)) {
+        if (empty($site_key)) {
             $this->error('Site key missing.');
         }
-        if (is_null($user_key) || empty($user_key)) {
+        if (empty($user_key)) {
             $this->error('User key missing.');
         }
-        if (is_null($action) || empty($action)) {
+        if (empty($action)) {
             $this->error('Action missing.');
         }
 

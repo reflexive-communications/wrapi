@@ -51,10 +51,10 @@ class CRM_Wrapi_Authenticator
     protected function authenticateSiteKey(string $site_key_sent): void
     {
         // Get actual site-key
-        $site_key_real = defined('CIVICRM_SITE_KEY') ? CIVICRM_SITE_KEY : null;
+        $site_key_real = defined('CIVICRM_SITE_KEY') ? CIVICRM_SITE_KEY : "";
 
         // Check site-key is valid
-        if (is_null($site_key_real) || empty($site_key_real)) {
+        if (empty($site_key_real)) {
             $this->processor->error(
                 'You need to set a valid site key in civicrm.settings.php.',
                 true
