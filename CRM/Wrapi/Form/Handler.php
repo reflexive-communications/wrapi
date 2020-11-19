@@ -1,78 +1,162 @@
 <?php
 
-use CRM_Wrapi_ExtensionUtil as E;
-
 /**
- * Form controller class
+ * WrAPI Handler Form controller
  *
  * @see https://docs.civicrm.org/dev/en/latest/framework/quickform/
+ *
+ * @package  wrapi
+ * @author   Sandor Semsey <sandor@es-progress.hu>
+ * @license  AGPL-3.0
  */
-class CRM_Wrapi_Form_Handler extends CRM_Core_Form {
-  public function buildQuickForm() {
+class CRM_Wrapi_Form_Handler extends CRM_Core_Form
+{
+    /**
+     * Current WrAPI config
+     *
+     * @var array
+     */
+    protected array $config;
 
-    // add form elements
-    $this->add(
-      'select', // field type
-      'favorite_color', // field name
-      'Favorite Color', // field label
-      $this->getColorOptions(), // list of options
-      TRUE // is required
-    );
-    $this->addButtons(array(
-      array(
-        'type' => 'submit',
-        'name' => E::ts('Submit'),
-        'isDefault' => TRUE,
-      ),
-    ));
-
-    // export form elements
-    $this->assign('elementNames', $this->getRenderableElementNames());
-    parent::buildQuickForm();
-  }
-
-  public function postProcess() {
-    $values = $this->exportValues();
-    $options = $this->getColorOptions();
-    CRM_Core_Session::setStatus(E::ts('You picked color "%1"', array(
-      1 => $options[$values['favorite_color']],
-    )));
-    parent::postProcess();
-  }
-
-  public function getColorOptions() {
-    $options = array(
-      '' => E::ts('- select -'),
-      '#f00' => E::ts('Red'),
-      '#0f0' => E::ts('Green'),
-      '#00f' => E::ts('Blue'),
-      '#f0f' => E::ts('Purple'),
-    );
-    foreach (array('1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e') as $f) {
-      $options["#{$f}{$f}{$f}"] = E::ts('Grey (%1)', array(1 => $f));
+    /**
+     * Preprocess form
+     */
+    public function preProcess()
+    {
+        // Get current settings
+        $this->config = CRM_Wrapi_ConfigManager::loadConfig();
     }
-    return $options;
-  }
 
-  /**
-   * Get the fields/elements defined in this form.
-   *
-   * @return array (string)
-   */
-  public function getRenderableElementNames() {
-    // The _elements list includes some items which should not be
-    // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
-    // items don't have labels.  We'll identify renderable by filtering on
-    // the 'label'.
-    $elementNames = array();
-    foreach ($this->_elements as $element) {
-      /** @var HTML_QuickForm_Element $element */
-      $label = $element->getLabel();
-      if (!empty($label)) {
-        $elementNames[] = $element->getName();
-      }
+    /**
+     * Build form
+     *
+     * @throws CRM_Core_Exception
+     */
+    public function buildQuickForm()
+    {
+        // Add form elements
+        $this->add('text', 'name', ts('Handler Name'), [], true);
+        $this->add('text', 'action', ts('Action'), [], true);
+        $this->add('text', 'handler_class', ts('Handler Class'), [], true);
+        $this->addButtons(
+            [
+                [
+                    'type' => 'submit',
+                    'name' => ts('Done'),
+                    'isDefault' => true,
+                ],
+            ]
+        );
+
+        parent::buildQuickForm();
     }
-    return $elementNames;
-  }
 
+    /**
+     * Add form validation rules
+     */
+    public function addRules()
+    {
+        $this->addFormRule(['CRM_Wrapi_Form_Handler', 'validateTextFields']);
+        $this->addFormRule(['CRM_Wrapi_Form_Handler', 'validateAction'], $this->config);
+        $this->addFormRule(['CRM_Wrapi_Form_Handler', 'validateHandler']);
+    }
+
+    /**
+     * Validate text fields
+     *
+     * @param $values
+     *
+     * @return array|bool
+     */
+    public function validateTextFields($values)
+    {
+        $errors = [];
+        $name = $values['name'] ?? "";
+        $action = $values['action'] ?? "";
+        $handler_class = $values['handler_class'] ?? "";
+
+        // Validate
+        if (empty(CRM_Utils_String::stripSpaces($name))) {
+            $errors['name'] = ts('Do not leave this field empty!');
+        }
+        if (empty(CRM_Utils_String::stripSpaces($action))) {
+            $errors['action'] = ts('Do not leave this field empty!');
+        }
+        if (empty(CRM_Utils_String::stripSpaces($handler_class))) {
+            $errors['handler_class'] = ts('Do not leave this field empty!');
+        }
+
+        return empty($errors) ? true : $errors;
+    }
+
+    /**
+     * Validate action
+     *
+     * @param $values
+     * @param $files
+     * @param $options
+     *
+     * @return bool
+     */
+    public function validateAction($values, $files, $options)
+    {
+        // Loop through existing routes
+        foreach ($options['routing_table'] as $route) {
+            if ($route['action'] == $values['action']) {
+                $errors['action'] = ts(
+                    'There is already an action saved with this name: %1',
+                    ['1' => $values['action'],]
+                );
+
+                return $errors;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate handler
+     *
+     * @param $values
+     *
+     * @return bool
+     */
+    public function validateHandler($values)
+    {
+        if (!class_exists($values['handler_class'])) {
+            $errors['handler_class'] = ts('Handler: %1 does not exists!', ['1' => $values['handler_class'],]);
+
+            return $errors;
+        }
+
+        return true;
+    }
+
+    /**
+     * Post process form
+     */
+    public function postProcess()
+    {
+        // Assembly route
+        $route = [
+            'id' => $this->config['next_id'],
+            'name' => $this->_submitValues['name'],
+            'action' => $this->_submitValues['action'],
+            'handler' => $this->_submitValues['handler_class'],
+        ];
+
+        // Update configs
+        $this->config['routing_table'][] = $route;
+        $this->config['next_id']++;
+
+        // Save
+        if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
+            CRM_Core_Session::setStatus('Error while saving changes.', 'WrAPI', 'error');
+        };
+
+        // Show success & redirect back to main
+        CRM_Core_Session::setStatus(ts('New handler added'), '', 'success', ['expires' => 5000,]);
+        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/wrapi/main'));
+    }
 }

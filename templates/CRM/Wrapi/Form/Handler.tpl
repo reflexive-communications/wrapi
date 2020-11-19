@@ -1,27 +1,12 @@
-{* HEADER *}
+<div class="label">{$form.name.label}</div>
+<div class="content">{$form.name.html}</div>
+<div class="label">{$form.endpoint.label}</div>
+<div class="content">{$form.endpoint.html}</div>
+<div class="label">{$form.action.label}</div>
+<div class="content">{$form.action.html}</div>
+<div class="label">{$form.handler_class.label}</div>
+<div class="content">{$form.handler_class.html}</div>
 
 <div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="top"}
-</div>
-
-{* FIELD EXAMPLE: OPTION 1 (AUTOMATIC LAYOUT) *}
-
-{foreach from=$elementNames item=elementName}
-  <div class="crm-section">
-    <div class="label">{$form.$elementName.label}</div>
-    <div class="content">{$form.$elementName.html}</div>
-    <div class="clear"></div>
-  </div>
-{/foreach}
-
-{* FIELD EXAMPLE: OPTION 2 (MANUAL LAYOUT)
-
-  <div>
-    <span>{$form.favorite_color.label}</span>
-    <span>{$form.favorite_color.html}</span>
-  </div>
-
-{* FOOTER *}
-<div class="crm-submit-buttons">
-{include file="CRM/common/formButtons.tpl" location="bottom"}
+    {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>

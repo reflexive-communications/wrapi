@@ -14,7 +14,7 @@ class CRM_Wrapi_Form_Main extends CRM_Core_Form
     /**
      * Current WrAPI config
      *
-     * @var array|null
+     * @var array
      */
     protected array $config;
 
@@ -55,7 +55,7 @@ class CRM_Wrapi_Form_Main extends CRM_Core_Form
             [
                 [
                     'type' => 'submit',
-                    'name' => E::ts('Update settings'),
+                    'name' => ts('Update settings'),
                     'isDefault' => true,
                 ],
             ]
@@ -107,8 +107,11 @@ class CRM_Wrapi_Form_Main extends CRM_Core_Form
 
             // Save
             if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
-                CRM_Core_Session::setStatus('Error while saving changes.', 'WrAPI', 'error');
+                throw new CRM_Core_Exception('Error while saving changes.');
             };
         }
+
+        // Show success even there is no change --> don't confuse users
+        CRM_Core_Session::setStatus(ts('Settings updated'), '', 'success', ['expires' => 5000,]);
     }
 }
