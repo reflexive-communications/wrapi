@@ -9,15 +9,8 @@
  * @author   Sandor Semsey <sandor@es-progress.hu>
  * @license  AGPL-3.0
  */
-class CRM_Wrapi_Form_Main extends CRM_Core_Form
+class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
 {
-    /**
-     * Current WrAPI config
-     *
-     * @var array
-     */
-    protected array $config;
-
     /**
      * This virtual function is used to set the default values of various form elements.
      *
@@ -29,16 +22,6 @@ class CRM_Wrapi_Form_Main extends CRM_Core_Form
         $this->_defaults['enable_debug'] = $this->config['config']['debug'] ? 1 : 0;
 
         return $this->_defaults;
-    }
-
-    /**
-     * Preprocess form
-     *
-     * @throws CRM_Core_Exception
-     */
-    public function preProcess()
-    {
-        $this->config = CRM_Wrapi_ConfigManager::loadConfig();
     }
 
     /**

@@ -9,22 +9,8 @@
  * @author   Sandor Semsey <sandor@es-progress.hu>
  * @license  AGPL-3.0
  */
-class CRM_Wrapi_Form_Route extends CRM_Core_Form
+class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
 {
-    /**
-     * Current WrAPI config
-     *
-     * @var array
-     */
-    protected array $config;
-
-    /**
-     * Route ID
-     *
-     * @var int|null
-     */
-    protected ?int $id;
-
     /**
      * Form in edit mode? (or add)
      *
@@ -33,32 +19,18 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
     protected bool $editMode;
 
     /**
-     * Get route from routing table
-     *
-     * @param int $id Route ID
-     *
-     * @return array
-     */
-    protected function getRoute(int $id): array
-    {
-        return $this->config['routing_table'][$id];
-    }
-
-    /**
      * Preprocess form
      *
      * @throws CRM_Core_Exception
      */
     public function preProcess()
     {
-        // Add main page to the stack so cancel returns to the main page
-        CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/wrapi/main'));
-
+        parent::preProcess();
         // Get current settings
-        $this->config = CRM_Wrapi_ConfigManager::loadConfig();
-
-        // Get route ID from request
-        $this->id = CRM_Utils_Request::retrieve('id', 'Positive');
+//        $this->config = CRM_Wrapi_ConfigManager::loadConfig();
+//
+//        // Get route ID from request
+//        $this->id = CRM_Utils_Request::retrieve('id', 'Positive');
 
         // Valid ID found --> edit mode
         if (!is_null($this->id)) {
