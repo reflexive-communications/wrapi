@@ -12,4 +12,10 @@
     <title>WrAPI - Route</title>
     <access_arguments>administer CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/wrapi/route/delete</path>
+    <page_callback>CRM_Wrapi_Form_DeleteRoute</page_callback>
+    <title>WrAPI - Route</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
 </menu>
