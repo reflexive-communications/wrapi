@@ -26,6 +26,13 @@ class CRM_Wrapi_Form_Base extends CRM_Core_Form
     protected ?int $id;
 
     /**
+     * Form action
+     *
+     * @var int|null
+     */
+    protected ?int $action;
+
+    /**
      * Get route from routing table
      *
      * @param int $id Route ID

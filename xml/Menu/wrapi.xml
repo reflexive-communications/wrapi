@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <menu>
-  <item>
-    <path>civicrm/wrapi/main</path>
-    <page_callback>CRM_Wrapi_Form_Main</page_callback>
-    <title>WrAPI</title>
-    <access_arguments>administer CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/wrapi/route</path>
-    <page_callback>CRM_Wrapi_Form_Route</page_callback>
-    <title>WrAPI - Route</title>
-    <access_arguments>administer CiviCRM</access_arguments>
-  </item>
-  <item>
-    <path>civicrm/wrapi/route/delete</path>
-    <page_callback>CRM_Wrapi_Form_DeleteRoute</page_callback>
-    <title>WrAPI - Route</title>
-    <access_arguments>administer CiviCRM</access_arguments>
-  </item>
+    <item>
+        <path>civicrm/wrapi/main</path>
+        <page_callback>CRM_Wrapi_Form_Main</page_callback>
+        <title>WrAPI</title>
+        <access_arguments>administer CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/wrapi/route</path>
+        <page_callback>CRM_Wrapi_Form_Route</page_callback>
+        <title>WrAPI - Route</title>
+        <access_arguments>administer CiviCRM</access_arguments>
+    </item>
+    <item>
+        <path>civicrm/wrapi/route/actions</path>
+        <page_callback>CRM_Wrapi_Form_RouteActions</page_callback>
+        <title>WrAPI - Route - Actions</title>
+        <access_arguments>administer CiviCRM</access_arguments>
+    </item>
 </menu>

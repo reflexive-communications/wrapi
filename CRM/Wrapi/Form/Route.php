@@ -48,25 +48,31 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
      */
     public function setDefaultValues()
     {
+        // Form now submitted --> no need to set defaults
+        if ($this->isSubmitted()) {
+            return null;
+        }
+
         // Add mode
         if (!$this->editMode) {
-            return null;
+            $this->_defaults['route_enabled'] = 1;
+            return $this->_defaults;
         }
 
         // Edit mode, set defaults to route data
         $route = $this->getRoute($this->id);
 
-        // No route with ID --> switch to add mode
+        // Valid ID but no route found --> switch to add mode
         if (empty($route)) {
-            $this->editMode = false;
-
-            return null;
+            $this->_defaults['route_enabled'] = 1;
+            return $this->_defaults;
         }
 
         // Set defaults
         $this->_defaults['name'] = $route['name'];
         $this->_defaults['action'] = $route['action'];
         $this->_defaults['handler_class'] = $route['handler'];
+        $this->_defaults['route_enabled'] = $route['enabled'] ? 1:0;
 
         return $this->_defaults;
     }
@@ -80,6 +86,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     {
         // Add form elements
         $this->add('hidden', 'id', $this->id);
+        $this->add('hidden', 'route_enabled');
         $this->add('text', 'name', ts('Route Name'), [], true);
         $this->add('text', 'action', ts('Action'), [], true);
         $this->add('text', 'handler_class', ts('Handler Class'), [], true);
@@ -212,6 +219,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             'name' => $this->_submitValues['name'],
             'action' => $this->_submitValues['action'],
             'handler' => $this->_submitValues['handler_class'],
+            'enabled' => ($this->_submitValues['route_enabled'] == 1),
         ];
 
         if ($this->editMode) {

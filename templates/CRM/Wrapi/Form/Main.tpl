@@ -34,6 +34,7 @@
                 <th id="sortable">{ts}Name{/ts}</th>
                 <th id="sortable">{ts}Action{/ts}</th>
                 <th id="sortable">{ts}Handler{/ts}</th>
+                <th id="sortable">{ts}Enabled{/ts}</th>
                 <th></th>
             </tr>
             </thead>
@@ -45,14 +46,8 @@
                     <td>{$route_data.name}</td>
                     <td>{$route_data.action}</td>
                     <td>{$route_data.handler}</td>
-                    <td>
-                        <a class="action-item crm-hover-button crm-popup wrapi-action"
-                           href="{crmURL p='civicrm/wrapi/route' q="id=`$id`"}"
-                           title="{ts}Edit route{/ts}">{ts}Edit{/ts}</a>
-                        <a class="action-item crm-hover-button crm-popup wrapi-action"
-                           href="{crmURL p='civicrm/wrapi/route/delete' q="id=`$id`"}"
-                           title="{ts}Delete route{/ts}">{ts}Delete{/ts}</a>
-                    </td>
+                    <td>{if $route_data.enabled}Yes{else}No{/if}</td>
+                    <td>{$route_data.actions}</td>
                 </tr>
             {/foreach}
             </tbody>
@@ -61,9 +56,27 @@
 </div>
 {literal}
     <script>
+        // Form in pop-up dialog
         CRM.$(function ($) {
             'use strict';
             $(".wrapi-action").on('crmPopupFormSuccess', CRM.refreshParent);
+        });
+
+        // Send action in AJAX
+        CRM.$(function ($) {
+            'use strict';
+            $(".wrapi-ajax-action").click(function (event) {
+
+                // Button clicked
+                let button = this;
+
+                event.preventDefault();
+
+                // Send AJAX request, expect JSON return
+                $.getJSON(button.href, {}, function () {
+                    CRM.refreshParent(button);
+                });
+            });
         });
     </script>
 {/literal}

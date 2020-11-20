@@ -12,6 +12,11 @@
 class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
 {
     /**
+     * Action links
+     */
+    public static ?array $_links = null;
+
+    /**
      * This virtual function is used to set the default values of various form elements.
      *
      * @return array|NULL
@@ -45,8 +50,30 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
         $add_route_url = CRM_Utils_System::url('civicrm/wrapi/route');
         $this->assign('add_route_url', $add_route_url);
 
+        // Get routes
+        $routes = $this->config['routing_table'];
+
+        // Add actions links
+        foreach ($routes as $id => $route) {
+            $actions = array_sum(array_keys($this->links()));
+
+            // Remove update enable/disable link
+            if ($route['enabled']) {
+                $actions -= CRM_Core_Action::ENABLE;
+            } else {
+                $actions -= CRM_Core_Action::DISABLE;
+            }
+
+            $routes[$id]['actions'] = CRM_Core_Action::formLink(
+                self::links(),
+                $actions,
+                ['id' => $id],
+                ts('more')
+            );
+        }
+
         // Export routes to template
-        $this->assign('routes', $this->config['routing_table']);
+        $this->assign('routes', $routes);
 
         parent::buildQuickForm();
     }
@@ -98,5 +125,49 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
 
         // Show success even there is no change --> don't confuse users
         CRM_Core_Session::setStatus(ts('Settings updated'), '', 'success', ['expires' => 5000,]);
+    }
+
+    /**
+     * Get action Links.
+     *
+     * @return array
+     *   (reference) of action links
+     */
+    public function &links()
+    {
+        if (!(self::$_links)) {
+            self::$_links = [
+                CRM_Core_Action::UPDATE => [
+                    'name' => ts('Edit'),
+                    'url' => 'civicrm/wrapi/route',
+                    'qs' => 'id=%%id%%',
+                    'title' => ts('Edit route'),
+                    'class' => 'crm-popup wrapi-action',
+                ],
+                CRM_Core_Action::DISABLE => [
+                    'name' => ts('Disable'),
+                    'url' => 'civicrm/wrapi/route/actions',
+                    'qs' => 'action=disable&id=%%id%%',
+                    'title' => ts('Disable route'),
+                    'class' => 'wrapi-ajax-action',
+                ],
+                CRM_Core_Action::ENABLE => [
+                    'name' => ts('Enable'),
+                    'url' => 'civicrm/wrapi/route/actions',
+                    'qs' => 'action=enable&id=%%id%%',
+                    'title' => ts('Enable route'),
+                    'class' => 'wrapi-ajax-action',
+                ],
+                CRM_Core_Action::DELETE => [
+                    'name' => ts('Delete'),
+                    'url' => 'civicrm/wrapi/route/actions',
+                    'qs' => 'action=delete&id=%%id%%',
+                    'title' => ts('Delete route'),
+                    'class' => 'wrapi-ajax-action',
+                ],
+            ];
+        }
+
+        return self::$_links;
     }
 }
