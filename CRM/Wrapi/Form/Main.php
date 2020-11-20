@@ -26,10 +26,7 @@ class CRM_Wrapi_Form_Main extends CRM_Core_Form
      */
     public function setDefaultValues()
     {
-        if (!$this->_defaults) {
-            $this->_defaults = [];
-            $this->_defaults['enable_debug'] = $this->config['config']['debug'] ? 1 : 0;
-        }
+        $this->_defaults['enable_debug'] = $this->config['config']['debug'] ? 1 : 0;
 
         return $this->_defaults;
     }

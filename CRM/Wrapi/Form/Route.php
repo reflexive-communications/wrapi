@@ -19,15 +19,80 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
     protected array $config;
 
     /**
+     * Route ID
+     *
+     * @var int|null
+     */
+    protected ?int $id;
+
+    /**
+     * Form in edit mode? (or add)
+     *
+     * @var bool
+     */
+    protected bool $editMode;
+
+    /**
+     * Get route from routing table
+     *
+     * @param int $id Route ID
+     *
+     * @return array
+     */
+    protected function getRoute(int $id): array
+    {
+        return $this->config['routing_table'][$id];
+    }
+
+    /**
      * Preprocess form
+     *
+     * @throws CRM_Core_Exception
      */
     public function preProcess()
     {
-        // Add main page to the stack so cancel return to the main page
+        // Add main page to the stack so cancel returns to the main page
         CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/wrapi/main'));
 
         // Get current settings
         $this->config = CRM_Wrapi_ConfigManager::loadConfig();
+
+        // Get route ID from request
+        $this->id = CRM_Utils_Request::retrieve('id', 'Positive');
+
+        // Valid ID found --> edit mode
+        if (!is_null($this->id)) {
+            $this->editMode = true;
+        } elseif (CRM_Utils_Rule::positiveInteger($this->_submitValues['id'])) {
+            // No ID in request but valid ID in form --> use it
+            $this->id = $this->_submitValues['id'];
+            $this->editMode = true;
+        } else {
+            // No valid ID in form or request--> add mode
+            $this->editMode = false;
+        }
+    }
+
+    /**
+     * Set default values
+     *
+     * @return array|NULL
+     */
+    public function setDefaultValues()
+    {
+        // Add mode
+        if (!$this->editMode) {
+            return null;
+        }
+
+        // Edit mode, set defaults to route data
+        $route = $this->getRoute($this->id);
+
+        $this->_defaults['name'] = $route['name'];
+        $this->_defaults['action'] = $route['action'];
+        $this->_defaults['handler_class'] = $route['handler'];
+
+        return $this->_defaults;
     }
 
     /**
@@ -38,6 +103,7 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
     public function buildQuickForm()
     {
         // Add form elements
+        $this->add('hidden', 'id', $this->id);
         $this->add('text', 'name', ts('Route Name'), [], true);
         $this->add('text', 'action', ts('Action'), [], true);
         $this->add('text', 'handler_class', ts('Handler Class'), [], true);
@@ -55,10 +121,6 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
             ]
         );
 
-        // Back to main form
-        $main_form_url = CRM_Utils_System::url('civicrm/wrapi/main');
-        $this->assign('main_form_url', $main_form_url);
-
         parent::buildQuickForm();
     }
 
@@ -68,7 +130,10 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
     public function addRules()
     {
         $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateTextFields']);
-        $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateAction'], $this->config);
+        $this->addFormRule(
+            ['CRM_Wrapi_Form_Route', 'validateAction'],
+            ['config' => $this->config, 'id' => $this->id,]
+        );
         $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateHandler']);
     }
 
@@ -79,7 +144,7 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
      *
      * @return array|bool
      */
-    public function validateTextFields($values)
+    protected function validateTextFields($values)
     {
         $errors = [];
         $name = $values['name'] ?? "";
@@ -109,10 +174,17 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
      *
      * @return bool
      */
-    public function validateAction($values, $files, $options)
+    protected function validateAction($values, $files, $options)
     {
         // Loop through existing routes
-        foreach ($options['routing_table'] as $route) {
+        foreach ($options['config']['routing_table'] as $id => $route) {
+
+            // Skip self-checking
+            if ($id == $options['id']) {
+                continue;
+            }
+
+            // Duplicate found
             if ($route['action'] == $values['action']) {
                 $errors['action'] = ts(
                     'There is already a route with this action: %1',
@@ -133,7 +205,7 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
      *
      * @return bool
      */
-    public function validateHandler($values)
+    protected function validateHandler($values)
     {
         if (!class_exists($values['handler_class'])) {
             $errors['handler_class'] = ts('Handler: %1 does not exists!', ['1' => $values['handler_class'],]);
@@ -149,17 +221,21 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
      */
     public function postProcess()
     {
-        // Assembly route
+        // Assembly route data
         $route = [
-            'id' => $this->config['next_id'],
             'name' => $this->_submitValues['name'],
             'action' => $this->_submitValues['action'],
             'handler' => $this->_submitValues['handler_class'],
         ];
 
-        // Update configs
-        $this->config['routing_table'][] = $route;
-        $this->config['next_id']++;
+        if ($this->editMode) {
+            // Update
+            $this->config['routing_table'][$this->id] = $route;
+        } else {
+            // Add
+            $this->config['routing_table'][$this->config['next_id']] = $route;
+            $this->config['next_id']++;
+        }
 
         // Save
         if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
@@ -167,7 +243,12 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
         };
 
         // Show success & redirect back to main
-        CRM_Core_Session::setStatus(ts('New route added'), '', 'success', ['expires' => 5000,]);
+        if ($this->editMode) {
+            $status = ts('Route updated.');
+        } else {
+            $status = ts('New route added');
+        }
+        CRM_Core_Session::setStatus($status, '', 'success', ['expires' => 5000,]);
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/wrapi/main'));
     }
 }

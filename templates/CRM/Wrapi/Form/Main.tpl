@@ -38,18 +38,18 @@
         </tr>
         </thead>
         <tbody>
-        {foreach from=$routes item=row}
+        {foreach from=$routes key=id item=route_data}
             <tr id="wrapi-route-{$row.id}" data-action="setvalue"
                 class="crm-entity {cycle values="odd-row,even-row"}">
-                <td>{$row.id}</td>
-                <td>{$row.name}</td>
-                <td>{$row.action}</td>
-                <td>{$row.handler}</td>
+                <td>{$id}</td>
+                <td>{$route_data.name}</td>
+                <td>{$route_data.action}</td>
+                <td>{$route_data.handler}</td>
                 <td>
                     <a class="action-item crm-hover-button no-popup"
-                       href="{crmURL p='civicrm/wrapi/route' q="id=`$row.id`"}" title="majomlali">{ts}Edit{/ts}</a>
+                       href="{crmURL p='civicrm/wrapi/route' q="id=`$id`"}" title="majomlali">{ts}Edit{/ts}</a>
                     <a class="action-item crm-hover-button no-popup"
-                       href="{crmURL p='civicrm/wrapi/route' q="id=`$row.id`"}" title="majomlali">{ts}Delete{/ts}</a>
+                       href="{crmURL p='civicrm/wrapi/route' q="id=`$id`"}" title="majomlali">{ts}Delete{/ts}</a>
                 </td>
             </tr>
         {/foreach}
