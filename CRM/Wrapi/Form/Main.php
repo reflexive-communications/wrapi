@@ -97,6 +97,8 @@ class CRM_Wrapi_Form_Main extends CRM_Core_Form
 
     /**
      * Post process form
+     *
+     * @throws CRM_Core_Exception
      */
     public function postProcess()
     {

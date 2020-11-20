@@ -123,9 +123,9 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
 
         // Set title
         if ($this->editMode) {
-            $this->setTitle('Edit route');
+            $this->setTitle(ts('Edit route'));
         } else {
-            $this->setTitle('Add new route');
+            $this->setTitle(ts('Add new route'));
         }
 
         // Export edit mode to template
@@ -249,14 +249,14 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
 
         // Save
         if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
-            CRM_Core_Session::setStatus('Error while saving changes.', 'WrAPI', 'error');
+            CRM_Core_Session::setStatus(ts('Error while saving changes.'), 'WrAPI', 'error');
         };
 
         // Show success & redirect back to main
         if ($this->editMode) {
             $status = ts('Route updated.');
         } else {
-            $status = ts('New route added');
+            $status = ts('New route added.');
         }
         CRM_Core_Session::setStatus($status, '', 'success', ['expires' => 5000,]);
     }

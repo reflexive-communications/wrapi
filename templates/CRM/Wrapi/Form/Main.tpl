@@ -1,6 +1,6 @@
 <div id="wrapi-main-wrapper">
     <div class="help">
-        Here you can view and manage WrAPI routes
+        {ts}Here you can view and manage WrAPI routes{/ts}
     </div>
     <div class="crm-block crm-form-block">
         <div class="crm-accordion-wrapper collapsed">

@@ -1,5 +1,9 @@
 <div class="help">
-    {if $edit_mode}Edit{else}Add new{/if} WrAPI route
+    {if $edit_mode}
+        {ts}Edit WrAPI route{/ts}
+    {else}
+        {ts}Add new WrAPI route{/ts}
+    {/if}
 </div>
 <div class="crm-block crm-form-block">
     <table class="form-layout">
