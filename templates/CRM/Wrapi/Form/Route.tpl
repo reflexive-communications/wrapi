@@ -1,5 +1,5 @@
 <div class="help">
-    Add or edit WrAPI routes
+    {if $edit_mode}Edit{else}Add new{/if} WrAPI route
 </div>
 <div class="crm-block crm-form-block">
     <table class="form-layout">

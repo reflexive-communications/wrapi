@@ -121,6 +121,16 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
             ]
         );
 
+        // Set title
+        if ($this->editMode) {
+            $this->setTitle('Edit route');
+        } else {
+            $this->setTitle('Add new route');
+        }
+
+        // Export edit mode to template
+        $this->assign('edit_mode',$this->editMode);
+
         parent::buildQuickForm();
     }
 
@@ -249,6 +259,5 @@ class CRM_Wrapi_Form_Route extends CRM_Core_Form
             $status = ts('New route added');
         }
         CRM_Core_Session::setStatus($status, '', 'success', ['expires' => 5000,]);
-        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/wrapi/main'));
     }
 }
