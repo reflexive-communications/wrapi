@@ -39,24 +39,24 @@ class CRM_Wrapi_Form_RouteActions extends CRM_Wrapi_Form_Base
         switch ($this->action) {
             case CRM_Core_Action::ENABLE:
                 $this->config['routing_table'][$this->id]['enabled'] = true;
-                $status = ts('Route enabled.');
+                $status = ts('Route enabled');
                 break;
             case CRM_Core_Action::DISABLE:
                 $this->config['routing_table'][$this->id]['enabled'] = false;
-                $status = ts('Route disabled.');
+                $status = ts('Route disabled');
                 break;
             case CRM_Core_Action::DELETE:
                 unset($this->config['routing_table'][$this->id]);
-                $status = ts('Route deleted.');
+                $status = ts('Route deleted');
                 break;
             default:
-                $status = ts('Not supported action.');
+                $status = ts('Not supported action');
                 break;
         }
 
         // Save
         if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
-            $status = ts('Error while saving changes.');
+            $status = ts('Error while saving changes');
         };
 
         // Show success

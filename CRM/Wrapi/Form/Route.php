@@ -233,14 +233,14 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
 
         // Save
         if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
-            CRM_Core_Session::setStatus(ts('Error while saving changes.'), 'WrAPI', 'error');
+            CRM_Core_Session::setStatus(ts('Error while saving changes'), 'WrAPI', 'error');
         };
 
         // Show success
         if ($this->editMode) {
-            $status = ts('Route updated.');
+            $status = ts('Route updated');
         } else {
-            $status = ts('New route added.');
+            $status = ts('New route added');
         }
         CRM_Core_Session::setStatus($status, '', 'success', ['expires' => 5000,]);
     }

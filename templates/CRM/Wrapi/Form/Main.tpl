@@ -40,8 +40,7 @@
             </thead>
             <tbody>
             {foreach from=$routes key=id item=route_data}
-                <tr id="wrapi-route-{$row.id}" data-action="setvalue"
-                    class="crm-entity {cycle values="odd-row,even-row"}">
+                <tr class="crm-entity {if !$route_data.enabled}disabled{/if} {cycle values="odd-row,even-row"}">
                     <td>{$id}</td>
                     <td>{$route_data.name}</td>
                     <td>{$route_data.action}</td>
