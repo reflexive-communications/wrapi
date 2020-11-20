@@ -49,7 +49,7 @@
                         <a class="action-item crm-hover-button crm-popup wrapi-action"
                            href="{crmURL p='civicrm/wrapi/route' q="id=`$id`"}"
                            title="{ts}Edit route{/ts}">{ts}Edit{/ts}</a>
-                        <a class="action-item crm-hover-button crm-popup"
+                        <a class="action-item crm-hover-button crm-popup wrapi-action"
                            href="{crmURL p='civicrm/wrapi/route/delete' q="id=`$id`"}"
                            title="{ts}Delete route{/ts}">{ts}Delete{/ts}</a>
                     </td>

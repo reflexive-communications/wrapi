@@ -34,7 +34,13 @@ class CRM_Wrapi_Form_Base extends CRM_Core_Form
      */
     protected function getRoute(int $id): array
     {
-        return $this->config['routing_table'][$id];
+        $route = $this->config['routing_table'][$id];
+
+        if (!is_array($route)) {
+            return [];
+        }
+
+        return $route;
     }
 
     /**

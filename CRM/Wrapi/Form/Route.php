@@ -26,14 +26,10 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     public function preProcess()
     {
         parent::preProcess();
-        // Get current settings
-//        $this->config = CRM_Wrapi_ConfigManager::loadConfig();
-//
-//        // Get route ID from request
-//        $this->id = CRM_Utils_Request::retrieve('id', 'Positive');
 
-        // Valid ID found --> edit mode
+        // Adding or editing?
         if (!is_null($this->id)) {
+            // Valid ID --> edit
             $this->editMode = true;
         } elseif (CRM_Utils_Rule::positiveInteger($this->_submitValues['id'])) {
             // No ID in request but valid ID in form --> use it
@@ -60,6 +56,14 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         // Edit mode, set defaults to route data
         $route = $this->getRoute($this->id);
 
+        // No route with ID --> switch to add mode
+        if (empty($route)) {
+            $this->editMode = false;
+
+            return null;
+        }
+
+        // Set defaults
         $this->_defaults['name'] = $route['name'];
         $this->_defaults['action'] = $route['action'];
         $this->_defaults['handler_class'] = $route['handler'];
@@ -101,7 +105,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         }
 
         // Export edit mode to template
-        $this->assign('edit_mode',$this->editMode);
+        $this->assign('edit_mode', $this->editMode);
 
         parent::buildQuickForm();
     }
@@ -224,7 +228,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             CRM_Core_Session::setStatus(ts('Error while saving changes.'), 'WrAPI', 'error');
         };
 
-        // Show success & redirect back to main
+        // Show success
         if ($this->editMode) {
             $status = ts('Route updated.');
         } else {
