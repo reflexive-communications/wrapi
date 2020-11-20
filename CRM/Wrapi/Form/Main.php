@@ -14,7 +14,7 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
     /**
      * Action links
      */
-    public static ?array $_links = null;
+    public static ?array $links = null;
 
     /**
      * This virtual function is used to set the default values of various form elements.
@@ -135,8 +135,8 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
      */
     public function &links()
     {
-        if (!(self::$_links)) {
-            self::$_links = [
+        if (!(self::$links)) {
+            self::$links = [
                 CRM_Core_Action::UPDATE => [
                     'name' => ts('Edit'),
                     'url' => 'civicrm/wrapi/route',
@@ -168,6 +168,6 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
             ];
         }
 
-        return self::$_links;
+        return self::$links;
     }
 }
