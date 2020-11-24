@@ -1,44 +1,61 @@
-# wrapi
+# WrAPI
 
-![Screenshot](/images/screenshot.png)
+## Summary
 
-(*FIXME: In one or two paragraphs, describe what the extension does and why one would download it. *)
+This extension adds a new REST API endpoint, which is basically a wrapper for the CiviCRM stock REST endpoint
+(hence the name: API wrapper = WrAPI :). It allows custom handlers to listen to this endpoint, and take any action to handle the request.
+In the stock API you can only do atomic operations, like add contact, add new tag, add tag to contact, etc. If you need more complex workflow
+to handle an event from outside of CiviCRM, you have to call more REST request.
+
+For example:
+- You want to handle a situation, like registration on a different site.
+- Your desired workflow is:
+    1. Check email address
+    1. If email not present --> Create new contact
+    1. If email present --> Don't create
+    1. Add a tag to this contact (based on the request)
+
+With the stock API, you can achieve this with:
+- Email::get
+- Contact::create or Contact::get
+- EntityTag::create
+
+This means 3 HTTP requests, and the logic (check if email is already registered) have to be done on the source site, so effectively CiviCRM is passive in this arrangement.
+
+With this new endpoint it is possible to combine this request to one request for CiviCRM to handle, calling the same API calls, performing the same logic.
+So CiviCRM will handle requests more actively, deciding on what to do with the received request.
+
+### Note
+
+There is an example handler supplied (and some handlers for debugging), but to handle ***your*** requests, some coding is required.
+
+Authentication, routing is already implemented, so hopefully what you only need to do is to write the custom logic and API calls.
 
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
 ## Requirements
 
 * PHP v7.2+
-* CiviCRM (*FIXME: Version number*)
+* CiviCRM (5.24 might work below - not tested)
 
-## Installation (Web UI)
+## Installation
 
 Learn more about installing CiviCRM extensions in the [CiviCRM Sysadmin Guide](https://docs.civicrm.org/sysadmin/en/latest/customize/extensions/).
-
-## Installation (CLI, Zip)
-
-Sysadmins and developers may download the `.zip` file for this extension and
-install it with the command-line tool [cv](https://github.com/civicrm/cv).
-
-```bash
-cd <extension-dir>
-cv dl wrapi@https://github.com/FIXME/wrapi/archive/master.zip
-```
-
-## Installation (CLI, Git)
 
 Sysadmins and developers may clone the [Git](https://en.wikipedia.org/wiki/Git) repo for this extension and
 install it with the command-line tool [cv](https://github.com/civicrm/cv).
 
 ```bash
-git clone https://github.com/FIXME/wrapi.git
+git clone https://gitlab.com/semsey_sandor_civicrm/extensions/wrapi.git
 cv en wrapi
 ```
 
 ## Getting Started
 
-(* FIXME: Where would a new user navigate to get started? What changes would they see? *)
+In the **Administer** >> **WrAPI** menu you can manage your routes, and update setting for WrAPI.
 
-## Known Issues
+Routing is based on `action` parameter received in the request. Here you can assign Handlers (CRM_Wrapi_Handler_* classes) to the actions.
 
-(* FIXME *)
+For further reference check [Developer Notes](dev_notes.md).
+
+***Contributors welcome! :)***
