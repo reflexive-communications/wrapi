@@ -32,7 +32,7 @@ class CRM_Wrapi_Processor_XML extends CRM_Wrapi_Processor_Base
 
             return $this->sanitize($data);
         } catch (Exception $ex) {
-            $this->error('Unable to parse XML.', true);
+            $this->error('Unable to parse XML');
         }
     }
 }

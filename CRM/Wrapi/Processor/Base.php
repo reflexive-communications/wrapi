@@ -141,24 +141,24 @@ abstract class CRM_Wrapi_Processor_Base
 
         // Check if supplied
         if (empty($site_key)) {
-            $this->error('Site key missing.');
+            $this->error('Site key missing');
         }
         if (empty($user_key)) {
-            $this->error('User key missing.');
+            $this->error('User key missing');
         }
         if (empty($action)) {
-            $this->error('Action missing.');
+            $this->error('Action missing');
         }
 
         // Check if string
         if (!CRM_Utils_Rule::string($site_key)) {
-            $this->error('Site key not a string.');
+            $this->error('Site key not a string');
         }
         if (!CRM_Utils_Rule::string($user_key)) {
-            $this->error('User key not a string.');
+            $this->error('User key not a string');
         }
         if (!CRM_Utils_Rule::string($action)) {
-            $this->error('Action not a string.');
+            $this->error('Action not a string');
         }
     }
 }

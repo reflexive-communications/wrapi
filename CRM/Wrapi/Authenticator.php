@@ -55,21 +55,15 @@ class CRM_Wrapi_Authenticator
 
         // Check site-key is valid
         if (empty($site_key_real)) {
-            $this->processor->error(
-                'You need to set a valid site key in civicrm.settings.php.',
-                true
-            );
+            $this->processor->error('You need to set a valid site key in civicrm.settings.php');
         }
         if (strlen($site_key_real) < 8) {
-            $this->processor->error(
-                'Site key needs to be greater than 7 characters in civicrm.settings.php.',
-                true
-            );
+            $this->processor->error('Site key needs to be greater than 7 characters in civicrm.settings.php');
         }
 
         // Check if received site-key is valid
         if ($site_key_sent !== $site_key_real) {
-            $this->processor->error('Failed to authenticate key.', true);
+            $this->processor->error('Failed to authenticate key.');
         }
     }
 
@@ -112,7 +106,7 @@ class CRM_Wrapi_Authenticator
             // No CMS user found
             // Same error as site-key fail, in order to make brute-force harder.
             // It is harder to debug though. You may change this when debugging.
-            $this->processor->error('Failed to authenticate key.', true);
+            $this->processor->error('Failed to authenticate key');
         }
     }
 }
