@@ -14,23 +14,27 @@ class CRM_Wrapi_Installer extends CRM_Wrapi_Upgrader_Base
 
     /**
      * Install process
+     *
+     * @throws CRM_Core_Exception
      */
     public function install(): void
     {
         // Create default configs
         if (!CRM_Wrapi_ConfigManager::createConfig()) {
-            throw new CRM_Core_Exception(ts('WrAPI could not create configs in database.'));
+            throw new CRM_Core_Exception(ts('WrAPI could not create configs in database'));
         };
     }
 
     /**
      * Uninstall process
+     *
+     * @throws CRM_Core_Exception
      */
     public function uninstall(): void
     {
         // Remove configs
         if (!CRM_Wrapi_ConfigManager::removeConfig()) {
-            throw new CRM_Core_Exception(ts('WrAPI could not remove configs from database.'));
+            throw new CRM_Core_Exception(ts('WrAPI could not remove configs from database'));
         };
     }
 }
