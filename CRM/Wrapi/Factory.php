@@ -10,6 +10,16 @@
 class CRM_Wrapi_Factory
 {
     /**
+     * Create Config Manager
+     *
+     * @return CRM_Wrapi_ConfigManager
+     */
+    public static function createConfigManager(): CRM_Wrapi_ConfigManager
+    {
+        return new CRM_Wrapi_ConfigManager();
+    }
+
+    /**
      * Create Processor
      *
      * @param string $processor_class Processor class name
@@ -31,12 +41,15 @@ class CRM_Wrapi_Factory
      * Create Authenticator
      *
      * @param CRM_Wrapi_Processor_Base $processor
+     * @param bool $debug_mode
      *
      * @return CRM_Wrapi_Authenticator
      */
-    public static function createAuthenticator(CRM_Wrapi_Processor_Base $processor): CRM_Wrapi_Authenticator
-    {
-        return new CRM_Wrapi_Authenticator($processor);
+    public static function createAuthenticator(
+        CRM_Wrapi_Processor_Base $processor,
+        bool $debug_mode
+    ): CRM_Wrapi_Authenticator {
+        return new CRM_Wrapi_Authenticator($processor, $debug_mode);
     }
 
     /**
