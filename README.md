@@ -27,7 +27,7 @@ So CiviCRM will handle requests more actively, deciding on what to do with the r
 
 ### Note
 
-There is an example handler supplied (and some handlers for debugging), but to handle ***your*** requests, some development effort (coding) is required.
+There is an example handler supplied (and some handlers for debugging), but to handle ***your*** requests, some **development effort** (coding) is required.
 
 Basically it is relatively easy (at least I hope).
 Authentication, routing and route administration is already implemented, so what you only need to do is to write the custom logic and API calls.
