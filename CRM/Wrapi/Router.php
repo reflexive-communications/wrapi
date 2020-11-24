@@ -17,13 +17,31 @@ class CRM_Wrapi_Router
     protected CRM_Wrapi_Processor_Base $processor;
 
     /**
+     * Debug mode
+     *
+     * @var bool
+     */
+    protected bool $debugMode;
+
+    /**
+     * Routing table
+     *
+     * @var array
+     */
+    protected array $routingTable;
+
+    /**
      * CRM_Wrapi_Router constructor
      *
      * @param CRM_Wrapi_Processor_Base $processor
+     * @param bool $debug_mode
+     * @param array $routing_table
      */
-    public function __construct(CRM_Wrapi_Processor_Base $processor)
+    public function __construct(CRM_Wrapi_Processor_Base $processor, bool $debug_mode, array $routing_table)
     {
         $this->processor = $processor;
+        $this->debugMode = $debug_mode;
+        $this->routingTable = $routing_table;
     }
 
     /**
@@ -37,27 +55,26 @@ class CRM_Wrapi_Router
      */
     public function route(string $action)
     {
-        $routing_table = $this->loadRoutingTable();
+        $route = $this->searchRoute($action, $this->routingTable);
 
-        $route = $this->searchRoute($action, $routing_table);
-
+        // Check route is present
         if (empty($route)) {
             $this->processor->error('Unknown action');
         }
 
+        // Check route is enabled
+        $enabled = $route['enabled'] ?? false;
+        if (!$enabled) {
+            // Verbose error msg in debug mode
+            if ($this->debugMode) {
+                $message = sprintf('%s action not enabled', $action);
+            } else {
+                $message = 'Unknown action';
+            }
+            $this->processor->error($message);
+        }
+
         return $route['handler'] ?? "";
-    }
-
-    /**
-     * Load routing table from DB
-     *
-     * @throws CRM_Core_Exception
-     */
-    protected function loadRoutingTable()
-    {
-        $config = CRM_Wrapi_ConfigManager::loadConfig();
-
-        return $config['routing_table'] ?? [];
     }
 
     /**

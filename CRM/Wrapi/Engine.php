@@ -43,7 +43,11 @@ class CRM_Wrapi_Engine
             $authenticator->authenticate($request_data['site_key'], $request_data['user_key']);
 
             // Civi bootstrapped --> route request
-            $router = CRM_Wrapi_Factory::createRouter($this->processor);
+            $router = CRM_Wrapi_Factory::createRouter(
+                $this->processor,
+                $config_manager->getDebugMode(),
+                $config_manager->getRoutingTable()
+            );
             $handler_class = $router->route($request_data['action']);
 
             // Handler found --> create handler & pass request to handler

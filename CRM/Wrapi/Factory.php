@@ -56,12 +56,17 @@ class CRM_Wrapi_Factory
      * Create Router
      *
      * @param CRM_Wrapi_Processor_Base $processor
+     * @param bool $debug_mode
+     * @param array $routing_table
      *
      * @return CRM_Wrapi_Router
      */
-    public static function createRouter(CRM_Wrapi_Processor_Base $processor): CRM_Wrapi_Router
-    {
-        return new CRM_Wrapi_Router($processor);
+    public static function createRouter(
+        CRM_Wrapi_Processor_Base $processor,
+        bool $debug_mode,
+        array $routing_table
+    ): CRM_Wrapi_Router {
+        return new CRM_Wrapi_Router($processor, $debug_mode, $routing_table);
     }
 
     /**
