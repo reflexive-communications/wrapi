@@ -17,13 +17,22 @@ class CRM_Wrapi_Authenticator
     protected CRM_Wrapi_Processor_Base $processor;
 
     /**
+     * Debug mode
+     *
+     * @var bool
+     */
+    protected bool $debugMode;
+
+    /**
      * CRM_Wrapi_Authenticator constructor.
      *
      * @param CRM_Wrapi_Processor_Base $processor
+     * @param bool $debug_mode
      */
-    public function __construct(CRM_Wrapi_Processor_Base $processor)
+    public function __construct(CRM_Wrapi_Processor_Base $processor, bool $debug_mode)
     {
         $this->processor = $processor;
+        $this->debugMode = $debug_mode;
     }
 
     /**
@@ -63,7 +72,13 @@ class CRM_Wrapi_Authenticator
 
         // Check if received site-key is valid
         if ($site_key_sent !== $site_key_real) {
-            $this->processor->error('Failed to authenticate key.');
+            // Verbose error msg in debug mode
+            if ($this->debugMode) {
+                $message = 'Failed to authenticate site-key';
+            } else {
+                $message = 'Failed to authenticate key';
+            }
+            $this->processor->error($message);
         }
     }
 
@@ -104,9 +119,13 @@ class CRM_Wrapi_Authenticator
             );
         } else {
             // No CMS user found
-            // Same error as site-key fail, in order to make brute-force harder.
-            // It is harder to debug though. You may change this when debugging.
-            $this->processor->error('Failed to authenticate key');
+            // Verbose error msg in debug mode
+            if ($this->debugMode) {
+                $message = 'Failed to authenticate user-key';
+            } else {
+                $message = 'Failed to authenticate key';
+            }
+            $this->processor->error($message);
         }
     }
 }
