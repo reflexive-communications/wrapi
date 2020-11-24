@@ -22,25 +22,36 @@ class CRM_Wrapi_ConfigManager
         ],
     ];
 
-    protected static bool $debugMode = false;
+    /**
+     * All configs
+     *
+     * @var array
+     */
+    protected array $config;
+
+    /**
+     * CRM_Wrapi_ConfigManager constructor.
+     */
+    public function __construct()
+    {
+        $this->config = self::DEFAULT_CONFIG;
+    }
 
     /**
      * Create config in DB
      *
      * @return bool success
      */
-    public static function createConfig(): bool
+    public function createConfig(): bool
     {
         // Add config
-        Civi::settings()->add(self::DEFAULT_CONFIG);
+        Civi::settings()->add($this->config);
 
         // Check if properly saved
         $cfg = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
-        if ($cfg !== self::DEFAULT_CONFIG[CRM_Wrapi_Installer::EXTENSION_PREFIX]) {
+        if ($cfg !== $this->config) {
             return false;
         }
-
-        self::updateDebugMode($cfg);
 
         return true;
     }
@@ -50,7 +61,7 @@ class CRM_Wrapi_ConfigManager
      *
      * @return bool success
      */
-    public static function removeConfig(): bool
+    public function removeConfig(): bool
     {
         // Remove config
         Civi::settings()->revert(CRM_Wrapi_Installer::EXTENSION_PREFIX);
@@ -60,8 +71,6 @@ class CRM_Wrapi_ConfigManager
         if (!is_null($cfg)) {
             return false;
         }
-
-        self::updateDebugMode($cfg);
 
         return true;
     }
@@ -73,7 +82,7 @@ class CRM_Wrapi_ConfigManager
      *
      * @throws CRM_Core_Exception
      */
-    public static function loadConfig(): array
+    public function loadConfig(): void
     {
         // Load configs
         $cfg = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
@@ -82,10 +91,6 @@ class CRM_Wrapi_ConfigManager
         if (is_null($cfg) || !is_array($cfg)) {
             throw new CRM_Core_Exception('WrAPI could not load config from database');
         }
-
-        self::updateDebugMode($cfg);
-
-        return $cfg;
     }
 
     /**
@@ -95,7 +100,7 @@ class CRM_Wrapi_ConfigManager
      *
      * @return bool success
      */
-    public static function saveConfig(array $config): bool
+    public function saveConfig(array $config): bool
     {
         // Save config
         Civi::settings()->set(CRM_Wrapi_Installer::EXTENSION_PREFIX, $config);
@@ -106,22 +111,7 @@ class CRM_Wrapi_ConfigManager
             return false;
         }
 
-        self::updateDebugMode($saved);
-
         return true;
-    }
-
-    /**
-     * Update debug mode config
-     *
-     * @param array $config
-     */
-    protected static function updateDebugMode(array $config)
-    {
-        // Check is present
-        $mode = $config['config']['debug'] ?? self::DEFAULT_CONFIG['config']['debug'];
-        // Update in instance
-        self::$debugMode = $mode;
     }
 
     /**
@@ -129,8 +119,8 @@ class CRM_Wrapi_ConfigManager
      *
      * @return bool
      */
-    public static function getDebugMode()
+    public function getDebugMode()
     {
-        return self::$debugMode;
+        return $this->config['config']['debug'] ?? self::DEFAULT_CONFIG['config']['debug'];
     }
 }
