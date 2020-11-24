@@ -45,10 +45,6 @@ class CRM_Wrapi_Form_RouteActions extends CRM_Wrapi_Form_Base
                 $this->config['routing_table'][$this->id]['enabled'] = false;
                 $status = ts('Route disabled');
                 break;
-            case CRM_Core_Action::DELETE:
-                unset($this->config['routing_table'][$this->id]);
-                $status = ts('Route deleted');
-                break;
             default:
                 $status = ts('Not supported action');
                 break;

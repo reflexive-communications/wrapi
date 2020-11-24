@@ -160,10 +160,10 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
                 ],
                 CRM_Core_Action::DELETE => [
                     'name' => ts('Delete'),
-                    'url' => 'civicrm/wrapi/route/actions',
-                    'qs' => 'action=delete&id=%%id%%',
+                    'url' => 'civicrm/wrapi/route/delete',
+                    'qs' => 'id=%%id%%',
                     'title' => ts('Delete route'),
-                    'class' => 'wrapi-ajax-action',
+                    'class' => 'crm-popup wrapi-action',
                 ],
             ];
         }
