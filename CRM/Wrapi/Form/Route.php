@@ -236,6 +236,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         // Save
         if (!$this->configManager->saveConfig($this->config)) {
             CRM_Core_Session::setStatus(ts('Error while saving changes'), 'WrAPI', 'error');
+
             return;
         }
 
