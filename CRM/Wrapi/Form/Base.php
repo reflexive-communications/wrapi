@@ -19,6 +19,13 @@ class CRM_Wrapi_Form_Base extends CRM_Core_Form
     protected array $config;
 
     /**
+     * Config Manager
+     *
+     * @var CRM_Wrapi_ConfigManager
+     */
+    protected CRM_Wrapi_ConfigManager $configManager;
+
+    /**
      * Route ID
      *
      * @var int|null
@@ -58,7 +65,8 @@ class CRM_Wrapi_Form_Base extends CRM_Core_Form
     public function preProcess()
     {
         // Get current settings
-        $this->config = CRM_Wrapi_ConfigManager::loadConfig();
+        $this->configManager = CRM_Wrapi_Factory::createConfigManager();
+        $this->config = $this->configManager->getAllConfig();
 
         // Get route ID from request
         $this->id = CRM_Utils_Request::retrieve('id', 'Positive');

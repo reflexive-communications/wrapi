@@ -13,10 +13,18 @@ class CRM_Wrapi_Factory
      * Create Config Manager
      *
      * @return CRM_Wrapi_ConfigManager
+     *
+     * @throws CRM_Core_Exception
      */
     public static function createConfigManager(): CRM_Wrapi_ConfigManager
     {
-        return new CRM_Wrapi_ConfigManager();
+        // Instantiate
+        $config_manager = new CRM_Wrapi_ConfigManager();
+
+        // Load settings
+        $config_manager->loadConfig();
+
+        return $config_manager;
     }
 
     /**

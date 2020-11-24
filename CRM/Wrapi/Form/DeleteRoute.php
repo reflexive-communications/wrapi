@@ -46,7 +46,7 @@ class CRM_Wrapi_Form_DeleteRoute extends CRM_Wrapi_Form_Base
         unset($this->config['routing_table'][$this->id]);
 
         // Save
-        if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
+        if (!$this->configManager->saveConfig($this->config)) {
             CRM_Core_Session::setStatus(ts('Error while saving changes'), 'WrAPI', 'error');
         }
 

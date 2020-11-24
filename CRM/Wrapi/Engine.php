@@ -32,7 +32,6 @@ class CRM_Wrapi_Engine
         try {
             // Load configs
             $config_manager = CRM_Wrapi_Factory::createConfigManager();
-            $config_manager->loadConfig();
 
             // Detect content-type & process input
             $this->processor = CRM_Wrapi_Factory::createProcessor(CRM_Wrapi_Processor_Base::detectContentType());

@@ -51,7 +51,7 @@ class CRM_Wrapi_Form_RouteActions extends CRM_Wrapi_Form_Base
         }
 
         // Save
-        if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
+        if (!$this->configManager->saveConfig($this->config)) {
             $status = ts('Error while saving changes');
         }
 

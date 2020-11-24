@@ -51,7 +51,7 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
         $this->assign('add_route_url', $add_route_url);
 
         // Get routes
-        $routes = $this->config['routing_table'];
+        $routes = $this->configManager->getRoutingTable();
 
         // Add actions links
         foreach ($routes as $id => $route) {
@@ -118,7 +118,7 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
             $this->config['config']['debug'] = (bool)$this->_submitValues['enable_debug'];
 
             // Save
-            if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
+            if (!$this->configManager->saveConfig($this->config)) {
                 throw new CRM_Core_Exception('Error while saving changes');
             }
         }

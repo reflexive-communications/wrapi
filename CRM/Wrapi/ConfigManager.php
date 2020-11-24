@@ -27,7 +27,7 @@ class CRM_Wrapi_ConfigManager
      *
      * @var array
      */
-    protected array $config;
+    protected ?array $config;
 
     /**
      * CRM_Wrapi_ConfigManager constructor.
@@ -53,6 +53,9 @@ class CRM_Wrapi_ConfigManager
             return false;
         }
 
+        // Update configs
+        $this->config = $cfg;
+
         return true;
     }
 
@@ -72,6 +75,9 @@ class CRM_Wrapi_ConfigManager
             return false;
         }
 
+        // Update configs
+        $this->config = $cfg;
+
         return true;
     }
 
@@ -90,6 +96,7 @@ class CRM_Wrapi_ConfigManager
             throw new CRM_Core_Exception('WrAPI could not load config from database');
         }
 
+        // Update configs
         $this->config = $cfg;
     }
 
@@ -110,6 +117,9 @@ class CRM_Wrapi_ConfigManager
         if ($saved !== $config) {
             return false;
         }
+
+        // Update configs
+        $this->config = $saved;
 
         return true;
     }
@@ -136,12 +146,22 @@ class CRM_Wrapi_ConfigManager
      */
     public function getRoutingTable(): array
     {
-        $routing_table = $this->config['routing_table'] ?? self::DEFAULT_CONFIG['routing_table'];
+        $routing_table = $this->config['routing_table'] ?? [];
 
         if (!is_array($routing_table)) {
-            return self::DEFAULT_CONFIG['routing_table'];
+            return [];
         }
 
         return $routing_table;
+    }
+
+    /**
+     * Return current routing table
+     *
+     * @return array
+     */
+    public function getAllConfig(): array
+    {
+        return $this->config ?? [];
     }
 }
