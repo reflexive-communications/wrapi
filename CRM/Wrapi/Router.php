@@ -50,8 +50,6 @@ class CRM_Wrapi_Router
      * @param string $action Request action parameter
      *
      * @return mixed
-     *
-     * @throws CRM_Core_Exception
      */
     public function route(string $action)
     {
