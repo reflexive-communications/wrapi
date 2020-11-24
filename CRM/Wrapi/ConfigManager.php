@@ -74,7 +74,7 @@ class CRM_Wrapi_ConfigManager
 
         // Check if loaded
         if (is_null($config) || !is_array($config)) {
-            throw new CRM_Core_Exception('WrAPI could not load config from database.');
+            throw new CRM_Core_Exception('WrAPI could not load config from database');
         }
 
         return $config;

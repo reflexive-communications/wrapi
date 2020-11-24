@@ -3,7 +3,11 @@
 use CRM_Wrapi_ExtensionUtil as E;
 
 /**
- * Collection of upgrade steps.
+ * Installer
+ *
+ * @package  wrapi
+ * @author   Sandor Semsey <sandor@es-progress.hu>
+ * @license  AGPL-3.0
  */
 class CRM_Wrapi_Installer extends CRM_Wrapi_Upgrader_Base
 {

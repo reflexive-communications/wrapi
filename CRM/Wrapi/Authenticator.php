@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Wrapi Authenticator
+ * Authenticator
  *
  * @package  wrapi
  * @author   Sandor Semsey <sandor@es-progress.hu>
