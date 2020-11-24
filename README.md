@@ -23,7 +23,7 @@ With the stock API, you can achieve this with:
 This means 3 HTTP requests, and the logic (check if email is already registered) have to be done on the source site, so effectively CiviCRM is passive in this arrangement.
 
 With this new endpoint it is possible to combine this request to one request for CiviCRM to handle, calling the same API calls, performing the same logic.
-So CiviCRM will handle requests more actively, deciding on what to do with the received request.
+So CiviCRM will handle requests more actively, deciding on what to do with the received request and reducing request round-trips.
 
 ### Note
 
