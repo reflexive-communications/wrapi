@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Base IO Processor Class
+ * Base IO Processor
  *
  * @package  wrapi
  * @author   Sandor Semsey <sandor@es-progress.hu>
@@ -47,30 +47,76 @@ abstract class CRM_Wrapi_Processor_Base
      * @param mixed $input Input to sanitize
      *
      * @return array|string
+     *
+     * @throws CRM_Core_Exception
      */
     public function sanitize($input)
     {
         $sanitized = [];
 
+        // Input is array --> sanitize values and keys
         if (is_array($input)) {
             foreach ($input as $key => $value) {
                 // Sanitize key
                 $key = CRM_Utils_String::stripSpaces($key);
+                $key = $this->sanitizeString($key);
 
                 // Sanitize value
                 if (is_array($value)) {
+                    // Array --> recurse
                     $value = $this->sanitize($value);
+                } elseif (is_int($value)) {
+                    // Integer
+                    $value = CRM_Utils_Type::validate($value, 'Int');
+                } elseif (is_float($value)) {
+                    // Float
+                    $value = CRM_Utils_Type::validate($value, 'Float');
+                } elseif (is_bool($value)) {
+                    // Boolean
+                    $value = CRM_Utils_Type::validate($value, 'Boolean');
                 } else {
-                    $value = CRM_Utils_String::stripSpaces($value);
+                    // Nothing else --> string
+                    $value = $this->sanitizeString($value);
                 }
 
                 $sanitized[$key] = $value;
             }
+        } elseif (is_int($input)) {
+            // Input is single integer
+            $sanitized = CRM_Utils_Type::validate($input, 'Int');
+        } elseif (is_float($input)) {
+            // Input is single float
+            $sanitized = CRM_Utils_Type::validate($input, 'Float');
+        } elseif (is_bool($input)) {
+            // Input is single boolean
+            $sanitized = CRM_Utils_Type::validate($input, 'Boolean');
         } else {
-            $sanitized = CRM_Utils_String::stripSpaces($input);
+            // Input is single string
+            $sanitized = $this->sanitizeString($input);
         }
 
         return $sanitized;
+    }
+
+    /**
+     * Sanitize string
+     *
+     * @param $value
+     *
+     * @return string
+     *
+     * @throws CRM_Core_Exception
+     */
+    protected function sanitizeString($value)
+    {
+        // Strip whitespace
+        $value = CRM_Utils_String::stripSpaces($value);
+        // Escape string
+        $value = CRM_Utils_Type::escape($value, 'String');
+        // Remove XSS
+        $value = CRM_Utils_String::purifyHTML($value);
+
+        return $value;
     }
 
     /**
@@ -118,10 +164,10 @@ abstract class CRM_Wrapi_Processor_Base
      */
     public function processInput()
     {
-        // Get request parameters
+        // Parse request data
         $request_data = $this->input();
 
-        // Validate input
+        // Check if required params (keys, action) supplied and valid strings
         $this->validate($request_data);
 
         return $request_data;

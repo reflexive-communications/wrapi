@@ -1,7 +1,7 @@
 <?php
 
 /**
- * WrAPI XML IO Processor
+ * XML IO Processor
  *
  * @package  wrapi
  * @author   Sandor Semsey <sandor@es-progress.hu>
