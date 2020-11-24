@@ -5,7 +5,7 @@
 This extension adds a new REST API endpoint, which is basically a wrapper for the CiviCRM stock REST endpoint
 (hence the name: API wrapper = WrAPI :). It allows custom handlers to listen to this endpoint, and take any action to handle the request.
 In the stock API you can only do atomic operations, like add contact, add new tag, add tag to contact, etc. If you need more complex workflow
-to handle an event from outside of CiviCRM, you have to call more REST request.
+to handle an event from outside of CiviCRM, you have to call more REST HTTP request.
 
 For example:
 - You want to handle a situation, like registration on a different site.
@@ -20,7 +20,7 @@ With the stock API, you can achieve this with:
 - Contact::create or Contact::get
 - EntityTag::create
 
-This means 3 HTTP requests, and the logic (check if email is already registered) have to be done on the source site, so effectively CiviCRM is passive in this arrangement.
+This means three HTTP requests, and the logic (check if email is already registered) have to be done on the source site, so effectively CiviCRM is passive in this arrangement.
 
 With this new endpoint it is possible to combine this request to one request for CiviCRM to handle, calling the same API calls, performing the same logic.
 So CiviCRM will handle requests more actively, deciding on what to do with the received request and reducing request round-trips.
