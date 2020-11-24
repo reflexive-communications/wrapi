@@ -33,5 +33,5 @@ abstract class CRM_Wrapi_Handler_Base
      *
      * @return mixed
      */
-    abstract public function handle($request_data);
+    abstract public function run($request_data);
 }

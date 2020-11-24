@@ -44,7 +44,7 @@ class CRM_Wrapi_Engine
 
             // Handler found --> create handler & pass request to handler
             $handler = CRM_Wrapi_Factory::createHandler($handler_class, $this->processor);
-            $handler->handle($request_data);
+            $handler->run($request_data);
 
         } catch (CRM_Core_Exception $ex) {
             http_response_code(500);
