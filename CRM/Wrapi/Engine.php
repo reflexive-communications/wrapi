@@ -30,12 +30,16 @@ class CRM_Wrapi_Engine
     public function run(): void
     {
         try {
+            // Load configs
+            $config_manager = CRM_Wrapi_Factory::createConfigManager();
+            $config_manager->loadConfig();
+
             // Detect content-type & process input
             $this->processor = CRM_Wrapi_Factory::createProcessor(CRM_Wrapi_Processor_Base::detectContentType());
             $request_data = $this->processor->processInput();
 
             // Request now parsed --> authenticate
-            $authenticator = CRM_Wrapi_Factory::createAuthenticator($this->processor);
+            $authenticator = CRM_Wrapi_Factory::createAuthenticator($this->processor, $config_manager->getDebugMode());
             $authenticator->authenticate($request_data['site_key'], $request_data['user_key']);
 
             // Civi bootstrapped --> route request
