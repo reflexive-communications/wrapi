@@ -56,6 +56,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         // Add mode
         if (!$this->editMode) {
             $this->_defaults['route_enabled'] = 1;
+
             return $this->_defaults;
         }
 
@@ -65,6 +66,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         // Valid ID but no route found --> switch to add mode
         if (empty($route)) {
             $this->_defaults['route_enabled'] = 1;
+
             return $this->_defaults;
         }
 
@@ -72,7 +74,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->_defaults['name'] = $route['name'];
         $this->_defaults['action'] = $route['action'];
         $this->_defaults['handler_class'] = $route['handler'];
-        $this->_defaults['route_enabled'] = $route['enabled'] ? 1:0;
+        $this->_defaults['route_enabled'] = $route['enabled'] ? 1 : 0;
 
         return $this->_defaults;
     }
@@ -234,7 +236,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         // Save
         if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
             CRM_Core_Session::setStatus(ts('Error while saving changes'), 'WrAPI', 'error');
-        };
+        }
 
         // Show success
         if ($this->editMode) {

@@ -26,7 +26,7 @@ class CRM_Wrapi_Installer extends CRM_Wrapi_Upgrader_Base
         // Create default configs
         if (!CRM_Wrapi_ConfigManager::createConfig()) {
             throw new CRM_Core_Exception(ts('WrAPI could not create configs in database'));
-        };
+        }
     }
 
     /**
@@ -39,6 +39,6 @@ class CRM_Wrapi_Installer extends CRM_Wrapi_Upgrader_Base
         // Remove configs
         if (!CRM_Wrapi_ConfigManager::removeConfig()) {
             throw new CRM_Core_Exception(ts('WrAPI could not remove configs from database'));
-        };
+        }
     }
 }

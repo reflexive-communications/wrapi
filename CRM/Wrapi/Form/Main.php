@@ -120,7 +120,7 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
             // Save
             if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
                 throw new CRM_Core_Exception('Error while saving changes');
-            };
+            }
         }
 
         // Show success even there is no change --> don't confuse users

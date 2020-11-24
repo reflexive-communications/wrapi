@@ -48,7 +48,7 @@ class CRM_Wrapi_Form_DeleteRoute extends CRM_Wrapi_Form_Base
         // Save
         if (!CRM_Wrapi_ConfigManager::saveConfig($this->config)) {
             CRM_Core_Session::setStatus(ts('Error while saving changes'), 'WrAPI', 'error');
-        };
+        }
 
         // Show success
         CRM_Core_Session::setStatus(ts('Route deleted'), '', 'success', ['expires' => 5000,]);
