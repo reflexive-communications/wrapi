@@ -14,21 +14,21 @@ class CRM_Wrapi_Router
      *
      * @var CRM_Wrapi_Processor_Base
      */
-    protected CRM_Wrapi_Processor_Base $processor;
+    protected $processor;
 
     /**
      * Debug mode
      *
      * @var bool
      */
-    protected bool $debugMode;
+    protected $debugMode;
 
     /**
      * Routing table
      *
      * @var array
      */
-    protected array $routingTable;
+    protected $routingTable;
 
     /**
      * CRM_Wrapi_Router constructor

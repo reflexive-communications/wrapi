@@ -14,7 +14,7 @@ abstract class CRM_Wrapi_Handler_Base
      *
      * @var CRM_Wrapi_Processor_Base
      */
-    protected CRM_Wrapi_Processor_Base $processor;
+    protected $processor;
 
     /**
      * CRM_Wrapi_Handler_Base constructor.

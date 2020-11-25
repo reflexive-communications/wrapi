@@ -14,7 +14,7 @@ class CRM_Wrapi_Engine
      *
      * @var CRM_Wrapi_Processor_Base|null $processor
      */
-    protected ?CRM_Wrapi_Processor_Base $processor;
+    protected $processor;
 
     /**
      * CRM_Wrapi_Engine constructor

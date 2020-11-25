@@ -14,14 +14,14 @@ class CRM_Wrapi_Authenticator
      *
      * @var CRM_Wrapi_Processor_Base
      */
-    protected CRM_Wrapi_Processor_Base $processor;
+    protected $processor;
 
     /**
      * Debug mode
      *
      * @var bool
      */
-    protected bool $debugMode;
+    protected $debugMode;
 
     /**
      * CRM_Wrapi_Authenticator constructor.

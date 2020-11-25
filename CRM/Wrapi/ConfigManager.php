@@ -27,7 +27,7 @@ class CRM_Wrapi_ConfigManager
      *
      * @var array|null
      */
-    protected ?array $config;
+    protected $config;
 
     /**
      * CRM_Wrapi_ConfigManager constructor.

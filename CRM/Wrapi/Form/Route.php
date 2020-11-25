@@ -16,7 +16,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
      *
      * @var bool
      */
-    protected bool $editMode;
+    protected $editMode;
 
     /**
      * Preprocess form

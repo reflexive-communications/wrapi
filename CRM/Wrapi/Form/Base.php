@@ -16,28 +16,28 @@ class CRM_Wrapi_Form_Base extends CRM_Core_Form
      *
      * @var array
      */
-    protected array $config;
+    protected $config;
 
     /**
      * Config Manager
      *
      * @var CRM_Wrapi_ConfigManager
      */
-    protected CRM_Wrapi_ConfigManager $configManager;
+    protected $configManager;
 
     /**
      * Route ID
      *
      * @var int|null
      */
-    protected ?int $id;
+    protected $id;
 
     /**
      * Form action
      *
      * @var int|null
      */
-    protected ?int $action;
+    protected $action;
 
     /**
      * Get route from routing table
