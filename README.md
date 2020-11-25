@@ -36,7 +36,7 @@ The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
 ## Requirements
 
-* PHP v7.2+
+* PHP v7.4
 * CiviCRM (5.24 might work below - not tested)
 
 ## Installation

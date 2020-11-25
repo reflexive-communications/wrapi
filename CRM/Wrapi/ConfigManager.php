@@ -34,7 +34,7 @@ class CRM_Wrapi_ConfigManager
      */
     public function __construct()
     {
-        $this->config = self::DEFAULT_CONFIG;
+        $this->config = self::DEFAULT_CONFIG[CRM_Wrapi_Installer::EXTENSION_PREFIX];
     }
 
     /**
