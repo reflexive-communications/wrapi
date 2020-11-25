@@ -10,10 +10,15 @@
 class CRM_Wrapi_ConfigManager
 {
     /**
+     * Config name
+     */
+    public const CONFIG_NAME = CRM_Wrapi_ExtensionUtil::SHORT_NAME.'_config';
+
+    /**
      * Default configuration
      */
     public const DEFAULT_CONFIG = [
-        CRM_Wrapi_Installer::EXTENSION_PREFIX => [
+        self::CONFIG_NAME => [
             'next_id' => 1,
             'routing_table' => [],
             'config' => [
@@ -34,7 +39,7 @@ class CRM_Wrapi_ConfigManager
      */
     public function __construct()
     {
-        $this->config = self::DEFAULT_CONFIG[CRM_Wrapi_Installer::EXTENSION_PREFIX];
+        $this->config = self::DEFAULT_CONFIG[self::CONFIG_NAME];
     }
 
     /**
@@ -45,10 +50,10 @@ class CRM_Wrapi_ConfigManager
     public function createConfig(): bool
     {
         // Add config
-        Civi::settings()->add($this->config);
+        Civi::settings()->add(self::DEFAULT_CONFIG);
 
         // Check if properly saved
-        $cfg = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
+        $cfg = Civi::settings()->get(self::CONFIG_NAME);
         if ($cfg !== $this->config) {
             return false;
         }
@@ -67,10 +72,10 @@ class CRM_Wrapi_ConfigManager
     public function removeConfig(): bool
     {
         // Remove config
-        Civi::settings()->revert(CRM_Wrapi_Installer::EXTENSION_PREFIX);
+        Civi::settings()->revert(self::CONFIG_NAME);
 
         // Check if remove properly
-        $cfg = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
+        $cfg = Civi::settings()->get(self::CONFIG_NAME);
         if (!is_null($cfg)) {
             return false;
         }
@@ -89,7 +94,7 @@ class CRM_Wrapi_ConfigManager
     public function loadConfig(): void
     {
         // Load configs
-        $cfg = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
+        $cfg = Civi::settings()->get(self::CONFIG_NAME);
 
         // Check if loaded
         if (is_null($cfg) || !is_array($cfg)) {
@@ -110,10 +115,10 @@ class CRM_Wrapi_ConfigManager
     public function saveConfig(array $config): bool
     {
         // Save config
-        Civi::settings()->set(CRM_Wrapi_Installer::EXTENSION_PREFIX, $config);
+        Civi::settings()->set(self::CONFIG_NAME, $config);
 
         // Check if properly saved
-        $saved = Civi::settings()->get(CRM_Wrapi_Installer::EXTENSION_PREFIX);
+        $saved = Civi::settings()->get(self::CONFIG_NAME);
         if ($saved !== $config) {
             return false;
         }
