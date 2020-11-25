@@ -95,13 +95,13 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->addButtons(
             [
                 [
-                    'type' => 'cancel',
-                    'name' => ts('Cancel'),
-                ],
-                [
                     'type' => 'done',
                     'name' => ts('Save'),
                     'isDefault' => true,
+                ],
+                [
+                    'type' => 'cancel',
+                    'name' => ts('Cancel'),
                 ],
             ]
         );
