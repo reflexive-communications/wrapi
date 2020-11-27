@@ -251,17 +251,19 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
 
     /**
      * Post process form
+     *
+     * @throws CRM_Core_Exception
      */
     public function postProcess()
     {
-        // Assembly route data
+        // Assembly route data & sanitize input
         $route = [
-            'name' => $this->_submitValues['name'],
-            'selector' => $this->_submitValues['selector'],
-            'handler' => $this->_submitValues['handler_class'],
+            'name' => CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['name']),
+            'selector' => CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['selector']),
+            'handler' => CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['handler_class']),
             'enabled' => ($this->_submitValues['route_enabled'] == 1),
             'log' => (int)$this->_submitValues['log_level'],
-            'perm' => $this->_submitValues['permissions'],
+            'perm' => CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['permissions']),
         ];
 
         if ($this->editMode) {

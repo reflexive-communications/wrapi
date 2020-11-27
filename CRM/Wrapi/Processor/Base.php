@@ -107,7 +107,7 @@ abstract class CRM_Wrapi_Processor_Base
      *
      * @throws CRM_Core_Exception
      */
-    protected static function sanitizeString($value)
+    public static function sanitizeString($value)
     {
         // Strip whitespace
         $value = CRM_Utils_String::stripSpaces($value);
