@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Router
+ * Router teszt
  *
  * @package  wrapi
  * @author   Sandor Semsey <sandor@es-progress.hu>
