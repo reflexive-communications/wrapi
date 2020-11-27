@@ -34,8 +34,8 @@ class CRM_Wrapi_Engine
             $config_manager = CRM_Wrapi_Factory::createConfigManager();
 
             // Detect content-type & process input
-            $this->processor = CRM_Wrapi_Factory::createProcessor(CRM_Wrapi_Processor_Base::detectContentType());
-            $request_data = $this->processor->processInput();
+            $processor = CRM_Wrapi_Factory::createProcessor(CRM_Wrapi_Processor_Base::detectContentType());
+            $request_data = $processor->processInput();
 
             // Request now parsed --> authenticate
             $authenticator = CRM_Wrapi_Factory::createAuthenticator($config_manager->getDebugMode());
@@ -51,17 +51,45 @@ class CRM_Wrapi_Engine
             // Handler found --> create handler & pass request to handler
             $handler = CRM_Wrapi_Factory::createHandler(
                 $router->getRouteHandler(),
-                $this->processor,
+                $processor,
                 $router->getRouteLogLevel()
             );
             $handler->run($request_data);
 
         } catch (CRM_Core_Exception $ex) {
-            http_response_code(500);
-            $this->processor->error($ex->getMessage(), true);
-        } catch (Throwable $error) {
-            http_response_code(500);
-            $this->processor->error($error->getMessage(), true);
+            // Only catch known exceptions.
+            // Let the rest fall out.
+            $this->error($ex->getMessage());
         }
+    }
+
+    /**
+     * Log and optionally return error message to client then exit
+     *
+     * @param string $message Error message
+     */
+    protected function error($message)
+    {
+        // Write to log
+        CRM_Core_Error::debug_log_message(
+            $message,
+            false,
+            CRM_Wrapi_ExtensionUtil::SHORT_NAME,
+            PEAR_LOG_ERR
+        );
+
+        // Set response headers
+        http_response_code(500);
+        header('Content-Type: application/json');
+
+        // Response body
+        $response = [
+            'error' => true,
+            'message' => $message,
+        ];
+
+        // Send response and exit
+        echo json_encode($response);
+        CRM_Utils_System::civiExit();
     }
 }

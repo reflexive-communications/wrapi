@@ -132,37 +132,11 @@ abstract class CRM_Wrapi_Processor_Base
     }
 
     /**
-     * Log and optionally return error message to client then exit
-     *
-     * @param mixed $message Error message
-     * @param bool $output Should we output error message
-     */
-    public function error($message, bool $output = true): void
-    {
-        // Log error
-        CRM_Core_Error::debug_log_message(
-            $message,
-            false,
-            CRM_Wrapi_ExtensionUtil::SHORT_NAME,
-            PEAR_LOG_ERR
-        );
-
-        // Should we output error message?
-        if ($output) {
-            $response = [
-                'error' => true,
-                'message' => $message,
-            ];
-            $this->output($response);
-        }
-
-        CRM_Utils_System::civiExit();
-    }
-
-    /**
      * Process request
      *
      * @return array|string
+     *
+     * @throws CRM_Core_Exception
      */
     public function processInput()
     {
@@ -179,6 +153,8 @@ abstract class CRM_Wrapi_Processor_Base
      * Validate inputs (keys, action)
      *
      * @param mixed $request_params Request data
+     *
+     * @throws CRM_Core_Exception
      */
     public function validate($request_params): void
     {
@@ -189,24 +165,24 @@ abstract class CRM_Wrapi_Processor_Base
 
         // Check if supplied
         if (empty($site_key)) {
-            $this->error('Site key missing');
+            throw new CRM_Core_Exception('Site key missing');
         }
         if (empty($user_key)) {
-            $this->error('User key missing');
+            throw new CRM_Core_Exception('User key missing');
         }
         if (empty($selector)) {
-            $this->error('Selector missing');
+            throw new CRM_Core_Exception('Selector missing');
         }
 
         // Check if string
         if (!CRM_Utils_Rule::string($site_key)) {
-            $this->error('Site key not a string');
+            throw new CRM_Core_Exception('Site key not a string');
         }
         if (!CRM_Utils_Rule::string($user_key)) {
-            $this->error('User key not a string');
+            throw new CRM_Core_Exception('User key not a string');
         }
         if (!CRM_Utils_Rule::string($selector)) {
-            $this->error('Selector not a string');
+            throw new CRM_Core_Exception('Selector not a string');
         }
     }
 }

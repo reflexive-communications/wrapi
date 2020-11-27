@@ -13,6 +13,8 @@ class CRM_Wrapi_Processor_XML extends CRM_Wrapi_Processor_Base
      * Process input
      *
      * @return array|string
+     *
+     * @throws CRM_Core_Exception
      */
     public function input()
     {
@@ -30,10 +32,10 @@ class CRM_Wrapi_Processor_XML extends CRM_Wrapi_Processor_Base
             $data = json_encode($xml);
             $data = json_decode($data, true);
 
-        } catch (Exception $ex) {
-            $this->error('Unable to parse XML');
-        }
+            return $this->sanitize($data);
 
-        return $this->sanitize($data);
+        } catch (Exception $ex) {
+            throw new CRM_Core_Exception('Unable to parse XML');
+        }
     }
 }

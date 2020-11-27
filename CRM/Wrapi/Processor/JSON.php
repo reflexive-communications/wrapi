@@ -26,7 +26,7 @@ class CRM_Wrapi_Processor_JSON extends CRM_Wrapi_Processor_Base
 
         // Check if valid JSON
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->error('Not valid JSON received');
+            throw new CRM_Core_Exception('Not valid JSON received');
         }
 
         return $this->sanitize($decoded);

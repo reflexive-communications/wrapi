@@ -50,7 +50,7 @@ abstract class CRM_Wrapi_Handler_Base
      *
      * @return mixed
      */
-    public function run($request_data)
+    public function run($request_data): void
     {
         // Get parsed, sanitized request data
         $this->requestData = $request_data;
