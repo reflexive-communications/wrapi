@@ -11,16 +11,12 @@
  */
 class CRM_Wrapi_Handler_Echo extends CRM_Wrapi_Handler_Base
 {
-    /**
-     * Handle request
-     *
-     * @param $request_data
-     *
-     * @return mixed
-     */
-    public function run($request_data)
+    protected function process()
     {
+        // Log request processed
+        $this->logRequestProcessed();
+
         // Echo request data (in JSON)
-        $this->processor->output($request_data);
+        $this->processor->output($this->requestData);
     }
 }
