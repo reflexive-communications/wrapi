@@ -96,7 +96,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->add('text', 'name', ts('Route Name'), [], true);
         $this->add('text', 'selector', ts('Selector'), [], true);
         $this->add('text', 'handler_class', ts('Handler Class'), [], true);
-        $this->add('text', 'permissions', ts('Handler Class'));
+        $this->add('text', 'permissions', ts('Permissions'));
         $this->addRadio(
             'log_level',
             'Logging level',
@@ -164,7 +164,6 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $name = $values['name'] ?? "";
         $selector = $values['selector'] ?? "";
         $handler_class = $values['handler_class'] ?? "";
-        $permissions = $values['permissions'] ?? "";
 
         // Validate
         if (empty(CRM_Utils_String::stripSpaces($name))) {
@@ -175,9 +174,6 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         }
         if (empty(CRM_Utils_String::stripSpaces($handler_class))) {
             $errors['handler_class'] = ts('Do not leave this field empty!');
-        }
-        if (empty(CRM_Utils_String::stripSpaces($permissions))) {
-            $errors['permissions'] = ts('Do not leave this field empty!');
         }
 
         return empty($errors) ? true : $errors;
