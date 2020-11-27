@@ -34,8 +34,9 @@
                 <th id="sortable">{ts}Name{/ts}</th>
                 <th id="sortable">{ts}Selector{/ts}</th>
                 <th id="sortable">{ts}Handler{/ts}</th>
-                <th id="sortable">{ts}Enabled{/ts}</th>
+                <th id="sortable">{ts}Permissions{/ts}</th>
                 <th id="sortable">{ts}Log level{/ts}</th>
+                <th id="sortable">{ts}Enabled{/ts}</th>
                 <th>{ts}Actions{/ts}</th>
             </tr>
             </thead>
@@ -46,7 +47,7 @@
                     <td>{$route_data.name}</td>
                     <td>{$route_data.selector}</td>
                     <td>{$route_data.handler}</td>
-                    <td>{if $route_data.enabled}Yes{else}No{/if}</td>
+                    <td>{$route_data.perm}</td>
                     <td>
                         {if $route_data.log == 0}
                             {ts}No logging{/ts}
@@ -60,6 +61,7 @@
                             {$route_data.log}
                         {/if}
                     </td>
+                    <td>{if $route_data.enabled}Yes{else}No{/if}</td>
                     <td>{$route_data.actions}</td>
                 </tr>
             {/foreach}

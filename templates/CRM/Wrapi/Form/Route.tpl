@@ -31,6 +31,12 @@
                 <span class="description">{ts}Set logging level for this route{/ts}</span>
             </td>
         </tr>
+        <tr>
+            <td class="label">{$form.permissions.label}</td>
+            <td class="content">{$form.permissions.html}<br/>
+                <span class="description">{ts}Required permissions{/ts}</span>
+            </td>
+        </tr>
     </table>
     <div class="crm-submit-buttons">
         {include file="CRM/common/formButtons.tpl" location="bottom"}

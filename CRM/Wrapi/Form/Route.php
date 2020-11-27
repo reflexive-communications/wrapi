@@ -57,6 +57,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         if (!$this->editMode) {
             $this->_defaults['route_enabled'] = 1;
             $this->_defaults['log_level'] = PEAR_LOG_ERR;
+            $this->_defaults['permissions'] = 'Administer CiviCRM';
 
             return $this->_defaults;
         }
@@ -77,6 +78,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->_defaults['handler_class'] = $route['handler'];
         $this->_defaults['route_enabled'] = $route['enabled'] ? 1 : 0;
         $this->_defaults['log_level'] = $route['log'];
+        $this->_defaults['permissions'] = $route['perm'];
 
         return $this->_defaults;
     }
@@ -94,6 +96,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->add('text', 'name', ts('Route Name'), [], true);
         $this->add('text', 'selector', ts('Selector'), [], true);
         $this->add('text', 'handler_class', ts('Handler Class'), [], true);
+        $this->add('text', 'permissions', ts('Handler Class'));
         $this->addRadio(
             'log_level',
             'Logging level',
@@ -161,6 +164,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $name = $values['name'] ?? "";
         $selector = $values['selector'] ?? "";
         $handler_class = $values['handler_class'] ?? "";
+        $permissions = $values['permissions'] ?? "";
 
         // Validate
         if (empty(CRM_Utils_String::stripSpaces($name))) {
@@ -171,6 +175,9 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         }
         if (empty(CRM_Utils_String::stripSpaces($handler_class))) {
             $errors['handler_class'] = ts('Do not leave this field empty!');
+        }
+        if (empty(CRM_Utils_String::stripSpaces($permissions))) {
+            $errors['permissions'] = ts('Do not leave this field empty!');
         }
 
         return empty($errors) ? true : $errors;
@@ -258,6 +265,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             'handler' => $this->_submitValues['handler_class'],
             'enabled' => ($this->_submitValues['route_enabled'] == 1),
             'log' => (int)$this->_submitValues['log_level'],
+            'perm' => $this->_submitValues['permissions'],
         ];
 
         if ($this->editMode) {
