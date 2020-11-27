@@ -50,7 +50,7 @@ class CRM_Wrapi_Engine
     }
 
     /**
-     * Log and return error message to client then exit
+     * Log and optionally return error message to client then exit
      *
      * @param string $message Error message
      */
