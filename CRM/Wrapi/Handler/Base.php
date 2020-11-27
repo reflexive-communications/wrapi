@@ -100,7 +100,13 @@ abstract class CRM_Wrapi_Handler_Base
      */
     protected function checkPermissions()
     {
-        if (!CRM_Core_Permission::check($this->permissions)) {
+        if (empty($this->permissions)) {
+            return;
+        }
+
+        $permissions = explode(',', $this->permissions);
+
+        if (!CRM_Core_Permission::check($permissions)) {
             throw new CRM_Core_Exception(sprintf('Required permission missing: %s', $this->permissions));
         }
     }

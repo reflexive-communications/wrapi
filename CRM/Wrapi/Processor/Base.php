@@ -59,7 +59,7 @@ abstract class CRM_Wrapi_Processor_Base
             foreach ($input as $key => $value) {
                 // Sanitize key
                 $key = CRM_Utils_String::stripSpaces($key);
-                $key = $this->sanitizeString($key);
+                $key = self::sanitizeString($key);
 
                 // Sanitize value
                 if (is_array($value)) {
@@ -76,7 +76,7 @@ abstract class CRM_Wrapi_Processor_Base
                     $value = CRM_Utils_Type::validate($value, 'Boolean');
                 } else {
                     // Nothing else --> string
-                    $value = $this->sanitizeString($value);
+                    $value = self::sanitizeString($value);
                 }
 
                 $sanitized[$key] = $value;
@@ -92,7 +92,7 @@ abstract class CRM_Wrapi_Processor_Base
             $sanitized = CRM_Utils_Type::validate($input, 'Boolean');
         } else {
             // Input is single string
-            $sanitized = $this->sanitizeString($input);
+            $sanitized = self::sanitizeString($input);
         }
 
         return $sanitized;
@@ -107,7 +107,7 @@ abstract class CRM_Wrapi_Processor_Base
      *
      * @throws CRM_Core_Exception
      */
-    protected function sanitizeString($value)
+    protected static function sanitizeString($value)
     {
         // Strip whitespace
         $value = CRM_Utils_String::stripSpaces($value);
