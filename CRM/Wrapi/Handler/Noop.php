@@ -12,13 +12,9 @@
 class CRM_Wrapi_Handler_Noop extends CRM_Wrapi_Handler_Base
 {
     /**
-     * Handle request
-     *
-     * @param $request_data
-     *
-     * @return mixed
+     * Process Request
      */
-    public function run($request_data)
+    protected function process()
     {
     }
 }

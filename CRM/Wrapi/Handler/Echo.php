@@ -11,6 +11,9 @@
  */
 class CRM_Wrapi_Handler_Echo extends CRM_Wrapi_Handler_Base
 {
+    /**
+     * Process Request
+     */
     protected function process()
     {
         // Log request processed
