@@ -10,13 +10,6 @@
 class CRM_Wrapi_Authenticator
 {
     /**
-     * IO processor
-     *
-     * @var CRM_Wrapi_Processor_Base
-     */
-    protected $processor;
-
-    /**
      * Debug mode
      *
      * @var bool
@@ -26,12 +19,10 @@ class CRM_Wrapi_Authenticator
     /**
      * CRM_Wrapi_Authenticator constructor.
      *
-     * @param CRM_Wrapi_Processor_Base $processor
      * @param bool $debug_mode
      */
-    public function __construct(CRM_Wrapi_Processor_Base $processor, bool $debug_mode)
+    public function __construct(bool $debug_mode)
     {
-        $this->processor = $processor;
         $this->debugMode = $debug_mode;
     }
 
@@ -56,6 +47,8 @@ class CRM_Wrapi_Authenticator
      * Authenticate site-key
      *
      * @param string $site_key_sent Received site-key
+     *
+     * @throws CRM_Core_Exception
      */
     protected function authenticateSiteKey(string $site_key_sent): void
     {
@@ -64,10 +57,10 @@ class CRM_Wrapi_Authenticator
 
         // Check site-key is valid
         if (empty($site_key_real)) {
-            $this->processor->error('You need to set a valid site key in civicrm.settings.php');
+            throw new CRM_Core_Exception('You need to set a valid site key in civicrm.settings.php');
         }
         if (strlen($site_key_real) < 8) {
-            $this->processor->error('Site key needs to be greater than 7 characters in civicrm.settings.php');
+            throw new CRM_Core_Exception('Site key needs to be greater than 7 characters in civicrm.settings.php');
         }
 
         // Check if received site-key is valid
@@ -78,7 +71,7 @@ class CRM_Wrapi_Authenticator
             } else {
                 $message = 'Failed to authenticate key';
             }
-            $this->processor->error($message);
+            throw new CRM_Core_Exception($message);
         }
     }
 
@@ -125,7 +118,7 @@ class CRM_Wrapi_Authenticator
             } else {
                 $message = 'Failed to authenticate key';
             }
-            $this->processor->error($message);
+            throw new CRM_Core_Exception($message);
         }
     }
 }

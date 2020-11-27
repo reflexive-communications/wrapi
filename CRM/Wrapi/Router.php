@@ -10,11 +10,11 @@
 class CRM_Wrapi_Router
 {
     /**
-     * IO processor
+     * Routing table
      *
-     * @var CRM_Wrapi_Processor_Base
+     * @var array
      */
-    protected $processor;
+    protected $routingTable;
 
     /**
      * Debug mode
@@ -22,13 +22,6 @@ class CRM_Wrapi_Router
      * @var bool
      */
     protected $debugMode;
-
-    /**
-     * Routing table
-     *
-     * @var array
-     */
-    protected $routingTable;
 
     /**
      * Data associated to selected route
@@ -40,15 +33,13 @@ class CRM_Wrapi_Router
     /**
      * CRM_Wrapi_Router constructor
      *
-     * @param CRM_Wrapi_Processor_Base $processor
-     * @param bool $debug_mode
      * @param array $routing_table
+     * @param bool $debug_mode
      */
-    public function __construct(CRM_Wrapi_Processor_Base $processor, bool $debug_mode, array $routing_table)
+    public function __construct(array $routing_table,bool $debug_mode )
     {
-        $this->processor = $processor;
-        $this->debugMode = $debug_mode;
         $this->routingTable = $routing_table;
+        $this->debugMode = $debug_mode;
         $this->selectedRoute = [];
     }
 
@@ -57,15 +48,15 @@ class CRM_Wrapi_Router
      *
      * @param string $selector Request selector parameter
      *
-     * @return mixed
+     * @throws CRM_Core_Exception
      */
-    public function route(string $selector)
+    public function route(string $selector):void
     {
         $this->selectedRoute = $this->searchRoute($selector);
 
         // Check route is present
         if (empty($this->selectedRoute)) {
-            $this->processor->error('Unknown selector');
+            throw new CRM_Core_Exception('Unknown selector');
         }
 
         // Check route is enabled
@@ -77,10 +68,8 @@ class CRM_Wrapi_Router
             } else {
                 $message = 'Unknown selector';
             }
-            $this->processor->error($message);
+            throw new CRM_Core_Exception($message);
         }
-
-        return $route['handler'] ?? "";
     }
 
     /**
@@ -89,11 +78,13 @@ class CRM_Wrapi_Router
      * @param string $selector
      *
      * @return array
+     *
+     * @throws CRM_Core_Exception
      */
     protected function searchRoute(string $selector): array
     {
         if (empty($this->routingTable)) {
-            $this->processor->error('Empty routing table');
+            throw new CRM_Core_Exception('Empty routing table');
         }
 
         // Search route
@@ -101,10 +92,10 @@ class CRM_Wrapi_Router
 
             // Check route data
             if (!is_array($route_data)) {
-                $this->processor->error(sprintf('Not valid data at route ID: %s', $id));
+                throw new CRM_Core_Exception(sprintf('Not valid data at route ID: %s', $id));
             }
-            if (!isset($route_data['action'])) {
-                $this->processor->error(sprintf('Action missing at route ID: %s', $id));
+            if (!isset($route_data['selector'])) {
+                throw new CRM_Core_Exception(sprintf('Action missing at route ID: %s', $id));
             }
 
             // Route found --> return route data

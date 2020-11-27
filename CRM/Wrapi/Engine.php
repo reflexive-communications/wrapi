@@ -38,19 +38,22 @@ class CRM_Wrapi_Engine
             $request_data = $this->processor->processInput();
 
             // Request now parsed --> authenticate
-            $authenticator = CRM_Wrapi_Factory::createAuthenticator($this->processor, $config_manager->getDebugMode());
+            $authenticator = CRM_Wrapi_Factory::createAuthenticator($config_manager->getDebugMode());
             $authenticator->authenticate($request_data['site_key'], $request_data['user_key']);
 
             // Civi bootstrapped --> route request
             $router = CRM_Wrapi_Factory::createRouter(
-                $this->processor,
-                $config_manager->getDebugMode(),
-                $config_manager->getRoutingTable()
+                $config_manager->getRoutingTable(),
+                $config_manager->getDebugMode()
             );
             $router->route($request_data['selector']);
 
             // Handler found --> create handler & pass request to handler
-            $handler = CRM_Wrapi_Factory::createHandler($router->getRouteHandler(), $this->processor,$router->getRouteLogLevel());
+            $handler = CRM_Wrapi_Factory::createHandler(
+                $router->getRouteHandler(),
+                $this->processor,
+                $router->getRouteLogLevel()
+            );
             $handler->run($request_data);
 
         } catch (CRM_Core_Exception $ex) {

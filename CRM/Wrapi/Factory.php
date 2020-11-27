@@ -48,33 +48,26 @@ class CRM_Wrapi_Factory
     /**
      * Create Authenticator
      *
-     * @param CRM_Wrapi_Processor_Base $processor
      * @param bool $debug_mode
      *
      * @return CRM_Wrapi_Authenticator
      */
-    public static function createAuthenticator(
-        CRM_Wrapi_Processor_Base $processor,
-        bool $debug_mode
-    ): CRM_Wrapi_Authenticator {
-        return new CRM_Wrapi_Authenticator($processor, $debug_mode);
+    public static function createAuthenticator(bool $debug_mode): CRM_Wrapi_Authenticator
+    {
+        return new CRM_Wrapi_Authenticator($debug_mode);
     }
 
     /**
      * Create Router
      *
-     * @param CRM_Wrapi_Processor_Base $processor
      * @param bool $debug_mode
      * @param array $routing_table
      *
      * @return CRM_Wrapi_Router
      */
-    public static function createRouter(
-        CRM_Wrapi_Processor_Base $processor,
-        bool $debug_mode,
-        array $routing_table
-    ): CRM_Wrapi_Router {
-        return new CRM_Wrapi_Router($processor, $debug_mode, $routing_table);
+    public static function createRouter(array $routing_table, bool $debug_mode): CRM_Wrapi_Router
+    {
+        return new CRM_Wrapi_Router($routing_table, $debug_mode);
     }
 
     /**
