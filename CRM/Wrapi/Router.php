@@ -36,7 +36,7 @@ class CRM_Wrapi_Router
      * @param array $routing_table
      * @param bool $debug_mode
      */
-    public function __construct(array $routing_table,bool $debug_mode )
+    public function __construct(array $routing_table, bool $debug_mode)
     {
         $this->routingTable = $routing_table;
         $this->debugMode = $debug_mode;
@@ -50,7 +50,7 @@ class CRM_Wrapi_Router
      *
      * @throws CRM_Core_Exception
      */
-    public function route(string $selector):void
+    public function route(string $selector): void
     {
         $this->selectedRoute = $this->searchRoute($selector);
 
@@ -95,7 +95,7 @@ class CRM_Wrapi_Router
                 throw new CRM_Core_Exception(sprintf('Not valid data at route ID: %s', $id));
             }
             if (!isset($route_data['selector'])) {
-                throw new CRM_Core_Exception(sprintf('Action missing at route ID: %s', $id));
+                throw new CRM_Core_Exception(sprintf('Selector missing at route ID: %s', $id));
             }
 
             // Route found --> return route data
@@ -120,7 +120,7 @@ class CRM_Wrapi_Router
     {
         $handler = $this->selectedRoute['handler'] ?? "";
 
-        if (!is_string($handler) || empty($handler)) {
+        if (!CRM_Utils_Rule::string($handler) || empty($handler)) {
             throw new CRM_Core_Exception('Not valid handler');
         }
 
@@ -128,7 +128,7 @@ class CRM_Wrapi_Router
     }
 
     /**
-     * Get Logging Level for selected route
+     * Get logging level for selected route
      *
      * @return int
      *
@@ -138,10 +138,28 @@ class CRM_Wrapi_Router
     {
         $log_level = $this->selectedRoute['log'] ?? PEAR_LOG_ERR;
 
-        if (!is_int($log_level)) {
+        if (!CRM_Utils_Rule::positiveInteger($log_level) || $log_level < PEAR_LOG_NONE || $log_level > PEAR_LOG_DEBUG) {
             throw new CRM_Core_Exception('Not valid logging level');
         }
 
         return $log_level;
+    }
+
+    /**
+     * Get permissions for selected route
+     *
+     * @return string
+     *
+     * @throws CRM_Core_Exception
+     */
+    public function getRoutePermissions(): string
+    {
+        $permissions = $this->selectedRoute['perm'] ?? "";
+
+        if (!CRM_Utils_Rule::string($permissions)) {
+            throw new CRM_Core_Exception('Not valid permissions');
+        }
+
+        return $permissions;
     }
 }

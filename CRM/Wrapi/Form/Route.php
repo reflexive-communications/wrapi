@@ -240,7 +240,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     protected function validateLogLevel($values)
     {
         $log_level = (int)$values['log_level'];
-        if (!is_int($log_level) || $log_level < PEAR_LOG_NONE || $log_level > PEAR_LOG_DEBUG) {
+        if (!CRM_Utils_Rule::positiveInteger($log_level) || $log_level < PEAR_LOG_NONE || $log_level > PEAR_LOG_DEBUG) {
             $errors['log_level'] = ts('Not valid logging level');
 
             return $errors;
