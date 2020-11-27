@@ -31,6 +31,13 @@ class CRM_Wrapi_Router
     protected $routingTable;
 
     /**
+     * Data associated to selected route
+     *
+     * @var array
+     */
+    protected $selectedRoute;
+
+    /**
      * CRM_Wrapi_Router constructor
      *
      * @param CRM_Wrapi_Processor_Base $processor
@@ -42,6 +49,7 @@ class CRM_Wrapi_Router
         $this->processor = $processor;
         $this->debugMode = $debug_mode;
         $this->routingTable = $routing_table;
+        $this->selectedRoute = [];
     }
 
     /**
@@ -53,15 +61,15 @@ class CRM_Wrapi_Router
      */
     public function route(string $action)
     {
-        $route = $this->searchRoute($action, $this->routingTable);
+        $this->selectedRoute = $this->searchRoute($action);
 
         // Check route is present
-        if (empty($route)) {
+        if (empty($this->selectedRoute)) {
             $this->processor->error('Unknown action');
         }
 
         // Check route is enabled
-        $enabled = $route['enabled'] ?? false;
+        $enabled = $this->selectedRoute['enabled'] ?? false;
         if (!$enabled) {
             // Verbose error msg in debug mode
             if ($this->debugMode) {
@@ -79,18 +87,17 @@ class CRM_Wrapi_Router
      * Search route
      *
      * @param string $action
-     * @param array $routing_table
      *
      * @return array
      */
-    protected function searchRoute(string $action, array $routing_table): array
+    protected function searchRoute(string $action): array
     {
-        if (empty($routing_table)) {
+        if (empty($this->routingTable)) {
             $this->processor->error('Empty routing table');
         }
 
         // Search route
-        foreach ($routing_table as $id => $route_data) {
+        foreach ($this->routingTable as $id => $route_data) {
 
             // Check route data
             if (!is_array($route_data)) {
@@ -109,5 +116,41 @@ class CRM_Wrapi_Router
         }
 
         return [];
+    }
+
+    /**
+     * Get Handler class for selected route
+     *
+     * @return string
+     *
+     * @throws CRM_Core_Exception
+     */
+    public function getRouteHandler(): string
+    {
+        $handler = $this->selectedRoute['handler'] ?? "";
+
+        if (!is_string($handler) || empty($handler)) {
+            throw new CRM_Core_Exception('Not valid handler');
+        }
+
+        return $handler;
+    }
+
+    /**
+     * Get Logging Level for selected route
+     *
+     * @return int
+     *
+     * @throws CRM_Core_Exception
+     */
+    public function getRouteLogLevel(): int
+    {
+        $log_level = $this->selectedRoute['log'] ?? PEAR_LOG_ERR;
+
+        if (!is_int($log_level)) {
+            throw new CRM_Core_Exception('Not valid logging level');
+        }
+
+        return $log_level;
     }
 }

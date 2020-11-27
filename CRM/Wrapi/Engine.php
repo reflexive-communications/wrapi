@@ -47,15 +47,15 @@ class CRM_Wrapi_Engine
                 $config_manager->getDebugMode(),
                 $config_manager->getRoutingTable()
             );
-            $handler_class = $router->route($request_data['action']);
+            $router->route($request_data['action']);
 
             // Handler found --> create handler & pass request to handler
-            $handler = CRM_Wrapi_Factory::createHandler($handler_class, $this->processor);
+            $handler = CRM_Wrapi_Factory::createHandler($router->getRouteHandler(), $this->processor,$router->getRouteLogLevel());
             $handler->run($request_data);
 
         } catch (CRM_Core_Exception $ex) {
             http_response_code(500);
-            $this->processor->error((string)$ex, true);
+            $this->processor->error($ex->getMessage(), true);
         } catch (Throwable $error) {
             http_response_code(500);
             $this->processor->error($error->getMessage(), true);
