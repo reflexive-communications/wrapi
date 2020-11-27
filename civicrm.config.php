@@ -21,7 +21,7 @@ function find_civi_settings_file(): string
 
     foreach ($candidates as $candidate) {
         $settings_file = "${candidate}/civicrm.settings.php";
-        if (is_readable($settings_file)) {
+        if (is_dir($candidate) && is_readable($settings_file)) {
             return $settings_file;
         }
     }
