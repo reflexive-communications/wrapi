@@ -52,7 +52,8 @@ class CRM_Wrapi_Engine
             $handler = CRM_Wrapi_Factory::createHandler(
                 $router->getRouteHandler(),
                 $processor,
-                $router->getRouteLogLevel()
+                $router->getRouteLogLevel(),
+                $router->getRoutePermissions()
             );
             $handler->run($request_data);
 
@@ -70,9 +71,12 @@ class CRM_Wrapi_Engine
      */
     protected function error($message)
     {
-        // Write to log
+        // Message to log
+        $log = "${_SERVER['REMOTE_ADDR']} ${message}";
+
+        // Write msg to log
         CRM_Core_Error::debug_log_message(
-            $message,
+            $log,
             false,
             CRM_Wrapi_ExtensionUtil::SHORT_NAME,
             PEAR_LOG_ERR
