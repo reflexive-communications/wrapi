@@ -34,7 +34,12 @@
         <tr>
             <td class="label">{$form.permissions.label}</td>
             <td class="content">{$form.permissions.html}<br/>
-                <span class="description">{ts}Required permissions{/ts}</span>
+                <span class="description">
+                    Required permissions. You can put here many permissions and use AND, OR logic.
+                    The format used at routing is valid here. See
+                    <a href="https://docs.civicrm.org/dev/en/latest/security/permissions/#implementing-permissions-logic"> Developer Guide</a>.
+                    It is possible to leave empty, if you want no permissions, but is not recommended, use "administer CiviCRM" at least.
+                </span>
             </td>
         </tr>
     </table>
