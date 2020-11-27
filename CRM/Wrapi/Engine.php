@@ -10,21 +10,6 @@
 class CRM_Wrapi_Engine
 {
     /**
-     * IO Processor
-     *
-     * @var CRM_Wrapi_Processor_Base|null $processor
-     */
-    protected $processor;
-
-    /**
-     * CRM_Wrapi_Engine constructor
-     */
-    public function __construct()
-    {
-        $this->processor = null;
-    }
-
-    /**
      * Run Engine
      */
     public function run(): void
@@ -65,7 +50,7 @@ class CRM_Wrapi_Engine
     }
 
     /**
-     * Log and optionally return error message to client then exit
+     * Log and return error message to client then exit
      *
      * @param string $message Error message
      */

@@ -122,7 +122,7 @@ abstract class CRM_Wrapi_Handler_Base
         }
 
         // Compose message
-        $message = $_SERVER['REMOTE_ADDR'].' Request received Selector: '.$this->requestData['selector'];
+        $message = $_SERVER['REMOTE_ADDR'].' Request received  Selector: '.$this->requestData['selector'];
 
         // Also log request data for debug
         if ($this->logLevel == 7) {
@@ -139,7 +139,7 @@ abstract class CRM_Wrapi_Handler_Base
 
         // Create logger then log
         $file_logger = CRM_Core_Error::createDebugLogger(CRM_Wrapi_ExtensionUtil::SHORT_NAME);
-        $file_logger->log("$message\n", $this->logLevel);
+        $file_logger->log($message, $this->logLevel);
     }
 
     /**
@@ -157,6 +157,6 @@ abstract class CRM_Wrapi_Handler_Base
 
         // Create logger then log
         $file_logger = CRM_Core_Error::createDebugLogger(CRM_Wrapi_ExtensionUtil::SHORT_NAME);
-        $file_logger->log("$message\n", $this->logLevel);
+        $file_logger->log($message, $this->logLevel);
     }
 }
