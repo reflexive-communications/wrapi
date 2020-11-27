@@ -90,7 +90,7 @@ abstract class CRM_Wrapi_Handler_Base
         }
 
         // Compose message
-        $message = $_SERVER['REMOTE_ADDR'].' Request received Route: '.$this->requestData['action'];
+        $message = $_SERVER['REMOTE_ADDR'].' Request received Selector: '.$this->requestData['selector'];
 
         // Also log request data for debug
         if ($this->logLevel == 7) {
@@ -100,7 +100,7 @@ abstract class CRM_Wrapi_Handler_Base
             unset($data['site_key']);
             unset($data['user_key']);
             // Already logged
-            unset($data['action']);
+            unset($data['selector']);
 
             $message .= " Data: ".serialize($data);
         }
@@ -121,7 +121,7 @@ abstract class CRM_Wrapi_Handler_Base
         }
 
         // Compose message
-        $message = $_SERVER['REMOTE_ADDR'].' Request processed Route: '.$this->requestData['action'];
+        $message = $_SERVER['REMOTE_ADDR'].' Request processed Selector: '.$this->requestData['selector'];
 
         // Create logger then log
         $file_logger = CRM_Core_Error::createDebugLogger(CRM_Wrapi_ExtensionUtil::SHORT_NAME);

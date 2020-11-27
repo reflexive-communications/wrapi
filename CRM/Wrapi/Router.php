@@ -55,17 +55,17 @@ class CRM_Wrapi_Router
     /**
      * Routing
      *
-     * @param string $action Request action parameter
+     * @param string $selector Request selector parameter
      *
      * @return mixed
      */
-    public function route(string $action)
+    public function route(string $selector)
     {
-        $this->selectedRoute = $this->searchRoute($action);
+        $this->selectedRoute = $this->searchRoute($selector);
 
         // Check route is present
         if (empty($this->selectedRoute)) {
-            $this->processor->error('Unknown action');
+            $this->processor->error('Unknown selector');
         }
 
         // Check route is enabled
@@ -73,9 +73,9 @@ class CRM_Wrapi_Router
         if (!$enabled) {
             // Verbose error msg in debug mode
             if ($this->debugMode) {
-                $message = sprintf('%s action not enabled', $action);
+                $message = sprintf('%s selector not enabled', $selector);
             } else {
-                $message = 'Unknown action';
+                $message = 'Unknown selector';
             }
             $this->processor->error($message);
         }
@@ -86,11 +86,11 @@ class CRM_Wrapi_Router
     /**
      * Search route
      *
-     * @param string $action
+     * @param string $selector
      *
      * @return array
      */
-    protected function searchRoute(string $action): array
+    protected function searchRoute(string $selector): array
     {
         if (empty($this->routingTable)) {
             $this->processor->error('Empty routing table');
@@ -108,7 +108,7 @@ class CRM_Wrapi_Router
             }
 
             // Route found --> return route data
-            if ($route_data['action'] == $action) {
+            if ($route_data['selector'] == $selector) {
                 $route_data['id'] = $id;
 
                 return $route_data;

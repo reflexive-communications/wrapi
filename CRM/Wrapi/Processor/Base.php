@@ -185,7 +185,7 @@ abstract class CRM_Wrapi_Processor_Base
         // Get parameters
         $site_key = $request_params['site_key'] ?? "";
         $user_key = $request_params['user_key'] ?? "";
-        $action = $request_params['action'] ?? "";
+        $selector = $request_params['selector'] ?? "";
 
         // Check if supplied
         if (empty($site_key)) {
@@ -194,8 +194,8 @@ abstract class CRM_Wrapi_Processor_Base
         if (empty($user_key)) {
             $this->error('User key missing');
         }
-        if (empty($action)) {
-            $this->error('Action missing');
+        if (empty($selector)) {
+            $this->error('Selector missing');
         }
 
         // Check if string
@@ -205,8 +205,8 @@ abstract class CRM_Wrapi_Processor_Base
         if (!CRM_Utils_Rule::string($user_key)) {
             $this->error('User key not a string');
         }
-        if (!CRM_Utils_Rule::string($action)) {
-            $this->error('Action not a string');
+        if (!CRM_Utils_Rule::string($selector)) {
+            $this->error('Selector not a string');
         }
     }
 }

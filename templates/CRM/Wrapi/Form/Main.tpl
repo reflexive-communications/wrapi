@@ -32,11 +32,11 @@
             <tr>
                 <th id="sortable">{ts}ID{/ts}</th>
                 <th id="sortable">{ts}Name{/ts}</th>
-                <th id="sortable">{ts}Action{/ts}</th>
+                <th id="sortable">{ts}Selector{/ts}</th>
                 <th id="sortable">{ts}Handler{/ts}</th>
                 <th id="sortable">{ts}Enabled{/ts}</th>
                 <th id="sortable">{ts}Log level{/ts}</th>
-                <th></th>
+                <th>{ts}Actions{/ts}</th>
             </tr>
             </thead>
             <tbody>
@@ -44,7 +44,7 @@
                 <tr class="crm-entity {if !$route_data.enabled}disabled{/if} {cycle values="odd-row,even-row"}">
                     <td>{$id}</td>
                     <td>{$route_data.name}</td>
-                    <td>{$route_data.action}</td>
+                    <td>{$route_data.selector}</td>
                     <td>{$route_data.handler}</td>
                     <td>{if $route_data.enabled}Yes{else}No{/if}</td>
                     <td>

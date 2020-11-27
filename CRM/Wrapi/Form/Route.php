@@ -73,7 +73,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
 
         // Set defaults
         $this->_defaults['name'] = $route['name'];
-        $this->_defaults['action'] = $route['action'];
+        $this->_defaults['selector'] = $route['selector'];
         $this->_defaults['handler_class'] = $route['handler'];
         $this->_defaults['route_enabled'] = $route['enabled'] ? 1 : 0;
         $this->_defaults['log_level'] = $route['log'];
@@ -92,7 +92,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->add('hidden', 'id', $this->id);
         $this->add('hidden', 'route_enabled');
         $this->add('text', 'name', ts('Route Name'), [], true);
-        $this->add('text', 'action', ts('Action'), [], true);
+        $this->add('text', 'selector', ts('Selector'), [], true);
         $this->add('text', 'handler_class', ts('Handler Class'), [], true);
         $this->addRadio(
             'log_level',
@@ -141,7 +141,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     {
         $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateTextFields']);
         $this->addFormRule(
-            ['CRM_Wrapi_Form_Route', 'validateAction'],
+            ['CRM_Wrapi_Form_Route', 'validateSelector'],
             ['config' => $this->config, 'id' => $this->id,]
         );
         $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateHandler']);
@@ -159,15 +159,15 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     {
         $errors = [];
         $name = $values['name'] ?? "";
-        $action = $values['action'] ?? "";
+        $selector = $values['selector'] ?? "";
         $handler_class = $values['handler_class'] ?? "";
 
         // Validate
         if (empty(CRM_Utils_String::stripSpaces($name))) {
             $errors['name'] = ts('Do not leave this field empty!');
         }
-        if (empty(CRM_Utils_String::stripSpaces($action))) {
-            $errors['action'] = ts('Do not leave this field empty!');
+        if (empty(CRM_Utils_String::stripSpaces($selector))) {
+            $errors['selector'] = ts('Do not leave this field empty!');
         }
         if (empty(CRM_Utils_String::stripSpaces($handler_class))) {
             $errors['handler_class'] = ts('Do not leave this field empty!');
@@ -177,7 +177,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     }
 
     /**
-     * Validate action
+     * Validate selector
      *
      * @param $values
      * @param $files
@@ -185,7 +185,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
      *
      * @return bool
      */
-    protected function validateAction($values, $files, $options)
+    protected function validateSelector($values, $files, $options)
     {
         // Loop through existing routes
         foreach ($options['config']['routing_table'] as $id => $route) {
@@ -196,10 +196,10 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             }
 
             // Duplicate found
-            if ($route['action'] == $values['action']) {
-                $errors['action'] = ts(
-                    'There is already a route with this action: %1',
-                    ['1' => $values['action'],]
+            if ($route['selector'] == $values['selector']) {
+                $errors['selector'] = ts(
+                    'There is already a route with this selector: %1',
+                    ['1' => $values['selector'],]
                 );
 
                 return $errors;
@@ -254,7 +254,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         // Assembly route data
         $route = [
             'name' => $this->_submitValues['name'],
-            'action' => $this->_submitValues['action'],
+            'selector' => $this->_submitValues['selector'],
             'handler' => $this->_submitValues['handler_class'],
             'enabled' => ($this->_submitValues['route_enabled'] == 1),
             'log' => (int)$this->_submitValues['log_level'],

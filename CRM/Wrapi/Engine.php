@@ -47,7 +47,7 @@ class CRM_Wrapi_Engine
                 $config_manager->getDebugMode(),
                 $config_manager->getRoutingTable()
             );
-            $router->route($request_data['action']);
+            $router->route($request_data['selector']);
 
             // Handler found --> create handler & pass request to handler
             $handler = CRM_Wrapi_Factory::createHandler($router->getRouteHandler(), $this->processor,$router->getRouteLogLevel());
