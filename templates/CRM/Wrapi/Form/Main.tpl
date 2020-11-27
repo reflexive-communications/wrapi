@@ -35,6 +35,7 @@
                 <th id="sortable">{ts}Action{/ts}</th>
                 <th id="sortable">{ts}Handler{/ts}</th>
                 <th id="sortable">{ts}Enabled{/ts}</th>
+                <th id="sortable">{ts}Log level{/ts}</th>
                 <th></th>
             </tr>
             </thead>
@@ -46,6 +47,19 @@
                     <td>{$route_data.action}</td>
                     <td>{$route_data.handler}</td>
                     <td>{if $route_data.enabled}Yes{else}No{/if}</td>
+                    <td>
+                        {if $route_data.log == 0}
+                            {ts}No logging{/ts}
+                        {elseif $route_data.log == 7}
+                            {ts}Debug{/ts}
+                        {elseif $route_data.log == 6}
+                            {ts}Info{/ts}
+                        {elseif $route_data.log == 3}
+                            {ts}Error{/ts}
+                        {else}
+                            {$route_data.log}
+                        {/if}
+                    </td>
                     <td>{$route_data.actions}</td>
                 </tr>
             {/foreach}

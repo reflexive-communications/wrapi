@@ -25,6 +25,12 @@
                 <span class="description">{ts}Class name of the handler that will handle this request{/ts}</span>
             </td>
         </tr>
+        <tr>
+            <td class="label">{$form.log_level.label}</td>
+            <td class="content">{$form.log_level.html}<br/>
+                <span class="description">{ts}Set logging level for this route{/ts}</span>
+            </td>
+        </tr>
     </table>
     <div class="crm-submit-buttons">
         {include file="CRM/common/formButtons.tpl" location="bottom"}

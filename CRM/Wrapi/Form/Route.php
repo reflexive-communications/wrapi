@@ -56,6 +56,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         // Add mode
         if (!$this->editMode) {
             $this->_defaults['route_enabled'] = 1;
+            $this->_defaults['log_level'] = PEAR_LOG_ERR;
 
             return $this->_defaults;
         }
@@ -75,6 +76,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->_defaults['action'] = $route['action'];
         $this->_defaults['handler_class'] = $route['handler'];
         $this->_defaults['route_enabled'] = $route['enabled'] ? 1 : 0;
+        $this->_defaults['log_level'] = $route['log'];
 
         return $this->_defaults;
     }
@@ -92,6 +94,19 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->add('text', 'name', ts('Route Name'), [], true);
         $this->add('text', 'action', ts('Action'), [], true);
         $this->add('text', 'handler_class', ts('Handler Class'), [], true);
+        $this->addRadio(
+            'log_level',
+            'Logging level',
+            [
+                PEAR_LOG_NONE => 'No logging',
+                PEAR_LOG_DEBUG => 'Debug',
+                PEAR_LOG_INFO => 'Info',
+                PEAR_LOG_ERR => 'Error',
+            ],
+            [],
+            null,
+            true
+        );
         $this->addButtons(
             [
                 [
@@ -130,6 +145,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             ['config' => $this->config, 'id' => $this->id,]
         );
         $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateHandler']);
+        $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateLogLevel']);
     }
 
     /**
@@ -212,6 +228,25 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     }
 
     /**
+     * Validate Logging Level
+     *
+     * @param $values
+     *
+     * @return bool
+     */
+    protected function validateLogLevel($values)
+    {
+        $log_level = (int)$values['log_level'];
+        if (!is_int($log_level) || $log_level < PEAR_LOG_NONE || $log_level > PEAR_LOG_DEBUG) {
+            $errors['log_level'] = ts('Not valid logging level');
+
+            return $errors;
+        }
+
+        return true;
+    }
+
+    /**
      * Post process form
      */
     public function postProcess()
@@ -222,6 +257,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             'action' => $this->_submitValues['action'],
             'handler' => $this->_submitValues['handler_class'],
             'enabled' => ($this->_submitValues['route_enabled'] == 1),
+            'log' => (int)$this->_submitValues['log_level'],
         ];
 
         if ($this->editMode) {
