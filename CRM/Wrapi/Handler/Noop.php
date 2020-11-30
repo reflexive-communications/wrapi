@@ -16,5 +16,6 @@ class CRM_Wrapi_Handler_Noop extends CRM_Wrapi_Handler_Base
      */
     protected function process()
     {
+        return null;
     }
 }

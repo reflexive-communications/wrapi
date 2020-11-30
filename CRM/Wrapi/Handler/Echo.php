@@ -19,7 +19,7 @@ class CRM_Wrapi_Handler_Echo extends CRM_Wrapi_Handler_Base
         // Log request processed
         $this->logRequestProcessed();
 
-        // Echo request data (in JSON)
-        $this->processor->output($this->requestData);
+        // Echo request data
+        return $this->requestData;
     }
 }

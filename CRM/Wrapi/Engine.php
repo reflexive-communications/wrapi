@@ -62,13 +62,9 @@ class CRM_Wrapi_Engine
         // Message to log
         $log = "${_SERVER['REMOTE_ADDR']} ${message}";
 
-        // Write msg to log
-        CRM_Core_Error::debug_log_message(
-            $log,
-            false,
-            CRM_Wrapi_ExtensionUtil::SHORT_NAME,
-            PEAR_LOG_ERR
-        );
+        // Create logger then log
+        $file_logger = CRM_Core_Error::createDebugLogger(CRM_Wrapi_ExtensionUtil::SHORT_NAME);
+        $file_logger->log($log, PEAR_LOG_ERR);
 
         // Set response headers
         http_response_code(500);

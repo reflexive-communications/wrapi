@@ -63,7 +63,7 @@ abstract class CRM_Wrapi_Handler_Base
         $this->validate();
 
         // Process request
-        $this->process();
+        return $this->process();
     }
 
     /**
