@@ -10,13 +10,6 @@
 abstract class CRM_Wrapi_Handler_Base
 {
     /**
-     * IO Processor
-     *
-     * @var CRM_Wrapi_Processor_Base
-     */
-    protected $processor;
-
-    /**
      * Request Data
      *
      * @var null|array
@@ -40,14 +33,13 @@ abstract class CRM_Wrapi_Handler_Base
     /**
      * CRM_Wrapi_Handler_Base constructor.
      *
-     * @param CRM_Wrapi_Processor_Base $processor
+     * @param array|null $request_data
      * @param int $logging_level
      * @param string $permissions
      */
-    public function __construct(CRM_Wrapi_Processor_Base $processor, int $logging_level, string $permissions)
+    public function __construct(?array $request_data, int $logging_level, string $permissions)
     {
-        $this->processor = $processor;
-        $this->requestData = null;
+        $this->requestData = $request_data;
         $this->logLevel = $logging_level;
         $this->permissions = $permissions;
     }
@@ -55,17 +47,12 @@ abstract class CRM_Wrapi_Handler_Base
     /**
      * Handle request
      *
-     * @param $request_data
-     *
      * @return mixed
      *
      * @throws CRM_Core_Exception
      */
-    public function run($request_data): void
+    public function run()
     {
-        // Get parsed, sanitized request data
-        $this->requestData = $request_data;
-
         // Check permissions
         $this->checkPermissions();
 

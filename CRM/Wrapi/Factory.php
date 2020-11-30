@@ -74,7 +74,7 @@ class CRM_Wrapi_Factory
      * Create Handler
      *
      * @param string $handler_class
-     * @param CRM_Wrapi_Processor_Base $processor
+     * @param array|null $request_data
      * @param int $logging_level
      * @param string $permissions
      *
@@ -84,12 +84,12 @@ class CRM_Wrapi_Factory
      */
     public static function createHandler(
         string $handler_class,
-        CRM_Wrapi_Processor_Base $processor,
+        ?array $request_data,
         int $logging_level,
         string $permissions
     ): CRM_Wrapi_Handler_Base {
         self::checkClass($handler_class);
-        $handler = new $handler_class($processor, $logging_level, $permissions);
+        $handler = new $handler_class($request_data, $logging_level, $permissions);
         self::checkInstance($handler, CRM_Wrapi_Handler_Base::class);
 
         return $handler;

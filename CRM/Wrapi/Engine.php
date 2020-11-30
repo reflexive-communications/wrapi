@@ -36,11 +36,14 @@ class CRM_Wrapi_Engine
             // Handler found --> create handler & pass request to handler
             $handler = CRM_Wrapi_Factory::createHandler(
                 $router->getRouteHandler(),
-                $processor,
+                $request_data,
                 $router->getRouteLogLevel(),
                 $router->getRoutePermissions()
             );
-            $handler->run($request_data);
+            $response = $handler->run();
+
+            // Output response to client
+            $processor->output($response);
 
         } catch (CRM_Core_Exception $ex) {
             // Only catch known exceptions.
