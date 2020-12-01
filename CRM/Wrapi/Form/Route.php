@@ -162,7 +162,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     /**
      * Validate text fields
      *
-     * @param $values
+     * @param array $values Submitted values
      *
      * @return array|bool
      */
@@ -190,14 +190,16 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     /**
      * Validate selector
      *
-     * @param $values
-     * @param $files
-     * @param $options
+     * @param array $values Submitted values
+     * @param array $files Uploaded files
+     * @param array $options Options to pass to function
      *
-     * @return bool
+     * @return array|bool
      */
     protected function validateSelector($values, $files, $options)
     {
+        $errors = [];
+
         // Loop through existing routes
         foreach ($options['config']['routing_table'] as $id => $route) {
 
@@ -217,15 +219,15 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             }
         }
 
-        return true;
+        return empty($errors) ? true : $errors;
     }
 
     /**
      * Validate handler
      *
-     * @param $values
+     * @param array $values Submitted values
      *
-     * @return bool
+     * @return array|bool
      */
     protected function validateHandler($values)
     {
@@ -241,13 +243,14 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     /**
      * Validate Logging Level
      *
-     * @param $values
+     * @param array $values Submitted values
      *
-     * @return bool
+     * @return array|bool
      */
     protected function validateLogLevel($values)
     {
         $log_level = (int)$values['log_level'];
+
         if (!CRM_Utils_Rule::positiveInteger($log_level) || $log_level < PEAR_LOG_NONE || $log_level > PEAR_LOG_DEBUG) {
             $errors['log_level'] = ts('Not valid logging level');
 
@@ -260,7 +263,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     /**
      * Compose route data from submitted values
      *
-     * @return array
+     * @return array Route data
      *
      * @throws CRM_Core_Exception
      */

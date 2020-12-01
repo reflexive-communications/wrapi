@@ -44,7 +44,7 @@ class CRM_Wrapi_Form_Base extends CRM_Core_Form
      *
      * @param int $id Route ID
      *
-     * @return array
+     * @return array Route data
      */
     protected function getRoute(int $id): array
     {

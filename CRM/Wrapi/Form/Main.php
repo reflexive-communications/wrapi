@@ -45,7 +45,7 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
             ]
         );
 
-        // Add handler button
+        // Add new route button
         $add_route_url = CRM_Utils_System::url('civicrm/wrapi/route');
         $this->assign('add_route_url', $add_route_url);
 
@@ -90,7 +90,7 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
     /**
      * Validate debug selector
      *
-     * @param $values
+     * @param array $values Submitted values
      *
      * @return array|bool
      */
@@ -131,7 +131,7 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
     /**
      * Get action Links.
      *
-     * @return array
+     * @return array Action links
      */
     public function links(): array
     {
