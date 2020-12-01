@@ -49,7 +49,7 @@
                     <td>{$route_data.handler}</td>
                     <td>
                         {foreach from=$route_data.perms item=permission}
-                            <span class="crm-marker crm-tag-item">{$permission}</span>
+                            <span class="crm-tag-item margin-small">{$permission}</span>
                         {/foreach}
                     <td>
                         {if $route_data.log == 0}
@@ -72,29 +72,3 @@
         </table>
     </div>
 </div>
-{literal}
-    <script>
-        // Form in pop-up dialog
-        CRM.$(function ($) {
-            'use strict';
-            $(".wrapi-action").on('crmPopupFormSuccess', CRM.refreshParent);
-        });
-
-        // Send action in AJAX
-        CRM.$(function ($) {
-            'use strict';
-            $(".wrapi-ajax-action").click(function (event) {
-
-                // Button clicked
-                let button = this;
-
-                event.preventDefault();
-
-                // Send AJAX request, expect JSON return
-                $.getJSON(button.href, {}, function () {
-                    CRM.refreshParent(button);
-                });
-            });
-        });
-    </script>
-{/literal}
