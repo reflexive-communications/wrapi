@@ -29,6 +29,8 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
      */
     public function buildQuickForm()
     {
+        parent::buildQuickForm();
+
         // Add form elements
         $this->addYesNo('enable_debug', 'Enable debug', false, true,);
         $this->addButtons(
@@ -69,8 +71,6 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
 
         // Export routes to template
         $this->assign('routes', $routes);
-
-        parent::buildQuickForm();
     }
 
     /**
@@ -130,34 +130,34 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
     public function links(): array
     {
         return [
-                CRM_Core_Action::UPDATE => [
-                    'name' => ts('Edit'),
-                    'url' => 'civicrm/wrapi/route',
-                    'qs' => 'id=%%id%%',
-                    'title' => ts('Edit route'),
-                    'class' => 'crm-popup wrapi-action',
-                ],
-                CRM_Core_Action::DISABLE => [
-                    'name' => ts('Disable'),
-                    'url' => 'civicrm/wrapi/route/actions',
-                    'qs' => 'action=disable&id=%%id%%',
-                    'title' => ts('Disable route'),
-                    'class' => 'wrapi-ajax-action',
-                ],
-                CRM_Core_Action::ENABLE => [
-                    'name' => ts('Enable'),
-                    'url' => 'civicrm/wrapi/route/actions',
-                    'qs' => 'action=enable&id=%%id%%',
-                    'title' => ts('Enable route'),
-                    'class' => 'wrapi-ajax-action',
-                ],
-                CRM_Core_Action::DELETE => [
-                    'name' => ts('Delete'),
-                    'url' => 'civicrm/wrapi/route/delete',
-                    'qs' => 'id=%%id%%',
-                    'title' => ts('Delete route'),
-                    'class' => 'crm-popup wrapi-action',
-                ],
-            ];
+            CRM_Core_Action::UPDATE => [
+                'name' => ts('Edit'),
+                'url' => 'civicrm/wrapi/route',
+                'qs' => 'id=%%id%%',
+                'title' => ts('Edit route'),
+                'class' => 'crm-popup wrapi-action',
+            ],
+            CRM_Core_Action::DISABLE => [
+                'name' => ts('Disable'),
+                'url' => 'civicrm/wrapi/route/actions',
+                'qs' => 'action=disable&id=%%id%%',
+                'title' => ts('Disable route'),
+                'class' => 'wrapi-ajax-action',
+            ],
+            CRM_Core_Action::ENABLE => [
+                'name' => ts('Enable'),
+                'url' => 'civicrm/wrapi/route/actions',
+                'qs' => 'action=enable&id=%%id%%',
+                'title' => ts('Enable route'),
+                'class' => 'wrapi-ajax-action',
+            ],
+            CRM_Core_Action::DELETE => [
+                'name' => ts('Delete'),
+                'url' => 'civicrm/wrapi/route/delete',
+                'qs' => 'id=%%id%%',
+                'title' => ts('Delete route'),
+                'class' => 'crm-popup wrapi-action',
+            ],
+        ];
     }
 }

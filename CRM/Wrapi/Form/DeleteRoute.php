@@ -16,6 +16,8 @@ class CRM_Wrapi_Form_DeleteRoute extends CRM_Wrapi_Form_Base
      */
     public function buildQuickForm()
     {
+        parent::buildQuickForm();
+
         // Add form elements
         $this->addButtons(
             [
@@ -33,8 +35,6 @@ class CRM_Wrapi_Form_DeleteRoute extends CRM_Wrapi_Form_Base
         $this->assign('route_name', $this->config['routing_table'][$this->id]['name']);
 
         $this->setTitle(ts('Delete route'));
-
-        parent::buildQuickForm();
     }
 
     /**

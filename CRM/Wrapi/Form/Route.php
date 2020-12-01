@@ -90,6 +90,8 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
      */
     public function buildQuickForm()
     {
+        parent::buildQuickForm();
+
         // Add form elements
         $this->add('hidden', 'id', $this->id);
         $this->add('hidden', 'route_enabled');
@@ -133,8 +135,6 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
 
         // Export edit mode to template
         $this->assign('edit_mode', $this->editMode);
-
-        parent::buildQuickForm();
     }
 
     /**
