@@ -26,16 +26,15 @@ class CRM_Wrapi_Actions_Create
      *
      * @throws CRM_Core_Exception
      */
-    public static function checkSuccess(Civi\Api4\Generic\Result $results, string $action): int
+    protected static function checkSuccess(Civi\Api4\Generic\Result $results, string $action): int
     {
         $id = $results->first()['id'];
 
         if (is_null($id)) {
-            throw new CRM_Core_Exception(sprintf('Failed to %1', $action));
+            throw new CRM_Core_Exception(sprintf('Failed to %s', $action));
         }
 
         return (int)$id;
-
     }
 
     /**

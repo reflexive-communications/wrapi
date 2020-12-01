@@ -163,7 +163,7 @@ abstract class CRM_Wrapi_Processor_Base
     {
         // If required input --> check if empty
         if ($required && empty($value)) {
-            throw new CRM_Core_Exception(sprintf('Missing parameter: %1', $name));
+            throw new CRM_Core_Exception(sprintf('Missing parameter: %s', $name));
         }
 
         switch ($type) {
@@ -181,7 +181,7 @@ abstract class CRM_Wrapi_Processor_Base
         }
 
         if (!$valid) {
-            throw new CRM_Core_Exception(sprintf('%1 is not type of: %2', $name, $type));
+            throw new CRM_Core_Exception(sprintf('%s is not type of: %s', $name, $type));
         }
     }
 
