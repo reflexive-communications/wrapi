@@ -18,8 +18,8 @@ class CRM_Wrapi_Actions_Get
     /**
      * Get contact ID by email
      *
-     * @param string $email
-     * @param bool $check_permissions
+     * @param string $email Email address
+     * @param bool $check_permissions Should we check permissions (ACLs)?
      *
      * @return int|null Contact ID if found, null if not found
      *
@@ -29,7 +29,7 @@ class CRM_Wrapi_Actions_Get
      */
     public static function contactIDFromEmail(string $email, bool $check_permissions = false): ?int
     {
-        CRM_Wrapi_Processor_Base::validateInput($email, 'email', 'Email address');
+        CRM_Wrapi_Processor_Base::validateInput($email, 'string', 'Email address');
 
         // Search DB
         $results = Email::get($check_permissions)
@@ -45,8 +45,8 @@ class CRM_Wrapi_Actions_Get
     /**
      * Retrieve contact data
      *
-     * @param int $contact_id
-     * @param bool $check_permissions
+     * @param int $contact_id Contact ID
+     * @param bool $check_permissions Should we check permissions (ACLs)?
      *
      * @return array|null Contact data on success, null on fail
      *

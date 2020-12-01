@@ -15,12 +15,12 @@ use Civi\Api4\Generic\Result;
 class CRM_Wrapi_Actions_Update
 {
     /**
-     * Check if create operation succeeded
+     * Check if update operation succeeded
      *
-     * @param Result $results
-     * @param string $action
+     * @param Result $results API call results
+     * @param string $action Operation name (for logging & reporting)
      *
-     * @return array
+     * @return array Data
      *
      * @throws CRM_Core_Exception
      */
@@ -38,11 +38,11 @@ class CRM_Wrapi_Actions_Update
     /**
      * Update contact
      *
-     * @param int $contact_id
-     * @param array $values
-     * @param bool $check_permissions
+     * @param int $contact_id Contact ID
+     * @param array $values Contact data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
      *
-     * @return int Contact ID
+     * @return array Contact data
      *
      * @throws API_Exception
      * @throws CRM_Core_Exception

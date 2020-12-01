@@ -19,10 +19,10 @@ class CRM_Wrapi_Actions_Create
     /**
      * Check if create operation succeeded
      *
-     * @param Result $results
-     * @param string $action
+     * @param Result $results API call results
+     * @param string $action Operation name (for logging & reporting)
      *
-     * @return int
+     * @return int Entity ID
      *
      * @throws CRM_Core_Exception
      */
@@ -40,8 +40,8 @@ class CRM_Wrapi_Actions_Create
     /**
      * Create new contact
      *
-     * @param array $values
-     * @param bool $check_permissions
+     * @param array $values Contact data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
      *
      * @return int Contact ID
      *
@@ -66,12 +66,17 @@ class CRM_Wrapi_Actions_Create
     /**
      * Add email to contact
      *
-     * @param string $email
-     * @param int $contact_id
-     * @param string $type
-     * @param bool $check_permissions
+     * @param string $email Email address
+     * @param int $contact_id Contact ID
+     * @param string $type Email address type
+     *  'Home'
+     *  'Work'
+     *  'Main'
+     *  'Billing'
+     *  'Other'
+     * @param bool $check_permissions Should we check permissions (ACLs)?
      *
-     * @return mixed
+     * @return int Email ID
      *
      * @throws API_Exception
      * @throws UnauthorizedException
@@ -82,8 +87,8 @@ class CRM_Wrapi_Actions_Create
         int $contact_id,
         string $type = 'Home',
         bool $check_permissions = false
-    ) {
-        CRM_Wrapi_Processor_Base::validateInput($email, 'email', 'Email address');
+    ): int {
+        CRM_Wrapi_Processor_Base::validateInput($email, 'string', 'Email address');
         CRM_Wrapi_Processor_Base::validateInput($contact_id, 'id', 'Contact ID');
 
         $results = Email::create($check_permissions)
