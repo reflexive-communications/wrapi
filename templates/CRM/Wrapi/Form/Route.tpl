@@ -35,7 +35,7 @@
             <td class="label">{$form.permissions.label}</td>
             <td class="content">{$form.permissions.html}<br/>
                 <span class="description">
-                    Required permissions. You can also give here more permissions in a comma separated list to use AND logic.
+                    Required permissions. You can select more permissions, so all of them will be required.
                     It is possible to leave empty, if you want no permissions, but is not recommended, use "administer CiviCRM" at least.
                 </span>
             </td>

@@ -76,7 +76,7 @@ class CRM_Wrapi_Factory
      * @param string $handler_class Handler class name
      * @param array|null $request_data Request data
      * @param int $logging_level Logging level
-     * @param string $permissions Required permissions
+     * @param array $permissions Required permissions
      *
      * @return CRM_Wrapi_Handler_Base
      *
@@ -86,7 +86,7 @@ class CRM_Wrapi_Factory
         string $handler_class,
         ?array $request_data,
         int $logging_level,
-        string $permissions
+        array $permissions
     ): CRM_Wrapi_Handler_Base {
         self::checkClass($handler_class);
         $handler = new $handler_class($request_data, $logging_level, $permissions);

@@ -26,7 +26,7 @@ abstract class CRM_Wrapi_Handler_Base
     /**
      * Required permissions
      *
-     * @var string
+     * @var array
      */
     protected $permissions;
 
@@ -35,9 +35,9 @@ abstract class CRM_Wrapi_Handler_Base
      *
      * @param array|null $request_data Request data
      * @param int $logging_level Logging level
-     * @param string $permissions Required permissions
+     * @param array $permissions Required permissions
      */
-    public function __construct(?array $request_data, int $logging_level, string $permissions)
+    public function __construct(?array $request_data, int $logging_level, array $permissions)
     {
         $this->requestData = $request_data;
         $this->logLevel = $logging_level;
@@ -83,14 +83,10 @@ abstract class CRM_Wrapi_Handler_Base
      */
     protected function checkPermissions()
     {
-        if (empty($this->permissions)) {
-            return;
-        }
-
-        $permissions = explode(',', $this->permissions);
-
-        if (!CRM_Core_Permission::check($permissions)) {
-            throw new CRM_Core_Exception(sprintf('Required permission missing: %s', $this->permissions));
+        foreach ($this->permissions as $permission) {
+            if (!CRM_Core_Permission::check($permission)) {
+                throw new CRM_Core_Exception(sprintf('Required permission missing: %s', $permission));
+            }
         }
     }
 
