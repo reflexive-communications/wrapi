@@ -33,9 +33,9 @@ abstract class CRM_Wrapi_Handler_Base
     /**
      * CRM_Wrapi_Handler_Base constructor.
      *
-     * @param array|null $request_data
-     * @param int $logging_level
-     * @param string $permissions
+     * @param array|null $request_data Request data
+     * @param int $logging_level Logging level
+     * @param string $permissions Required permissions
      */
     public function __construct(?array $request_data, int $logging_level, string $permissions)
     {

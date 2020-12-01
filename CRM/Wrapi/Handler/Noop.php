@@ -12,6 +12,13 @@
 class CRM_Wrapi_Handler_Noop extends CRM_Wrapi_Handler_Base
 {
     /**
+     * Validate Data
+     */
+    protected function validate()
+    {
+    }
+
+    /**
      * Process Request
      */
     protected function process()
