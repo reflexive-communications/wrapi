@@ -27,6 +27,20 @@ class CRM_Wrapi_Authenticator
     }
 
     /**
+     * Check HTTP request method
+     *
+     * @throws CRM_Core_Exception
+     */
+    public static function checkHTTPRequestMethod()
+    {
+        $method=$_SERVER['REQUEST_METHOD'] ?? "";
+
+        if ($method != 'POST') {
+            throw new CRM_Core_Exception('Only POST method is allowed');
+        }
+    }
+
+    /**
      * Authenticate request
      *
      * @param string $site_key Received site-key

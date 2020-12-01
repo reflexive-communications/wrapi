@@ -108,7 +108,7 @@ class CRM_Wrapi_ConfigManager
     /**
      * Save config
      *
-     * @param array $config
+     * @param array $config Config to save
      *
      * @return bool success
      */
@@ -132,7 +132,7 @@ class CRM_Wrapi_ConfigManager
     /**
      * Return current debug mode
      *
-     * @return bool
+     * @return bool Current Debug mode
      */
     public function getDebugMode(): bool
     {
@@ -147,7 +147,7 @@ class CRM_Wrapi_ConfigManager
     /**
      * Return current routing table
      *
-     * @return array
+     * @return array Current Routing table
      */
     public function getRoutingTable(): array
     {
@@ -161,9 +161,9 @@ class CRM_Wrapi_ConfigManager
     }
 
     /**
-     * Return current routing table
+     * Return current configs
      *
-     * @return array
+     * @return array Current configs
      */
     public function getAllConfig(): array
     {

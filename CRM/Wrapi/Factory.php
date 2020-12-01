@@ -48,7 +48,7 @@ class CRM_Wrapi_Factory
     /**
      * Create Authenticator
      *
-     * @param bool $debug_mode
+     * @param bool $debug_mode Debug mode
      *
      * @return CRM_Wrapi_Authenticator
      */
@@ -60,8 +60,8 @@ class CRM_Wrapi_Factory
     /**
      * Create Router
      *
-     * @param bool $debug_mode
-     * @param array $routing_table
+     * @param bool $debug_mode Debug mode
+     * @param array $routing_table Routing table
      *
      * @return CRM_Wrapi_Router
      */
@@ -73,10 +73,10 @@ class CRM_Wrapi_Factory
     /**
      * Create Handler
      *
-     * @param string $handler_class
-     * @param array|null $request_data
-     * @param int $logging_level
-     * @param string $permissions
+     * @param string $handler_class Handler class name
+     * @param array|null $request_data Request data
+     * @param int $logging_level Logging level
+     * @param string $permissions Required permissions
      *
      * @return CRM_Wrapi_Handler_Base
      *
@@ -98,7 +98,7 @@ class CRM_Wrapi_Factory
     /**
      * Check if class exists
      *
-     * @param string $class
+     * @param string $class Class name
      *
      * @throws CRM_Core_Exception
      */
@@ -112,8 +112,8 @@ class CRM_Wrapi_Factory
     /**
      * Check instance type
      *
-     * @param $instance
-     * @param string $class
+     * @param mixed $instance Instance
+     * @param string $class Class name
      *
      * @throws CRM_Core_Exception
      */

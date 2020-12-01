@@ -33,8 +33,8 @@ class CRM_Wrapi_Router
     /**
      * CRM_Wrapi_Router constructor
      *
-     * @param array $routing_table
-     * @param bool $debug_mode
+     * @param array $routing_table Routing table
+     * @param bool $debug_mode Debug mode
      */
     public function __construct(array $routing_table, bool $debug_mode)
     {
@@ -73,11 +73,11 @@ class CRM_Wrapi_Router
     }
 
     /**
-     * Search route
+     * Search particular route from all routes
      *
-     * @param string $selector
+     * @param string $selector Selector to search
      *
-     * @return array
+     * @return array Route data
      *
      * @throws CRM_Core_Exception
      */
@@ -112,7 +112,7 @@ class CRM_Wrapi_Router
     /**
      * Get Handler class for selected route
      *
-     * @return string
+     * @return string Handler class name
      *
      * @throws CRM_Core_Exception
      */
@@ -120,7 +120,7 @@ class CRM_Wrapi_Router
     {
         $handler = $this->selectedRoute['handler'] ?? "";
 
-        if (!CRM_Utils_Rule::string($handler) || empty($handler)) {
+        if (empty($handler) || !CRM_Utils_Rule::string($handler)) {
             throw new CRM_Core_Exception('Not valid handler');
         }
 
@@ -130,7 +130,7 @@ class CRM_Wrapi_Router
     /**
      * Get logging level for selected route
      *
-     * @return int
+     * @return int Logging level
      *
      * @throws CRM_Core_Exception
      */
@@ -148,16 +148,16 @@ class CRM_Wrapi_Router
     /**
      * Get permissions for selected route
      *
-     * @return string
+     * @return array Route permissions
      *
      * @throws CRM_Core_Exception
      */
-    public function getRoutePermissions(): string
+    public function getRoutePermissions(): array
     {
-        $permissions = $this->selectedRoute['perm'] ?? "";
+        $permissions = $this->selectedRoute['perms'] ?? [];
 
-        if (!CRM_Utils_Rule::string($permissions)) {
-            throw new CRM_Core_Exception('Not valid permissions');
+        if (!is_array($permissions)) {
+            throw new CRM_Core_Exception('Not valid permissions format');
         }
 
         return $permissions;

@@ -18,6 +18,9 @@ class CRM_Wrapi_Engine
             // Load configs
             $config_manager = CRM_Wrapi_Factory::createConfigManager();
 
+            // Check request method
+            CRM_Wrapi_Authenticator::checkHTTPRequestMethod();
+
             // Detect content-type & process input
             $processor = CRM_Wrapi_Factory::createProcessor(CRM_Wrapi_Processor_Base::detectContentType());
             $request_data = $processor->processInput();
@@ -53,7 +56,7 @@ class CRM_Wrapi_Engine
     }
 
     /**
-     * Log and optionally return error message to client then exit
+     * Log and return error message to client then exit
      *
      * @param string $message Error message
      */
