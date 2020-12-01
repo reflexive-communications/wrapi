@@ -113,10 +113,55 @@ abstract class CRM_Wrapi_Processor_Base
         $value = CRM_Utils_String::stripSpaces($value);
         // Escape string
         $value = CRM_Utils_Type::escape($value, 'String');
-        // Remove XSS
-        $value = CRM_Utils_String::purifyHTML($value);
+        // Remove HTML tags
+        $value = preg_replace('/<.*>/U', '', $value);
 
         return $value;
+    }
+
+    /**
+     * Validate input
+     *
+     * Throws exception if problem with input
+     * No exception means input OK
+     *
+     * @param mixed $value Input to validate
+     * @param string $type Input type
+     *  'string': any string
+     *  'email'
+     *  'id': positive integer
+     * @param string $name Name of variable (for logging and reporting)
+     * @param bool $required Is value required?
+     *  throws exception if value is empty
+     *
+     * @return void
+     *
+     * @throws CRM_Core_Exception
+     */
+    public static function validateInput($value, string $type, string $name, bool $required = true): void
+    {
+        // If required input --> check if empty
+        if ($required && empty($value)) {
+            throw new CRM_Core_Exception(sprintf('Missing parameter: %s', $name));
+        }
+
+        switch ($type) {
+            case 'string':
+                $valid = CRM_Utils_Rule::string($value);
+                break;
+            case 'email':
+                $valid = CRM_Utils_Rule::email($value);
+                break;
+            case 'id':
+                $valid = CRM_Utils_Rule::positiveInteger($value);
+                break;
+            default:
+                throw new CRM_Core_Exception(sprintf('Not supported type: %s', $type));
+        }
+
+        if (!$valid) {
+            throw new CRM_Core_Exception(sprintf('%s is not type of: %s', $name, $type));
+        }
     }
 
     /**
@@ -147,46 +192,6 @@ abstract class CRM_Wrapi_Processor_Base
         $this->validateKeyInputs($request_data);
 
         return $request_data;
-    }
-
-    /**
-     * Validate input
-     *
-     * @param mixed $value Input to validate
-     * @param string $type Input type
-     *  'string': any string
-     *  'email'
-     *  'id': positive integer
-     * @param string $name Name of variable (for logging and reporting)
-     * @param bool $required Is value required?
-     *  throws exception if value is empty
-     *
-     * @throws CRM_Core_Exception
-     */
-    public static function validateInput($value, string $type, string $name, bool $required = true): void
-    {
-        // If required input --> check if empty
-        if ($required && empty($value)) {
-            throw new CRM_Core_Exception(sprintf('Missing parameter: %s', $name));
-        }
-
-        switch ($type) {
-            case 'string':
-                $valid = CRM_Utils_Rule::string($value);
-                break;
-            case 'email':
-                $valid = CRM_Utils_Rule::email($value);
-                break;
-            case 'id':
-                $valid = CRM_Utils_Rule::positiveInteger($value);
-                break;
-            default:
-                throw new CRM_Core_Exception(sprintf('Not supported type: %s', $type));
-        }
-
-        if (!$valid) {
-            throw new CRM_Core_Exception(sprintf('%s is not type of: %s', $name, $type));
-        }
     }
 
     /**
