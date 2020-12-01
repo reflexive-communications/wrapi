@@ -69,16 +69,12 @@ abstract class CRM_Wrapi_Handler_Base
     /**
      * Validate Request Data
      */
-    protected function validate()
-    {
-    }
+    abstract protected function validate();
 
     /**
      * Process Request
      */
-    protected function process()
-    {
-    }
+    abstract protected function process();
 
     /**
      * Check if current user (based on user-key) has required permissions
