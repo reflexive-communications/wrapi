@@ -26,7 +26,7 @@ class CRM_Wrapi_Actions_Create
      *
      * @throws CRM_Core_Exception
      */
-    protected static function checkSuccess(Civi\Api4\Generic\Result $results, string $action): int
+    public static function checkSuccess(Civi\Api4\Generic\Result $results, string $action): int
     {
         $id = $results->first()['id'];
 
@@ -78,7 +78,7 @@ class CRM_Wrapi_Actions_Create
      * @throws UnauthorizedException
      * @throws CRM_Core_Exception
      */
-    public static function addEmailToContact(
+    public static function emailToContact(
         string $email,
         int $contact_id,
         string $type = 'Home',
