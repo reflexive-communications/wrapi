@@ -78,7 +78,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->_defaults['handler_class'] = $route['handler'];
         $this->_defaults['route_enabled'] = $route['enabled'] ? 1 : 0;
         $this->_defaults['log_level'] = $route['log'];
-        $this->_defaults['permissions'] = $route['perm'];
+        $this->_defaults['permissions'] = $route['perms'];
 
         return $this->_defaults;
     }
@@ -98,7 +98,15 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->add('text', 'name', ts('Route Name'), [], true);
         $this->add('text', 'selector', ts('Selector'), [], true);
         $this->add('text', 'handler_class', ts('Handler Class'), [], true);
-        $this->add('text', 'permissions', ts('Permissions'));
+        $this->addSelect(
+            'permissions',
+            [
+                'label' => ts('Permissions'),
+                'options' => CRM_Core_Permission::basicPermissions(),
+                'entity' => '',
+                'multiple' => true,
+            ]
+        );
         $this->addRadio(
             'log_level',
             'Logging level',
@@ -250,21 +258,43 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     }
 
     /**
+     * Compose route data from submitted values
+     *
+     * @return array
+     *
+     * @throws CRM_Core_Exception
+     */
+    protected function composeRouteData()
+    {
+        // Sanitize input
+        $name = CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['name']);
+        $selector = CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['selector']);
+        $handler = CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['handler_class']);
+
+        // Parse permissions
+        $permissions = [];
+        foreach ($this->_submitValues['permissions'] as $item) {
+            array_push($permissions, CRM_Wrapi_Processor_Base::sanitizeString($item));
+        }
+
+        return [
+            'name' => $name,
+            'selector' => $selector,
+            'handler' => $handler,
+            'enabled' => ($this->_submitValues['route_enabled'] == 1),
+            'log' => (int)$this->_submitValues['log_level'],
+            'perms' => $permissions,
+        ];
+    }
+
+    /**
      * Post process form
      *
      * @throws CRM_Core_Exception
      */
     public function postProcess()
     {
-        // Assembly route data & sanitize input
-        $route = [
-            'name' => CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['name']),
-            'selector' => CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['selector']),
-            'handler' => CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['handler_class']),
-            'enabled' => ($this->_submitValues['route_enabled'] == 1),
-            'log' => (int)$this->_submitValues['log_level'],
-            'perm' => CRM_Wrapi_Processor_Base::sanitizeString($this->_submitValues['permissions']),
-        ];
+        $route = $this->composeRouteData();
 
         if ($this->editMode) {
             // Update

@@ -1,4 +1,4 @@
-<div id="wrapi-main-wrapper">
+<div id="wrapi-main-wrapper" class="crm-container">
     <div class="help">
         {ts}Here you can view and manage WrAPI routes{/ts}
     </div>
@@ -47,7 +47,10 @@
                     <td>{$route_data.name}</td>
                     <td>{$route_data.selector}</td>
                     <td>{$route_data.handler}</td>
-                    <td>{$route_data.perm}</td>
+                    <td>
+                        {foreach from=$route_data.perms item=permission}
+                            <span class="crm-marker crm-tag-item">{$permission}</span>
+                        {/foreach}
                     <td>
                         {if $route_data.log == 0}
                             {ts}No logging{/ts}
