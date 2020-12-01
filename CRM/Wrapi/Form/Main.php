@@ -74,7 +74,7 @@ class CRM_Wrapi_Form_Main extends CRM_Wrapi_Form_Base
         // Export routes to template
         $this->assign('routes', $routes);
 
-        // Add css, JS
+        // Add css, JS resources
         Civi::resources()->addStyleFile(CRM_Wrapi_ExtensionUtil::LONG_NAME, 'css/wrapi.css');
         Civi::resources()->addScriptFile(CRM_Wrapi_ExtensionUtil::LONG_NAME, 'js/Form/Main.js');
     }
