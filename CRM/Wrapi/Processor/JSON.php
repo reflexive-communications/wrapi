@@ -12,7 +12,7 @@ class CRM_Wrapi_Processor_JSON extends CRM_Wrapi_Processor_Base
     /**
      * Process input
      *
-     * @return array|string
+     * @return array|string Request parameters parsed
      *
      * @throws CRM_Core_Exception
      */

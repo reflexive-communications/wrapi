@@ -12,7 +12,7 @@ class CRM_Wrapi_Processor_UrlEncodedForm extends CRM_Wrapi_Processor_Base
     /**
      * Process input
      *
-     * @return array|string
+     * @return array|string Request parameters parsed
      *
      * @throws CRM_Core_Exception
      */
@@ -26,8 +26,7 @@ class CRM_Wrapi_Processor_UrlEncodedForm extends CRM_Wrapi_Processor_Base
                 $data = $_POST;
                 break;
             default:
-                $data = [];
-                break;
+                throw new CRM_Core_Exception('Not supported request method');
         }
 
         return $this->sanitize($data);

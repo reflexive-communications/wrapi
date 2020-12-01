@@ -19,7 +19,7 @@ abstract class CRM_Wrapi_Processor_Base
     /**
      * Detect content-type
      *
-     * @return string
+     * @return string Appropriate Processor class name
      */
     public static function detectContentType(): string
     {
@@ -46,7 +46,7 @@ abstract class CRM_Wrapi_Processor_Base
      *
      * @param mixed $input Input to sanitize
      *
-     * @return array|string
+     * @return array|string Sanitized input
      *
      * @throws CRM_Core_Exception
      */
@@ -101,9 +101,9 @@ abstract class CRM_Wrapi_Processor_Base
     /**
      * Sanitize string
      *
-     * @param $value
+     * @param mixed $value Value to sanitize
      *
-     * @return string
+     * @return string Sanitized string
      *
      * @throws CRM_Core_Exception
      */
@@ -134,7 +134,7 @@ abstract class CRM_Wrapi_Processor_Base
     /**
      * Process request
      *
-     * @return array|string
+     * @return array|string Processed request parameters
      *
      * @throws CRM_Core_Exception
      */
@@ -152,10 +152,14 @@ abstract class CRM_Wrapi_Processor_Base
     /**
      * Validate input
      *
-     * @param $value
-     * @param string $type
-     * @param string $name
-     * @param bool $required
+     * @param mixed $value Input to validate
+     * @param string $type Input type
+     *  'string': any string
+     *  'email'
+     *  'id': positive integer
+     * @param string $name Name of variable (for logging and reporting)
+     * @param bool $required Is value required?
+     *  throws exception if value is empty
      *
      * @throws CRM_Core_Exception
      */
@@ -177,7 +181,7 @@ abstract class CRM_Wrapi_Processor_Base
                 $valid = CRM_Utils_Rule::positiveInteger($value);
                 break;
             default:
-                throw new CRM_Core_Exception('Not supported type');
+                throw new CRM_Core_Exception(sprintf('Not supported type: %s', $type));
         }
 
         if (!$valid) {
