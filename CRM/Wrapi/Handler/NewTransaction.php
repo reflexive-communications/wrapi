@@ -135,7 +135,7 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
             'contribution_status_id' => " Completed ",
         );
 
-        $contact_id = $this->processContactData()['id'];
+        $contact_id = $this->processContactData();
 
         return $contact_id;
 
@@ -144,13 +144,13 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
     /**
      * Process contact data
      *
-     * @return array Contact data
+     * @return int Contact data
      *
      * @throws API_Exception
      * @throws CRM_Core_Exception
      * @throws UnauthorizedException
      */
-    protected function processContactData(): array
+    protected function processContactData(): int
     {
         $contact_data_received = $this->parseContactData();
 
@@ -189,6 +189,6 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
             $this->debug(sprintf('Email added to contact ID: %s', $contact_id));
         }
 
-        return $contact_data_stored;
+        return $contact_id;
     }
 }
