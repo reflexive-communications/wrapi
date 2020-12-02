@@ -140,9 +140,22 @@ abstract class CRM_Wrapi_Processor_Base
      */
     public static function validateInput($value, string $type, string $name, bool $required = true): void
     {
-        // If required input --> check if empty
-        if ($required && empty($value)) {
-            throw new CRM_Core_Exception(sprintf('Missing parameter: %s', $name));
+        // Check parameters
+        if (empty($type)) {
+            throw new CRM_Core_Exception('Variable type missing');
+        }
+        if (empty($name)) {
+            throw new CRM_Core_Exception('Variable name missing');
+        }
+
+        // Check value
+        if (empty($value)) {
+
+            if ($required) {
+                throw new CRM_Core_Exception(sprintf('Missing parameter: %s', $name));
+            }
+
+            return;
         }
 
         switch ($type) {

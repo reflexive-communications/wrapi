@@ -67,16 +67,6 @@ abstract class CRM_Wrapi_Handler_Base
     }
 
     /**
-     * Validate Request Data
-     */
-    abstract protected function validate();
-
-    /**
-     * Process Request
-     */
-    abstract protected function process();
-
-    /**
      * Check if current user (based on user-key) has required permissions
      *
      * @throws CRM_Core_Exception
@@ -122,6 +112,31 @@ abstract class CRM_Wrapi_Handler_Base
     }
 
     /**
+     * Validate Request Data
+     *
+     * @throws CRM_Core_Exception
+     */
+    protected function validate(): void
+    {
+        // Loop through input rules
+        foreach ($this->inputRules() as $input => $rule) {
+            // Get rules
+            $type = $rule['type'] ?? "";
+            $name = $rule['name'] ?? "";
+            $required = isset($rule['required']);
+            $default = $rule['default'] ?? null;
+
+            // If input empty and default is defined --> use default
+            if (empty($this->requestData[$input]) && !is_null($default)) {
+                $this->requestData[$input] = $default;
+            }
+
+            // Validate input
+            CRM_Wrapi_Processor_Base::validateInput($this->requestData[$input], $type, $name, $required);
+        }
+    }
+
+    /**
      * Log request processed
      */
     protected function logRequestProcessed()
@@ -138,4 +153,16 @@ abstract class CRM_Wrapi_Handler_Base
         $file_logger = CRM_Core_Error::createDebugLogger(CRM_Wrapi_ExtensionUtil::SHORT_NAME);
         $file_logger->log($message, $this->logLevel);
     }
+
+    /**
+     * Process Request
+     */
+    abstract protected function process();
+
+    /**
+     * Return request parameter rules
+     *
+     * @return array Input rules
+     */
+    abstract protected function inputRules(): array;
 }
