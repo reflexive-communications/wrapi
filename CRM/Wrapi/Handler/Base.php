@@ -10,6 +10,11 @@
 abstract class CRM_Wrapi_Handler_Base
 {
     /**
+     * Request processed message
+     */
+    public const REQUEST_PROCESSED = 'Request processed';
+
+    /**
      * Request Data
      *
      * @var null|array
