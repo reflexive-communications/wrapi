@@ -12,10 +12,13 @@
 class CRM_Wrapi_Handler_Echo extends CRM_Wrapi_Handler_Base
 {
     /**
-     * Validate Data
+     * Return request parameter rules
+     *
+     * @return array Input rules
      */
-    protected function validate()
+    protected function inputRules(): array
     {
+        return [];
     }
 
     /**
