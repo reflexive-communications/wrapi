@@ -81,12 +81,21 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
      */
     protected function parseContactData(): array
     {
-        return [
-            'contact_type' => $this->requestData['contact_type'],
-            'first_name' => $this->requestData['first_name'],
-            'last_name' => $this->requestData['last_name'],
-            'preferred_language' => $this->requestData['preferred_language'],
-        ];
+        $data = [];
+        if (!empty($this->requestData['contact_type'])) {
+            $data['contact_type'] = $this->requestData['contact_type'];
+        }
+        if (!empty($this->requestData['first_name'])) {
+            $data['first_name'] = $this->requestData['first_name'];
+        }
+        if (!empty($this->requestData['last_name'])) {
+            $data['last_name'] = $this->requestData['last_name'];
+        }
+        if (!empty($this->requestData['preferred_language'])) {
+            $data['preferred_language'] = $this->requestData['preferred_language'];
+        }
+
+        return $data;
     }
 
     /**
@@ -97,14 +106,18 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
     protected function parseContributionData(): array
     {
         $data = [];
-        $data['source'] = $this->requestData['subject'];
         $data['total_amount'] = $this->requestData['total_amount'];
         $data['receive_date'] = $this->requestData['receive_date'];
         $data['payment_instrument_id'] = $this->requestData['payment_instrument_id'];
         $data['trxn_id'] = $this->requestData['payment_transaction_id'];
 
+        if (!empty($this->requestData['subject'])) {
+            $data['source'] = $this->requestData['subject'];
+        }
+
         switch ($this->requestData['contribution_status_id']) {
             case 'COMPLETE':
+            case 'Completed':
                 $data['contribution_status_id'] = 'Completed';
                 break;
             case 'Pending':

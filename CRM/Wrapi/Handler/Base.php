@@ -152,9 +152,15 @@ abstract class CRM_Wrapi_Handler_Base
             $required = isset($rule['required']);
             $default = $rule['default'] ?? null;
 
-            // If input empty and default is defined --> use default
-            if (empty($this->requestData[$input]) && !is_null($default)) {
-                $this->requestData[$input] = $default;
+            // If input empty
+            if (empty($this->requestData[$input])) {
+
+                // Default is defined --> use default
+                if (!is_null($default)) {
+                    $this->requestData[$input] = $default;
+                }
+                // Skip validation
+                continue;
             }
 
             // Validate input
