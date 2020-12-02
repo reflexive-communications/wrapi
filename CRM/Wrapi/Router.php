@@ -162,4 +162,22 @@ class CRM_Wrapi_Router
 
         return $permissions;
     }
+
+    /**
+     * Get options for selected route
+     *
+     * @return array Route options
+     *
+     * @throws CRM_Core_Exception
+     */
+    public function getRouteOptions(): array
+    {
+        $options = $this->selectedRoute['opts'] ?? [];
+
+        if (!is_array($options)) {
+            throw new CRM_Core_Exception('Not valid options format');
+        }
+
+        return $options;
+    }
 }

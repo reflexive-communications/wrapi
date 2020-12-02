@@ -41,7 +41,8 @@ class CRM_Wrapi_Engine
                 $router->getRouteHandler(),
                 $request_data,
                 $router->getRouteLogLevel(),
-                $router->getRoutePermissions()
+                $router->getRoutePermissions(),
+                $router->getRouteOptions()
             );
             $response = $handler->run();
 

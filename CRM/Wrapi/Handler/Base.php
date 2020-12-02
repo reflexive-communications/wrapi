@@ -36,6 +36,13 @@ abstract class CRM_Wrapi_Handler_Base
     protected $permissions;
 
     /**
+     * Options
+     *
+     * @var array
+     */
+    protected $options;
+
+    /**
      * File logger
      *
      * @var Log_file
@@ -48,13 +55,20 @@ abstract class CRM_Wrapi_Handler_Base
      * @param array|null $request_data Request data
      * @param int $logging_level Logging level
      * @param array $permissions Required permissions
+     * @param array $options Options
      * @param Log_file $file_logger File logger
      */
-    public function __construct(?array $request_data, int $logging_level, array $permissions, Log_file $file_logger)
-    {
+    public function __construct(
+        ?array $request_data,
+        int $logging_level,
+        array $permissions,
+        array $options,
+        Log_file $file_logger
+    ) {
         $this->requestData = $request_data;
         $this->logLevel = $logging_level;
         $this->permissions = $permissions;
+        $this->options = $options;
         $this->logger = $file_logger;
     }
 

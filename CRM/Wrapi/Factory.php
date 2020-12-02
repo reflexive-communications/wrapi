@@ -77,6 +77,7 @@ class CRM_Wrapi_Factory
      * @param array|null $request_data Request data
      * @param int $logging_level Logging level
      * @param array $permissions Required permissions
+     * @param array $options Options
      *
      * @return CRM_Wrapi_Handler_Base
      *
@@ -86,7 +87,8 @@ class CRM_Wrapi_Factory
         string $handler_class,
         ?array $request_data,
         int $logging_level,
-        array $permissions
+        array $permissions,
+        array $options
     ): CRM_Wrapi_Handler_Base {
         // Check valid class supplied
         self::checkClass($handler_class);
@@ -95,7 +97,7 @@ class CRM_Wrapi_Factory
         $logger = CRM_Core_Error::createDebugLogger(CRM_Wrapi_ExtensionUtil::SHORT_NAME);
 
         // Create handler
-        $handler = new $handler_class($request_data, $logging_level, $permissions, $logger);
+        $handler = new $handler_class($request_data, $logging_level, $permissions, $options, $logger);
         self::checkInstance($handler, CRM_Wrapi_Handler_Base::class);
 
         return $handler;
