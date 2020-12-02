@@ -108,8 +108,9 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
         $data = [];
         $data['total_amount'] = $this->requestData['total_amount'];
         $data['receive_date'] = $this->requestData['receive_date'];
-        $data['payment_instrument_id'] = $this->requestData['payment_instrument_id'];
+        $data['payment_instrument_id:name'] = $this->requestData['payment_instrument_id'];
         $data['trxn_id'] = $this->requestData['payment_transaction_id'];
+        $data['financial_type_id']=$this->options['financial_type_id'];
 
         if (!empty($this->requestData['subject'])) {
             $data['source'] = $this->requestData['subject'];
@@ -118,13 +119,13 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
         switch ($this->requestData['contribution_status_id']) {
             case 'COMPLETE':
             case 'Completed':
-                $data['contribution_status_id'] = 'Completed';
+                $data['contribution_status_id:name'] = 'Completed';
                 break;
             case 'Pending':
-                $data['contribution_status_id'] = 'Pending';
+                $data['contribution_status_id:name'] = 'Pending';
                 break;
             default:
-                $data['contribution_status_id'] = 'Failed';
+                $data['contribution_status_id:name'] = 'Failed';
                 $data['cancel_reason'] = $this->requestData['contribution_status_id'];
                 break;
         }
@@ -142,7 +143,7 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
     protected function process()
     {
         $contact_id = $this->processContactData();
-
+//        return CRM_Wrapi_Handler_Base::REQUEST_PROCESSED;
         $this->addContribution($contact_id);
 
         $this->logRequestProcessed();
