@@ -80,6 +80,13 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->_defaults['log_level'] = $route['log'];
         $this->_defaults['permissions'] = $route['perms'];
 
+        // Convert options array to string
+        $options = [];
+        foreach ($route['opts'] as $key => $value) {
+            $options[] = "${key}=${value}";
+        }
+        $this->_defaults['options'] = implode(PHP_EOL, $options);
+
         return $this->_defaults;
     }
 
@@ -98,6 +105,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->add('text', 'name', ts('Route Name'), [], true);
         $this->add('text', 'selector', ts('Selector'), [], true);
         $this->add('text', 'handler_class', ts('Handler Class'), [], true);
+        $this->add('textarea', 'options', ts('Options'), ['rows' => 5]);
         $this->addSelect(
             'permissions',
             [
@@ -280,6 +288,35 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             array_push($permissions, CRM_Wrapi_Processor_Base::sanitizeString($item));
         }
 
+        // Convert options string to array
+        $options = [];
+        $lines = explode(PHP_EOL, $this->_submitValues['options']);
+        foreach ($lines as $line) {
+            // Parse lines
+            $expression = explode('=', $line);
+            $key = $expression[0];
+            $value = $expression[1];
+
+            // Skip empty
+            if (empty($key) || empty($value)) {
+                continue;
+            }
+
+            // Validate key
+            $key = CRM_Wrapi_Processor_Base::sanitizeString($key);
+
+            // Validate value according to apparent type
+            if (CRM_Utils_Rule::numeric($value)) {
+                $value = (int)$value;
+            } elseif (CRM_Utils_Rule::boolean($value)) {
+                $value = (bool)$value;
+            } else {
+                $value = CRM_Wrapi_Processor_Base::sanitizeString($value);
+            }
+
+            $options[$key] = $value;
+        }
+
         return [
             'name' => $name,
             'selector' => $selector,
@@ -287,6 +324,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             'enabled' => ($this->_submitValues['route_enabled'] == 1),
             'log' => (int)$this->_submitValues['log_level'],
             'perms' => $permissions,
+            'opts' => $options,
         ];
     }
 

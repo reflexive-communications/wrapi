@@ -4,3 +4,11 @@ Small margin
 .margin-small {
     margin: 2px;
 }
+
+/**
+Align center
+ */
+td.centered {
+    vertical-align: middle;
+    text-align: center;
+}

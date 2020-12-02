@@ -40,6 +40,14 @@
                 </span>
             </td>
         </tr>
+        <tr>
+            <td class="label">{$form.options.label}</td>
+            <td class="content">{$form.options.html}<br/>
+                <span class="description">
+                    You can pass options to the handler. One option per line in the format: <code>name=value</code>
+                </span>
+            </td>
+        </tr>
     </table>
     <div class="crm-submit-buttons">
         {include file="CRM/common/formButtons.tpl" location="bottom"}

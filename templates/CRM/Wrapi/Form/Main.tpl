@@ -34,8 +34,9 @@
                 <th id="sortable">{ts}Name{/ts}</th>
                 <th id="sortable">{ts}Selector{/ts}</th>
                 <th id="sortable">{ts}Handler{/ts}</th>
-                <th id="sortable">{ts}Permissions{/ts}</th>
                 <th id="sortable">{ts}Log level{/ts}</th>
+                <th id="sortable">{ts}Permissions{/ts}</th>
+                <th id="sortable">{ts}Options{/ts}</th>
                 <th id="sortable">{ts}Enabled{/ts}</th>
                 <th>{ts}Actions{/ts}</th>
             </tr>
@@ -43,15 +44,11 @@
             <tbody>
             {foreach from=$routes key=id item=route_data}
                 <tr class="crm-entity {if !$route_data.enabled}disabled{/if} {cycle values="odd-row,even-row"}">
-                    <td>{$id}</td>
-                    <td>{$route_data.name}</td>
-                    <td>{$route_data.selector}</td>
-                    <td>{$route_data.handler}</td>
-                    <td>
-                        {foreach from=$route_data.perms item=permission}
-                            <span class="crm-tag-item margin-small">{$permission}</span>
-                        {/foreach}
-                    <td>
+                    <td class="centered">{$id}</td>
+                    <td class="centered">{$route_data.name}</td>
+                    <td class="centered">{$route_data.selector}</td>
+                    <td class="centered">{$route_data.handler}</td>
+                    <td class="centered">
                         {if $route_data.log == 0}
                             {ts}No logging{/ts}
                         {elseif $route_data.log == 7}
@@ -64,8 +61,17 @@
                             {$route_data.log}
                         {/if}
                     </td>
-                    <td>{if $route_data.enabled}Yes{else}No{/if}</td>
-                    <td>{$route_data.actions}</td>
+                    <td class="centered">
+                        {foreach from=$route_data.perms item=permission}
+                            <span class="crm-tag-item margin-small">{$permission}</span>
+                        {/foreach}
+                    <td>
+                        {foreach from=$route_data.opts key=opt_key item=opt_value}
+                            <div>{$opt_key}={$opt_value}</div>
+                        {/foreach}
+                    </td>
+                    <td class="centered">{if $route_data.enabled}Yes{else}No{/if}</td>
+                    <td class="centered">{$route_data.actions}</td>
                 </tr>
             {/foreach}
             </tbody>
