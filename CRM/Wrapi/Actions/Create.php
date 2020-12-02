@@ -99,4 +99,33 @@ class CRM_Wrapi_Actions_Create
 
         return self::checkSuccess($results, 'add email to contact');
     }
+
+    /**
+     * Add new contribution
+     *
+     * @param int $contact_id Contact ID
+     * @param array $values Contribution data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return int Contribution ID
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    public static function contribution(int $contact_id, array $values = [], bool $check_permissions = false): int
+    {
+        CRM_Wrapi_Processor_Base::validateInput($contact_id, 'id', 'Contact ID');
+
+        $results = civicrm_api4(
+            'Contribution',
+            'create',
+            [
+                'values' => $values,
+                'checkPermissions' => $check_permissions,
+            ]
+        );
+
+        return self::checkSuccess($results, 'add contribution to contact');
+    }
 }
