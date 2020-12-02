@@ -160,6 +160,30 @@ abstract class CRM_Wrapi_Handler_Base
     }
 
     /**
+     * Write debug message to log if current log level is DEBUG
+     *
+     * @param string $message Message to log
+     */
+    protected function debug(string $message)
+    {
+        if ($this->logLevel >= PEAR_LOG_DEBUG) {
+            $this->logger->debug($message);
+        }
+    }
+
+    /**
+     * Write info message to log if current log level at least INFO
+     *
+     * @param string $message Message to log
+     */
+    protected function info(string $message)
+    {
+        if ($this->logLevel >= PEAR_LOG_INFO) {
+            $this->logger->info($message);
+        }
+    }
+
+    /**
      * Process Request
      */
     abstract protected function process();
