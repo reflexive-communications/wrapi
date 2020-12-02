@@ -104,15 +104,14 @@ abstract class CRM_Wrapi_Processor_Base
      * @param mixed $value Value to sanitize
      *
      * @return string Sanitized string
-     *
-     * @throws CRM_Core_Exception
      */
     public static function sanitizeString($value)
     {
         // Strip whitespace
         $value = CRM_Utils_String::stripSpaces($value);
-        // Escape string
-        $value = CRM_Utils_Type::escape($value, 'String');
+        // Remove quotes around
+        $value = preg_replace('/^"(.*)"$/', '$1', $value);
+        $value = preg_replace("/^'(.*)'$/", '$1', $value);
         // Remove HTML tags
         $value = preg_replace('/<.*>/U', '', $value);
 
