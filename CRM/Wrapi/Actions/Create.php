@@ -117,6 +117,9 @@ class CRM_Wrapi_Actions_Create
     {
         CRM_Wrapi_Processor_Base::validateInput($contact_id, 'id', 'Contact ID');
 
+        // Add contact ID
+        $values['contact_id'] = $contact_id;
+
         $results = civicrm_api4(
             'Contribution',
             'create',

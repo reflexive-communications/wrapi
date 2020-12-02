@@ -1,5 +1,6 @@
 <?php
 
+use Civi\API\Exception\NotImplementedException;
 use Civi\API\Exception\UnauthorizedException;
 
 /**
@@ -95,14 +96,27 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
      */
     protected function parseContributionData(): array
     {
-        return [
-            'subject' => $this->requestData['subject'],
-            'total_amount' => $this->requestData['total_amount'],
-            'receive_date' => $this->requestData['receive_date'],
-            'payment_instrument_id' => $this->requestData['payment_instrument_id'],
-            'payment_transaction_id' => $this->requestData['payment_transaction_id'],
-            'contribution_status_id' => $this->requestData['contribution_status_id'],
-        ];
+        $data = [];
+        $data['source'] = $this->requestData['subject'];
+        $data['total_amount'] = $this->requestData['total_amount'];
+        $data['receive_date'] = $this->requestData['receive_date'];
+        $data['payment_instrument_id'] = $this->requestData['payment_instrument_id'];
+        $data['trxn_id'] = $this->requestData['payment_transaction_id'];
+
+        switch ($this->requestData['contribution_status_id']) {
+            case 'COMPLETE':
+                $data['contribution_status_id'] = 'Completed';
+                break;
+            case 'Pending':
+                $data['contribution_status_id'] = 'Pending';
+                break;
+            default:
+                $data['contribution_status_id'] = 'Failed';
+                $data['cancel_reason'] = $this->requestData['contribution_status_id'];
+                break;
+        }
+
+        return $data;
     }
 
     /**
@@ -114,31 +128,13 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
      */
     protected function process()
     {
-        $contact_data = array(
-            'email' => 'email',
-
-            'contact_type' => "Individual",
-            'last_name' => 'Last Name',
-            'first_name' => 'First Name',
-            'preferred_language' => 'hu_HU',
-
-            'financial_type_id' => "Adomány",
-//            (sima adomány esetén üres esetleg lehet pénzadomány, vagy maga a Menü / süti vagy karácsonyi csomag neve kerül ide és akkor lehet ez alapján dől el a címke is)
-            'subject' => 'termék neve',
-            'total_amount' => '3000',
-            'receive_date' => '2020-10-01',
-//            (utalás esetén: EFT)
-            'payment_instrument_id' => " OTP Simple Pay ",
-//            (csak simplePay esetén lesz értéke, ha nem kell nem adom át, de ez alapján visszakereshető a tranzakció a SimpleAdmin oldalán is)
-            'payment_transaction_id' => "123412341234",
-//            (utalás esetén: Pending, illetve akkor SimplePay esetén ide adom a banki választ, ilyeneket: COMPLETE / ABORTED TRANSACTION / CARD_NOTAUTHORIZED)
-            'contribution_status_id' => " Completed ",
-        );
-
         $contact_id = $this->processContactData();
 
-        return $contact_id;
+        $this->addContribution($contact_id);
 
+        $this->logRequestProcessed();
+
+        return CRM_Wrapi_Handler_Base::REQUEST_PROCESSED;
     }
 
     /**
@@ -190,5 +186,22 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
         }
 
         return $contact_id;
+    }
+
+    /**
+     * Add new contribution
+     *
+     * @param int $contact_id Contact ID
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    protected function addContribution(int $contact_id)
+    {
+        $contribution_data = $this->parseContributionData();
+
+        $contribution_id = CRM_Wrapi_Actions_Create::contribution($contact_id, $contribution_data);
+        $this->debug(sprintf('Contribution added ID: %s', $contribution_id));
     }
 }
