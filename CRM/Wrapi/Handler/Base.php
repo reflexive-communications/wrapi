@@ -31,17 +31,26 @@ abstract class CRM_Wrapi_Handler_Base
     protected $permissions;
 
     /**
+     * File logger
+     *
+     * @var Log_file
+     */
+    protected $logger;
+
+    /**
      * CRM_Wrapi_Handler_Base constructor.
      *
      * @param array|null $request_data Request data
      * @param int $logging_level Logging level
      * @param array $permissions Required permissions
+     * @param Log_file $file_logger File logger
      */
-    public function __construct(?array $request_data, int $logging_level, array $permissions)
+    public function __construct(?array $request_data, int $logging_level, array $permissions, Log_file $file_logger)
     {
         $this->requestData = $request_data;
         $this->logLevel = $logging_level;
         $this->permissions = $permissions;
+        $this->logger = $file_logger;
     }
 
     /**
@@ -85,8 +94,8 @@ abstract class CRM_Wrapi_Handler_Base
      */
     protected function logIncomingRequest()
     {
-        // Log only if log level is below notice
-        if ($this->logLevel < 6) {
+        // Log only if log level is higher than notice
+        if ($this->logLevel <= PEAR_LOG_NOTICE) {
             return;
         }
 
@@ -94,7 +103,7 @@ abstract class CRM_Wrapi_Handler_Base
         $message = $_SERVER['REMOTE_ADDR'].' Request received  Selector: '.$this->requestData['selector'];
 
         // Also log request data for debug
-        if ($this->logLevel == 7) {
+        if ($this->logLevel == PEAR_LOG_DEBUG) {
             $data = $this->requestData;
 
             // Exclude sensitive data from logging
@@ -106,9 +115,7 @@ abstract class CRM_Wrapi_Handler_Base
             $message .= " Data: ".serialize($data);
         }
 
-        // Create logger then log
-        $file_logger = CRM_Core_Error::createDebugLogger(CRM_Wrapi_ExtensionUtil::SHORT_NAME);
-        $file_logger->log($message, $this->logLevel);
+        $this->logger->log($message, $this->logLevel);
     }
 
     /**
@@ -141,17 +148,15 @@ abstract class CRM_Wrapi_Handler_Base
      */
     protected function logRequestProcessed()
     {
-        // Log only if log level is below notice
-        if ($this->logLevel < 6) {
+        // Log only if log level is higher than notice
+        if ($this->logLevel <= PEAR_LOG_NOTICE) {
             return;
         }
 
         // Compose message
         $message = $_SERVER['REMOTE_ADDR'].' Request processed Selector: '.$this->requestData['selector'];
 
-        // Create logger then log
-        $file_logger = CRM_Core_Error::createDebugLogger(CRM_Wrapi_ExtensionUtil::SHORT_NAME);
-        $file_logger->log($message, $this->logLevel);
+        $this->logger->log($message, $this->logLevel);
     }
 
     /**

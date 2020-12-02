@@ -67,7 +67,7 @@ class CRM_Wrapi_Engine
 
         // Create logger then log
         $file_logger = CRM_Core_Error::createDebugLogger(CRM_Wrapi_ExtensionUtil::SHORT_NAME);
-        $file_logger->log($log, PEAR_LOG_ERR);
+        $file_logger->err($log);
 
         // Set response headers
         http_response_code(500);
