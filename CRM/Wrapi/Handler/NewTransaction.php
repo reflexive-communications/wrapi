@@ -195,14 +195,15 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
             // If there is a change in data --> update contact
             if ($data_changed) {
                 CRM_Wrapi_Actions_Update::contact($contact_id, $contact_data_stored);
-                $this->debug(sprintf('Contact updated ID: %s', $contact_id));
+                $this->debug(sprintf('Contact updated (ID: %s)', $contact_id));
             }
         } else {
             // Email not found --> create new contact & add email
             $contact_id = CRM_Wrapi_Actions_Create::contact($contact_data_received);
-            $this->debug(sprintf('Contact created ID: %s', $contact_id));
+            $this->debug(sprintf('Contact created (ID: %s)', $contact_id));
+
             CRM_Wrapi_Actions_Create::emailToContact($this->requestData['email'], $contact_id);
-            $this->debug(sprintf('Email added to contact ID: %s', $contact_id));
+            $this->debug(sprintf('Email added to contact (ID: %s)', $contact_id));
         }
 
         return $contact_id;
@@ -222,6 +223,6 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
         $contribution_data = $this->parseContributionData();
 
         $contribution_id = CRM_Wrapi_Actions_Create::contribution($contact_id, $contribution_data);
-        $this->debug(sprintf('Contribution added ID: %s', $contribution_id));
+        $this->debug(sprintf('Contribution added (ID: %s)', $contribution_id));
     }
 }
