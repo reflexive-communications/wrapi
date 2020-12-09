@@ -56,7 +56,7 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
                 'name' => 'Received date',
                 'required' => true,
             ],
-            'payment_instrument_id' => [
+            'payment_instrument' => [
                 'type' => 'string',
                 'name' => 'Payment instrument',
                 'required' => true,
@@ -66,9 +66,9 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
                 'name' => 'Payment transaction ID',
                 'required' => true,
             ],
-            'contribution_status_id' => [
+            'contribution_status' => [
                 'type' => 'string',
-                'name' => 'Contribution ID',
+                'name' => 'Contribution status',
                 'required' => true,
             ],
         ];
@@ -110,7 +110,7 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
         $data = [];
         $data['total_amount'] = $this->requestData['total_amount'];
         $data['receive_date'] = $this->requestData['receive_date'];
-        $data['payment_instrument_id:name'] = $this->requestData['payment_instrument_id'];
+        $data['payment_instrument_id:name'] = $this->requestData['payment_instrument'];
         $data['trxn_id'] = $this->requestData['payment_transaction_id'];
 
         if (empty($this->options['financial_type_id'])) {
@@ -132,7 +132,7 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
                 break;
             default:
                 $data['contribution_status_id:name'] = 'Failed';
-                $data['cancel_reason'] = $this->requestData['contribution_status_id'];
+                $data['cancel_reason'] = $this->requestData['contribution_status'];
                 break;
         }
 
