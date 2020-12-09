@@ -102,6 +102,8 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
      * Parse contribution data from request
      *
      * @return array Contribution data
+     *
+     * @throws CRM_Core_Exception
      */
     protected function parseContributionData(): array
     {
@@ -110,7 +112,11 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
         $data['receive_date'] = $this->requestData['receive_date'];
         $data['payment_instrument_id:name'] = $this->requestData['payment_instrument_id'];
         $data['trxn_id'] = $this->requestData['payment_transaction_id'];
-        $data['financial_type_id']=$this->options['financial_type_id'];
+
+        if (empty($this->options['financial_type_id'])) {
+            throw new CRM_Core_Exception('Financial type ID option missing');
+        }
+        $data['financial_type_id'] = $this->options['financial_type_id'];
 
         if (!empty($this->requestData['subject'])) {
             $data['source'] = $this->requestData['subject'];
@@ -143,7 +149,7 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
     protected function process()
     {
         $contact_id = $this->processContactData();
-//        return CRM_Wrapi_Handler_Base::REQUEST_PROCESSED;
+
         $this->addContribution($contact_id);
 
         $this->logRequestProcessed();
