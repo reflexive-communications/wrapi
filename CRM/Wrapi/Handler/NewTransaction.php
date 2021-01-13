@@ -122,12 +122,12 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
             $data['source'] = $this->requestData['subject'];
         }
 
-        switch ($this->requestData['contribution_status_id']) {
-            case 'COMPLETE':
-            case 'Completed':
+        switch (strtolower($this->requestData['contribution_status'])) {
+            case 'complete':
+            case 'completed':
                 $data['contribution_status_id:name'] = 'Completed';
                 break;
-            case 'Pending':
+            case 'pending':
                 $data['contribution_status_id:name'] = 'Pending';
                 break;
             default:
