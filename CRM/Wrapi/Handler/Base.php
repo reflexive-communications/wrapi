@@ -149,7 +149,7 @@ abstract class CRM_Wrapi_Handler_Base
             // Get rules
             $type = $rule['type'] ?? "";
             $name = $rule['name'] ?? "";
-            $required = isset($rule['required']);
+            $required = (bool)($rule['required'] ?? false);
             $default = $rule['default'] ?? null;
 
             // If input empty & default is defined --> use default
@@ -211,6 +211,12 @@ abstract class CRM_Wrapi_Handler_Base
      * Return request parameter rules
      *
      * @return array Input rules
+     *
+     * Properties:
+     *   - type:     Type of field (string | email | id)
+     *   - name:     Name of field
+     *   - required: Is required field (true | false)
+     *   - default:  Default value
      */
     abstract protected function inputRules(): array;
 }
