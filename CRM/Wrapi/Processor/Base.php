@@ -73,7 +73,7 @@ abstract class CRM_Wrapi_Processor_Base
                     $value = CRM_Utils_Type::validate($value, 'Float');
                 } elseif (is_bool($value)) {
                     // Boolean
-                    $value = CRM_Utils_Type::validate($value, 'Boolean');
+                    $value = (bool)$value;
                 } else {
                     // Nothing else --> string
                     $value = self::sanitizeString($value);
