@@ -126,9 +126,14 @@ abstract class CRM_Wrapi_Processor_Base
      *
      * @param mixed $value Input to validate
      * @param string $type Input type
-     *  'string': any string
-     *  'email'
-     *  'id': positive integer
+     *  'string':   any string
+     *  'email':    email address
+     *  'int':      integer
+     *  'id':       positive integer
+     *  'float':    float
+     *  'bool':     boolean
+     *  'date':     date
+     *  'datetime': datetime
      * @param string $name Name of variable (for logging and reporting)
      * @param bool $required Is value required?
      *  throws exception if value is empty
@@ -164,8 +169,25 @@ abstract class CRM_Wrapi_Processor_Base
             case 'email':
                 $valid = CRM_Utils_Rule::email($value);
                 break;
+            case 'int':
+                $valid = CRM_Utils_Rule::integer($value);
+                break;
             case 'id':
                 $valid = CRM_Utils_Rule::positiveInteger($value);
+                break;
+            case 'float':
+                $valid = (is_float($value) || (preg_match('/^\d*\.\d+$/', $value)));
+                break;
+            case 'bool':
+                $valid = CRM_Utils_Rule::boolean($value);
+                break;
+            case 'date':
+                $valid = CRM_Utils_Rule::date($value);
+                break;
+            case 'datetime':
+                $valid = (is_string($value)
+                    && (preg_match('/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\.\d\d\d(Z|\+\d\d:\d\d)$/', $value)
+                        || !is_null(CRM_Utils_Rule::dateTime($value))));
                 break;
             default:
                 throw new CRM_Core_Exception(sprintf('Not supported type: %s', $type));
