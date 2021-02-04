@@ -12,8 +12,8 @@
         <url desc="Main Extension Page">https://gitlab.com/semsey_sandor_civicrm/extensions/wrapi</url>
         <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
     </urls>
-    <releaseDate>2020-11-17</releaseDate>
-    <version>0.87</version>
+    <releaseDate>2020-02-04</releaseDate>
+    <version>0.9</version>
     <develStage>beta</develStage>
     <compatibility>
         <ver>5.0</ver>
