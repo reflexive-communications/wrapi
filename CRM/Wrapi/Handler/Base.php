@@ -88,7 +88,7 @@ abstract class CRM_Wrapi_Handler_Base
         $this->logIncomingRequest();
 
         // Validate request data
-        $this->validate();
+        $this->validate($this->requestData, $this->inputRules());
 
         // Process request
         return $this->process();
@@ -140,25 +140,37 @@ abstract class CRM_Wrapi_Handler_Base
     /**
      * Validate Request Data
      *
+     * @param mixed $data Data to validate
+     * @param array $rules Validation rules
+     *
      * @throws CRM_Core_Exception
      */
-    protected function validate(): void
+    protected function validate($data, array $rules): void
     {
         // Loop through input rules
-        foreach ($this->inputRules() as $input => $rule) {
-            // Get rules
+        foreach ($rules as $field => $rule) {
+            // Get rule details
             $type = $rule['type'] ?? "";
             $name = $rule['name'] ?? "";
             $required = (bool)($rule['required'] ?? false);
-            $default = $rule['default'] ?? null;
+            $elements = $rule['elements'] ?? [];
 
-            // If input empty & default is defined --> use default
-            if (empty($this->requestData[$input]) && !is_null($default)) {
-                $this->requestData[$input] = $default;
+            // Validate input fields
+
+            // Field is a list
+            if ($type == "list") {
+                // Check child elements (recursively)
+                foreach ($data[$field] as $item) {
+                    $this->validate($item, $elements);
+                }
+            } else {
+                if (is_array($data)) {
+                    $value = $data[$field];
+                } else {
+                    $value = $data;
+                }
+                CRM_Wrapi_Processor_Base::validateInput($value, $type, $name, $required);
             }
-
-            // Validate input
-            CRM_Wrapi_Processor_Base::validateInput($this->requestData[$input], $type, $name, $required);
         }
     }
 
@@ -213,10 +225,11 @@ abstract class CRM_Wrapi_Handler_Base
      * @return array Input rules
      *
      * Properties:
-     *   - type:     Type of field (string | email | id)
+     *   - type:     Type of field (string | email | int | id | float | bool | date | datetime | list)
      *   - name:     Name of field
      *   - required: Is required field (true | false)
      *   - default:  Default value
+     *   - elements: Definition for list elements (only for list type)
      */
     abstract protected function inputRules(): array;
 }

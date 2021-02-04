@@ -46,53 +46,30 @@ abstract class CRM_Wrapi_Processor_Base
      *
      * @param mixed $input Input to sanitize
      *
-     * @return array|string Sanitized input
+     * @return mixed Sanitized input
      *
      * @throws CRM_Core_Exception
      */
     public function sanitize($input)
     {
-        $sanitized = [];
+        $sanitized = null;
 
-        // Input is array --> sanitize values and keys
+        // Input is array --> loop through and recurse
         if (is_array($input)) {
             foreach ($input as $key => $value) {
                 // Sanitize key
-                $key = CRM_Utils_String::stripSpaces($key);
                 $key = self::sanitizeString($key);
-
                 // Sanitize value
-                if (is_array($value)) {
-                    // Array --> recurse
-                    $value = $this->sanitize($value);
-                } elseif (is_int($value)) {
-                    // Integer
-                    $value = CRM_Utils_Type::validate($value, 'Int');
-                } elseif (is_float($value)) {
-                    // Float
-                    $value = CRM_Utils_Type::validate($value, 'Float');
-                } elseif (is_bool($value)) {
-                    // Boolean
-                    $value = (bool)$value;
-                } else {
-                    // Nothing else --> string
-                    $value = self::sanitizeString($value);
-                }
+                $value = $this->sanitize($value);
 
                 $sanitized[$key] = $value;
             }
-        } elseif (is_int($input)) {
-            // Input is single integer
-            $sanitized = CRM_Utils_Type::validate($input, 'Int');
-        } elseif (is_float($input)) {
-            // Input is single float
-            $sanitized = CRM_Utils_Type::validate($input, 'Float');
-        } elseif (is_bool($input)) {
-            // Input is single boolean
-            $sanitized = CRM_Utils_Type::validate($input, 'Boolean');
-        } else {
-            // Input is single string
+        } elseif (is_string($input)) {
+            // Input is string --> sanitize
             $sanitized = self::sanitizeString($input);
+        } else {
+            // Input is int, float or bool --> no need to sanitize
+            $sanitized = $input;
         }
 
         return $sanitized;
@@ -126,9 +103,14 @@ abstract class CRM_Wrapi_Processor_Base
      *
      * @param mixed $value Input to validate
      * @param string $type Input type
-     *  'string': any string
-     *  'email'
-     *  'id': positive integer
+     *  'string':   any string
+     *  'email':    email address
+     *  'int':      integer
+     *  'id':       positive integer
+     *  'float':    float
+     *  'bool':     boolean
+     *  'date':     date
+     *  'datetime': datetime
      * @param string $name Name of variable (for logging and reporting)
      * @param bool $required Is value required?
      *  throws exception if value is empty
@@ -164,8 +146,25 @@ abstract class CRM_Wrapi_Processor_Base
             case 'email':
                 $valid = CRM_Utils_Rule::email($value);
                 break;
+            case 'int':
+                $valid = CRM_Utils_Rule::integer($value);
+                break;
             case 'id':
                 $valid = CRM_Utils_Rule::positiveInteger($value);
+                break;
+            case 'float':
+                $valid = (is_float($value) || (preg_match('/^\d*\.\d+$/', $value)));
+                break;
+            case 'bool':
+                $valid = CRM_Utils_Rule::boolean($value);
+                break;
+            case 'date':
+                $valid = CRM_Utils_Rule::date($value);
+                break;
+            case 'datetime':
+                $valid = (is_string($value)
+                    && (preg_match('/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\.\d\d\d(Z|\+\d\d:\d\d)$/', $value)
+                        || !is_null(CRM_Utils_Rule::dateTime($value))));
                 break;
             default:
                 throw new CRM_Core_Exception(sprintf('Not supported type: %s', $type));
@@ -184,7 +183,7 @@ abstract class CRM_Wrapi_Processor_Base
     public function output($result): void
     {
         header('Content-Type: application/json');
-        echo json_encode($result);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
         CRM_Utils_System::civiExit();
     }
 
