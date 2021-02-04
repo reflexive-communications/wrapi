@@ -130,7 +130,7 @@ abstract class CRM_Wrapi_Processor_Base
         }
 
         // Check value
-        if (empty($value)) {
+        if ($value === "" || $value === [] || $value === null) {
 
             if ($required) {
                 throw new CRM_Core_Exception(sprintf('Missing parameter: %s', $name));
@@ -156,7 +156,7 @@ abstract class CRM_Wrapi_Processor_Base
                 $valid = (is_float($value) || (preg_match('/^\d*\.\d+$/', $value)));
                 break;
             case 'bool':
-                $valid = CRM_Utils_Rule::boolean($value);
+                $valid = (is_bool($value) || CRM_Utils_Rule::boolean($value));
                 break;
             case 'date':
                 $valid = CRM_Utils_Rule::date($value);
