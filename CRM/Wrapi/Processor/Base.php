@@ -46,53 +46,30 @@ abstract class CRM_Wrapi_Processor_Base
      *
      * @param mixed $input Input to sanitize
      *
-     * @return array|string Sanitized input
+     * @return mixed Sanitized input
      *
      * @throws CRM_Core_Exception
      */
     public function sanitize($input)
     {
-        $sanitized = [];
+        $sanitized = null;
 
-        // Input is array --> sanitize values and keys
+        // Input is array --> loop through and recurse
         if (is_array($input)) {
             foreach ($input as $key => $value) {
                 // Sanitize key
-                $key = CRM_Utils_String::stripSpaces($key);
                 $key = self::sanitizeString($key);
-
                 // Sanitize value
-                if (is_array($value)) {
-                    // Array --> recurse
-                    $value = $this->sanitize($value);
-                } elseif (is_int($value)) {
-                    // Integer
-                    $value = CRM_Utils_Type::validate($value, 'Int');
-                } elseif (is_float($value)) {
-                    // Float
-                    $value = CRM_Utils_Type::validate($value, 'Float');
-                } elseif (is_bool($value)) {
-                    // Boolean
-                    $value = (bool)$value;
-                } else {
-                    // Nothing else --> string
-                    $value = self::sanitizeString($value);
-                }
+                $value = $this->sanitize($value);
 
                 $sanitized[$key] = $value;
             }
-        } elseif (is_int($input)) {
-            // Input is single integer
-            $sanitized = CRM_Utils_Type::validate($input, 'Int');
-        } elseif (is_float($input)) {
-            // Input is single float
-            $sanitized = CRM_Utils_Type::validate($input, 'Float');
-        } elseif (is_bool($input)) {
-            // Input is single boolean
-            $sanitized = CRM_Utils_Type::validate($input, 'Boolean');
-        } else {
-            // Input is single string
+        } elseif (is_string($input)) {
+            // Input is string --> sanitize
             $sanitized = self::sanitizeString($input);
+        } else {
+            // Input is int, float or bool --> no need to sanitize
+            $sanitized = $input;
         }
 
         return $sanitized;
