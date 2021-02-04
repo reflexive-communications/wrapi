@@ -206,7 +206,7 @@ abstract class CRM_Wrapi_Processor_Base
     public function output($result): void
     {
         header('Content-Type: application/json');
-        echo json_encode($result);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
         CRM_Utils_System::civiExit();
     }
 
