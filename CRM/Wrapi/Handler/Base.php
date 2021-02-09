@@ -153,7 +153,7 @@ abstract class CRM_Wrapi_Handler_Base
             $type = $rule['type'] ?? "";
             $name = $rule['name'] ?? "";
             $required = (bool)($rule['required'] ?? false);
-            $allowed_values=$rule['values'] ?? [];
+            $allowed_values = $rule['values'] ?? [];
             $elements = $rule['elements'] ?? [];
 
             // Validate input fields
