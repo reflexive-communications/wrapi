@@ -114,13 +114,19 @@ abstract class CRM_Wrapi_Processor_Base
      * @param string $name Name of variable (for logging and reporting)
      * @param bool $required Is value required?
      *  throws exception if value is empty
+     * @param array $allowed_values Allowed values for this input
      *
      * @return void
      *
      * @throws CRM_Core_Exception
      */
-    public static function validateInput($value, string $type, string $name, bool $required = true): void
-    {
+    public static function validateInput(
+        $value,
+        string $type,
+        string $name,
+        bool $required = true,
+        array $allowed_values = []
+    ): void {
         // Check parameters
         if (empty($type)) {
             throw new CRM_Core_Exception('Variable type missing');
@@ -129,13 +135,14 @@ abstract class CRM_Wrapi_Processor_Base
             throw new CRM_Core_Exception('Variable name missing');
         }
 
-        // Check value
+        // Empty value
         if ($value === "" || $value === [] || $value === null) {
 
             if ($required) {
                 throw new CRM_Core_Exception(sprintf('Missing parameter: %s', $name));
             }
 
+            // Value empty and not required --> skip validation
             return;
         }
 
@@ -172,6 +179,11 @@ abstract class CRM_Wrapi_Processor_Base
 
         if (!$valid) {
             throw new CRM_Core_Exception(sprintf('%s is not type of: %s', $name, $type));
+        }
+
+        // Allowed values values set --> check
+        if (!empty($allowed_values) && !in_array($value, $allowed_values)) {
+            throw new CRM_Core_Exception(sprintf('Not allowed value for: %s (%s)', $name, $value));
         }
     }
 

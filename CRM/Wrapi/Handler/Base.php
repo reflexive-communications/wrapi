@@ -153,6 +153,7 @@ abstract class CRM_Wrapi_Handler_Base
             $type = $rule['type'] ?? "";
             $name = $rule['name'] ?? "";
             $required = (bool)($rule['required'] ?? false);
+            $allowed_values=$rule['values'] ?? [];
             $elements = $rule['elements'] ?? [];
 
             // Validate input fields
@@ -169,7 +170,7 @@ abstract class CRM_Wrapi_Handler_Base
                 } else {
                     $value = $data;
                 }
-                CRM_Wrapi_Processor_Base::validateInput($value, $type, $name, $required);
+                CRM_Wrapi_Processor_Base::validateInput($value, $type, $name, $required, $allowed_values);
             }
         }
     }
