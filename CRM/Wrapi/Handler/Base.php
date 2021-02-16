@@ -270,7 +270,7 @@ abstract class CRM_Wrapi_Handler_Base
     }
 
     /**
-     * Map Yes/No fields in input to fields specified by mapping
+     * Map Bool fields in input to fields specified by mapping
      *
      * @param array $request_data Input data
      * @param array $mapping Mapping rules
@@ -280,7 +280,7 @@ abstract class CRM_Wrapi_Handler_Base
      *  ]
      * @return array Mapped data
      */
-    protected function mapFieldsYesNo(array $request_data, array $mapping): array
+    protected function mapFieldsBool(array $request_data, array $mapping): array
     {
         $mapped_data = [];
 
