@@ -163,7 +163,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             ['CRM_Wrapi_Form_Route', 'validateSelector'],
             ['config' => $this->config, 'id' => $this->id,]
         );
-        $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateHandler']);
+        $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateHandlerAndOptions']);
         $this->addFormRule(['CRM_Wrapi_Form_Route', 'validateLogLevel']);
     }
 
@@ -231,18 +231,45 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     }
 
     /**
-     * Validate handler
+     * Validate handler and options
      *
      * @param array $values Submitted values
      *
      * @return array|bool
      */
-    protected function validateHandler($values)
+    protected function validateHandlerAndOptions($values)
     {
-        if (!class_exists($values['handler_class'])) {
-            $errors['handler_class'] = ts('Handler: %1 does not exists!', ['1' => $values['handler_class'],]);
+        $handler = $values['handler_class'];
+
+        // Check if handler class exists
+        if (!class_exists($handler)) {
+            $errors['handler_class'] = ts('Handler: %1 does not exists!', ['1' => $handler,]);
 
             return $errors;
+        }
+
+        // Check if handler is an actual wrAPI handler class
+        if (!is_subclass_of($handler, CRM_Wrapi_Handler_Base::class)) {
+            $errors['handler_class'] = ts('Handler: %1 is not a wrAPI handler!', ['1' => $handler,]);
+
+            return $errors;
+        }
+
+        // Handler is a valid wrAPI handler --> check for required options (if they are set)
+        if (method_exists($handler, 'requiredOptions')) {
+            $required_options = $handler::requiredOptions();
+
+            // Loop through required options
+            foreach ($required_options as $option) {
+                $pattern = "/$option=\S+/";
+
+                // Check for required option
+                if (!preg_match($pattern, $values['options'])) {
+                    $errors['options'] = ts('Required option: %1 missing!', ['1' => $option,]);
+
+                    return $errors;
+                }
+            }
         }
 
         return true;

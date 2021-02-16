@@ -13,6 +13,14 @@ use Civi\API\Exception\UnauthorizedException;
 class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
 {
     /**
+     * Required options
+     */
+    public static function requiredOptions(): array
+    {
+        return ['financial_type_id'];
+    }
+
+    /**
      * Return request parameter rules
      *
      * @return array Input rules
