@@ -42,6 +42,8 @@ class CRM_Wrapi_Actions_Create
     /**
      * Add email to contact
      *
+     * @deprecated
+     *
      * @param string $email Email address
      * @param int $contact_id Contact ID
      * @param string $type Email address type
