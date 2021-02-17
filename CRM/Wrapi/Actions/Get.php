@@ -73,7 +73,7 @@ class CRM_Wrapi_Actions_Get
      * @throws CRM_Core_Exception
      * @throws UnauthorizedException
      */
-    public static function contactDataByID(int $contact_id, bool $check_permissions = false): ?array
+    public static function contactData(int $contact_id, bool $check_permissions = false): ?array
     {
         CRM_Wrapi_Processor_Base::validateInput($contact_id, 'id', 'Contact ID');
 
