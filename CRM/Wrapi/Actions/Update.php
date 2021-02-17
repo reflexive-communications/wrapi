@@ -15,7 +15,7 @@ use Civi\Api4\Generic\Result;
 class CRM_Wrapi_Actions_Update
 {
     /**
-     * Check if update operation succeeded
+     * Check if update operation succeeded and return updated data
      *
      * @param Result $results API call results
      * @param string $action Operation name (for logging & reporting)
@@ -28,11 +28,47 @@ class CRM_Wrapi_Actions_Update
     {
         $data = $results->first();
 
-        if (is_null($data)) {
+        if (is_null($data) || !is_array($data)) {
             throw new CRM_Core_Exception(sprintf('Failed to %s', $action));
         }
 
         return $data;
+    }
+
+    /**
+     * Update generic entity
+     *
+     * @param string $entity Name of entity
+     * @param int $entity_id Entity ID
+     * @param array $values Entity data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return array Updated entity data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    public static function entity(
+        string $entity,
+        int $entity_id,
+        array $values = [],
+        bool $check_permissions = false
+    ): array {
+        $results = civicrm_api4(
+            $entity,
+            'update',
+            [
+                'where' => [
+                    ['id', '=', $entity_id],
+                ],
+                'values' => $values,
+                'limit' => 1,
+                'checkPermissions' => $check_permissions,
+            ]
+        );
+
+        return self::parseResults($results, sprintf('update %s (ID: %s)', $entity, $entity_id));
     }
 
     /**
@@ -42,7 +78,7 @@ class CRM_Wrapi_Actions_Update
      * @param array $values Contact data
      * @param bool $check_permissions Should we check permissions (ACLs)?
      *
-     * @return array Contact data
+     * @return array Updated Contact data
      *
      * @throws API_Exception
      * @throws CRM_Core_Exception
@@ -50,24 +86,60 @@ class CRM_Wrapi_Actions_Update
      */
     public static function contact(int $contact_id, array $values = [], bool $check_permissions = false): array
     {
-        CRM_Wrapi_Processor_Base::validateInput($contact_id, 'id', 'Contact ID');
+        return self::entity('Contact', $contact_id, $values, $check_permissions);
+    }
 
-        // Remove contact ID from values
-        unset($values['id']);
+    /**
+     * Update email
+     *
+     * @param int $email_id Email ID
+     * @param array $values Email data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return array Updated Email data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    public static function email(int $email_id, array $values = [], bool $check_permissions = false): array
+    {
+        return self::entity('Email', $email_id, $values, $check_permissions);
+    }
 
-        $results = civicrm_api4(
-            'Contact',
-            'update',
-            [
-                'where' => [
-                    ['id', '=', $contact_id],
-                ],
-                'values' => $values,
-                'limit' => 1,
-                'checkPermissions' => $check_permissions,
-            ]
-        );
+    /**
+     * Update phone
+     *
+     * @param int $phone_id Phone ID
+     * @param array $values Phone data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return array Updated Phone data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    public static function phone(int $phone_id,array $values = [], bool $check_permissions = false): array
+    {
+        return self::entity('Phone', $phone_id, $values, $check_permissions);
+    }
 
-        return self::parseResults($results, 'update contact');
+    /**
+     * Update relationship
+     *
+     * @param int $relationship_id Relationship ID
+     * @param array $values Relationship data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return array Updated Relationship data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    public static function relationship(int $relationship_id, array $values = [], bool $check_permissions = false): array
+    {
+        return self::entity('Relationship', $relationship_id, $values, $check_permissions);
     }
 }
