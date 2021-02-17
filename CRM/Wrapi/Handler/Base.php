@@ -216,6 +216,123 @@ abstract class CRM_Wrapi_Handler_Base
     }
 
     /**
+     * Map fields in input to fields specified by mapping
+     *
+     * @param array $request_data Input data
+     * @param array $mapping Mapping rules
+     *  format: [
+     *      'input_field_1_name => 'mapped_field_name_1,
+     *      'input_field_2_name => 'mapped_field_name_2,
+     *  ]
+     * @return array Mapped data
+     */
+    protected function mapFieldsString(array $request_data, array $mapping): array
+    {
+        $mapped_data = [];
+
+        // Loop through mapping
+        foreach ($mapping as $field_in_request => $field_mapped) {
+            $value = $request_data[$field_in_request];
+
+            if (isset($value)) {
+                $mapped_data[$field_mapped] = $value;
+            }
+        }
+
+        return $mapped_data;
+    }
+
+    /**
+     * Map fields in input to integer fields specified by mapping
+     *
+     * @param array $request_data Input data
+     * @param array $mapping Mapping rules
+     *  format: [
+     *      'input_field_1_name => 'mapped_field_name_1,
+     *      'input_field_2_name => 'mapped_field_name_2,
+     *  ]
+     * @return array Mapped data
+     */
+    protected function mapFieldsInteger(array $request_data, array $mapping): array
+    {
+        $mapped_data = [];
+
+        // Loop through mapping
+        foreach ($mapping as $field_in_request => $field_mapped) {
+            $value = $request_data[$field_in_request];
+
+            if (isset($value)) {
+                $mapped_data[$field_mapped] = (int)$value;
+            }
+        }
+
+        return $mapped_data;
+    }
+
+    /**
+     * Map Bool fields in input to fields specified by mapping
+     *
+     * @param array $request_data Input data
+     * @param array $mapping Mapping rules
+     *  format: [
+     *      'input_field_1_name => 'mapped_field_name_1,
+     *      'input_field_2_name => 'mapped_field_name_2,
+     *  ]
+     * @return array Mapped data
+     */
+    protected function mapFieldsBool(array $request_data, array $mapping): array
+    {
+        $mapped_data = [];
+
+        // Loop through mapping
+        foreach ($mapping as $field_in_request => $field_mapped) {
+            $value = $request_data[$field_in_request];
+            if (isset($value)) {
+
+                $true_values = [true, 1, 'Yes', 'yes'];
+
+                if (in_array($value, $true_values, true)) {
+                    $mapped_data[$field_mapped] = 1;
+                } else {
+                    $mapped_data[$field_mapped] = 0;
+                }
+            }
+        }
+
+        return $mapped_data;
+    }
+
+    /**
+     * Map ISO8601 DateTime fields in input to MySQL DateTime fields specified by mapping
+     *
+     * @param array $request_data Input data
+     * @param array $mapping Mapping rules
+     *  format: [
+     *      'input_field_1_name => 'mapped_field_name_1,
+     *      'input_field_2_name => 'mapped_field_name_2,
+     *  ]
+     * @return array Mapped data
+     */
+    protected function mapFieldsDateTimeISO8601(array $request_data, array $mapping): array
+    {
+        $mapped_data = [];
+
+        // Loop through mapping
+        foreach ($mapping as $field_in_request => $field_mapped) {
+            $value = $request_data[$field_in_request];
+
+            if (isset($value)) {
+                // Parse ISO8601 Date
+                $iso8601_date = DateTime::createFromFormat("Y-m-d\TH:i:s.uP", $value);
+                // Convert to MySQL Date
+                $mapped_data[$field_mapped] = $iso8601_date->format("Y-m-d H:i:s");
+            }
+        }
+
+        return $mapped_data;
+    }
+
+    /**
      * Process Request
      */
     abstract protected function process();
