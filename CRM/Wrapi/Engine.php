@@ -49,9 +49,8 @@ class CRM_Wrapi_Engine
             // Output response to client
             $processor->output($response);
 
-        } catch (CRM_Core_Exception $ex) {
-            // Only catch known exceptions.
-            // Let the rest fall out.
+        } catch (Throwable $ex) {
+            // Catch all errors
             $this->error($ex->getMessage());
         }
     }
