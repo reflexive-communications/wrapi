@@ -24,7 +24,7 @@ class CRM_Wrapi_Actions_Update
      *
      * @throws CRM_Core_Exception
      */
-    protected static function checkSuccess(Civi\Api4\Generic\Result $results, string $action): array
+    protected static function parseResults(Civi\Api4\Generic\Result $results, string $action): array
     {
         $data = $results->first();
 
@@ -68,6 +68,6 @@ class CRM_Wrapi_Actions_Update
             ]
         );
 
-        return self::checkSuccess($results, 'update contact');
+        return self::parseResults($results, 'update contact');
     }
 }

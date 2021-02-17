@@ -26,7 +26,7 @@ class CRM_Wrapi_Actions_Create
      *
      * @throws CRM_Core_Exception
      */
-    protected static function checkSuccess(Civi\Api4\Generic\Result $results, string $action): int
+    protected static function parseResults(Civi\Api4\Generic\Result $results, string $action): int
     {
         $id = $results->first()['id'];
 
@@ -60,7 +60,7 @@ class CRM_Wrapi_Actions_Create
             ]
         );
 
-        return self::checkSuccess($results, 'create new contact');
+        return self::parseResults($results, 'create new contact');
     }
 
     /**
@@ -97,7 +97,7 @@ class CRM_Wrapi_Actions_Create
             ->addValue('location_type_id:name', $type)
             ->execute();
 
-        return self::checkSuccess($results, 'add email to contact');
+        return self::parseResults($results, 'add email to contact');
     }
 
     /**
@@ -129,6 +129,6 @@ class CRM_Wrapi_Actions_Create
             ]
         );
 
-        return self::checkSuccess($results, 'add contribution to contact');
+        return self::parseResults($results, 'add contribution to contact');
     }
 }
