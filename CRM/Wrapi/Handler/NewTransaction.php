@@ -183,7 +183,7 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
 
         // Email found --> retrieve stored contact data
         if (!is_null($contact_id)) {
-            $contact_data_stored = CRM_Wrapi_Actions_Get::contactDataByID($contact_id);
+            $contact_data_stored = CRM_Wrapi_Actions_Get::contactData($contact_id);
 
             if (is_null($contact_data_stored)) {
                 throw new CRM_Core_Exception('Contact data not found in DB');
