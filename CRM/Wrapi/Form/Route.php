@@ -260,15 +260,21 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             $required_options = $handler::requiredOptions();
 
             // Loop through required options
+            $missing_options = [];
             foreach ($required_options as $option) {
                 $pattern = "/$option=\S+/";
 
                 // Check for required option
                 if (!preg_match($pattern, $values['options'])) {
-                    $errors['options'] = ts('Required option: %1 missing!', ['1' => $option,]);
-
-                    return $errors;
+                    $missing_options[] = $option;
                 }
+            }
+
+            // There are missing options
+            if (!empty($missing_options)) {
+                $errors['options'] = ts('Required option(s): %1 missing!', ['1' => implode(', ', $missing_options)]);
+
+                return $errors;
             }
         }
 
