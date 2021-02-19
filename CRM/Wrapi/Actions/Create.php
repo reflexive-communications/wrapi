@@ -32,7 +32,7 @@ class CRM_Wrapi_Actions_Create
         $id = $results->first()['id'];
 
         // If there is a valid ID --> successful insert
-        if (is_null($id) || $id < 1) {
+        if ((int)$id < 1) {
             throw new CRM_Core_Exception(sprintf('Failed to %s', $action));
         }
 
