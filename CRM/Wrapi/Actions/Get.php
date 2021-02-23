@@ -1,6 +1,7 @@
 <?php
 
 use Civi\API\Exception\UnauthorizedException;
+use Civi\Api4\Address;
 use Civi\Api4\Contact;
 use Civi\Api4\Email;
 use Civi\Api4\Phone;
@@ -125,6 +126,30 @@ class CRM_Wrapi_Actions_Get
     public static function phoneID(int $contact_id, int $loc_type_id, bool $check_permissions = false): ?int
     {
         $results = Phone::get($check_permissions)
+            ->addSelect('id')
+            ->addWhere('contact_id', '=', $contact_id)
+            ->addWhere('location_type_id', '=', $loc_type_id)
+            ->setLimit(1)
+            ->execute();
+
+        return $results->first()['id'];
+    }
+
+    /**
+     * Get Address ID from contact and phone type
+     *
+     * @param int $contact_id Contact ID
+     * @param int $loc_type_id Location type id (Home, Main, etc...)
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return int|null Address ID if found, null if not found
+     *
+     * @throws API_Exception
+     * @throws UnauthorizedException
+     */
+    public static function addressID(int $contact_id, int $loc_type_id, bool $check_permissions = false): ?int
+    {
+        $results = Address::get($check_permissions)
             ->addSelect('id')
             ->addWhere('contact_id', '=', $contact_id)
             ->addWhere('location_type_id', '=', $loc_type_id)
