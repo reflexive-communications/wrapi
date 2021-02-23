@@ -163,6 +163,26 @@ class CRM_Wrapi_Actions_Create
     }
 
     /**
+     * Add address to contact
+     *
+     * @param int $contact_id Contact ID
+     * @param array $values Address data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return int Address ID
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    public static function address(int $contact_id, array $values = [], bool $check_permissions = false): int
+    {
+        $values['contact_id'] = $contact_id;
+
+        return self::entity('Address', $values, $check_permissions);
+    }
+
+    /**
      * Add relationship to contact
      *
      * @param int $contact_id Contact ID
