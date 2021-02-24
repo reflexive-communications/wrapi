@@ -3,6 +3,7 @@
 use Civi\API\Exception\UnauthorizedException;
 use Civi\Api4\Contact;
 use Civi\Api4\Email;
+use Civi\Api4\LocationType;
 use Civi\Api4\Phone;
 use Civi\Api4\Relationship;
 
@@ -147,13 +148,38 @@ class CRM_Wrapi_Actions_Get
      * @throws API_Exception
      * @throws UnauthorizedException
      */
-    public static function relationshipID(int $contact_id, int $other_contact_id, int $relationship_type_id, bool $check_permissions = false): ?int
-    {
-        $results = Relationship::get()
+    public static function relationshipID(
+        int $contact_id,
+        int $other_contact_id,
+        int $relationship_type_id,
+        bool $check_permissions = false
+    ): ?int {
+        $results = Relationship::get($check_permissions)
             ->addSelect('id')
             ->addWhere('contact_id_a', '=', $contact_id)
             ->addWhere('contact_id_b', '=', $other_contact_id)
             ->addWhere('relationship_type_id', '=', $relationship_type_id)
+            ->setLimit(1)
+            ->execute();
+
+        return $results->first()['id'];
+    }
+
+    /**
+     * Get ID of default Location type
+     *
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return int|null Location type ID if found, null if not found
+     *
+     * @throws API_Exception
+     * @throws UnauthorizedException
+     */
+    public static function defaultLocationTypeID(bool $check_permissions = false): ?int
+    {
+        $results = LocationType::get($check_permissions)
+            ->addSelect('id')
+            ->addWhere('is_default', '=', true)
             ->setLimit(1)
             ->execute();
 
