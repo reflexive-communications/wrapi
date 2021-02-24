@@ -120,9 +120,27 @@ class CRM_Wrapi_Actions_Update
      * @throws CRM_Core_Exception
      * @throws NotImplementedException
      */
-    public static function phone(int $phone_id,array $values = [], bool $check_permissions = false): array
+    public static function phone(int $phone_id, array $values = [], bool $check_permissions = false): array
     {
         return self::entity('Phone', $phone_id, $values, $check_permissions);
+    }
+
+    /**
+     * Update address
+     *
+     * @param int $address_id Address ID
+     * @param array $values Address data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return array Updated Address data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    public static function address(int $address_id, array $values = [], bool $check_permissions = false): array
+    {
+        return self::entity('Address', $address_id, $values, $check_permissions);
     }
 
     /**
@@ -138,8 +156,11 @@ class CRM_Wrapi_Actions_Update
      * @throws CRM_Core_Exception
      * @throws NotImplementedException
      */
-    public static function relationship(int $relationship_id, array $values = [], bool $check_permissions = false): array
-    {
+    public static function relationship(
+        int $relationship_id,
+        array $values = [],
+        bool $check_permissions = false
+    ): array {
         return self::entity('Relationship', $relationship_id, $values, $check_permissions);
     }
 }
