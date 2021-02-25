@@ -21,12 +21,41 @@ class CRM_Wrapi_AuthenticatorTest extends \PHPUnit\Framework\TestCase {
   }
 
   /**
-   * Simple example test case.
-   *
-   * Note how the function name begins with the word "test".
+   * Check HTTP request method test.
+   * For post method it shoudn't throw any exception.
+   * For other methods, it should throw CRM_Core_Exception.
    */
-  public function testExample() {
-    self::assertTrue(TRUE, "The argument must be true to pass the test");
+  public function testCheckHTTPRequestMethod() {
+    $invalidMethods = ["GET", "HEAD", "PUT"];
+    foreach ($invalidMethods as $method) {
+      $_SERVER["REQUEST_METHOD"] = $method;
+      $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+      $this->expectExceptionMessage("Only POST method is allowed", "Invalid exception message.");
+      $this->assertEmpty(CRM_Wrapi_Authenticator::checkHTTPRequestMethod());
+    }
+    $_SERVER["REQUEST_METHOD"] = "GET";
+    try {
+      $this->assertEmpty(CRM_Wrapi_Authenticator::checkHTTPRequestMethod());
+    } catch (Exception $e) {
+      $this->fail("It shouldn't throw exception.");
+    }
   }
-
+  /**
+   * Authenticate site-key test.
+   */
+  public function testAuthenticateSiteKey() {
+    $this->markTestIncomplete("This test has not been implemented yet.");
+  }
+  /**
+   * Authenticate user-key test.
+   */
+  public function testAuthenticateUserKey() {
+    $this->markTestIncomplete("This test has not been implemented yet.");
+  }
+  /**
+   * Authenticate request test.
+   */
+  public function testAuthenticate() {
+    $this->markTestIncomplete("This test has not been implemented yet.");
+  }
 }
