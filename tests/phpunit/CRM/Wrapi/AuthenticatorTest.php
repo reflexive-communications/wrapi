@@ -33,7 +33,7 @@ class CRM_Wrapi_AuthenticatorTest extends \PHPUnit\Framework\TestCase {
       $this->expectExceptionMessage("Only POST method is allowed", "Invalid exception message.");
       $this->assertEmpty(CRM_Wrapi_Authenticator::checkHTTPRequestMethod());
     }
-    $_SERVER["REQUEST_METHOD"] = "GET";
+    $_SERVER["REQUEST_METHOD"] = "POST";
     try {
       $this->assertEmpty(CRM_Wrapi_Authenticator::checkHTTPRequestMethod());
     } catch (Exception $e) {
