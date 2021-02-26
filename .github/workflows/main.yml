@@ -7,7 +7,7 @@ on:
 jobs:
   tests:
     name: Unit tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     env:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: drupal
@@ -45,7 +45,6 @@ jobs:
 
     - name: Basic apache module and config
       run: |
-          sudo add-apt-repository ppa:ondrej/php
           sudo apt-get update
           sudo apt-get install libapache2-mod-php7.3
           sudo a2enmod rewrite
