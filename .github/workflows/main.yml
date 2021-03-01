@@ -46,6 +46,7 @@ jobs:
     - name: Create /home/runner/.cv.json file
       run: |
           echo "{\"sites\":{\"${{ env.LOCAL_DEPLOY_TARGET }}/${{ env.SITE_NAME }}/web/sites/default/civicrm.settings.php\":{\"TEST_DB_DSN\":\"mysql://root:${{ env.MYSQL_ROOT_PASSWORD }}@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/${{ env.MYSQL_DATABASE }}?new_link=true\"}}}" > /home/runner/.cv.json
+          cat /home/runner/.cv.json
 
     - name: Basic apache module and config
       run: |
