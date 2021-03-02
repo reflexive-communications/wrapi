@@ -88,15 +88,9 @@ jobs:
       with:
           path: ${{ env.EXTENSION_NAME }}
 
-    - name: Move ${{ env.EXTENSION_NAME }} under extensions directory
+    - name: Move code under extensions directory
       run: |
-          sudo mv ${{ env.EXTENSION_NAME }} ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}"/extensions"
-
-    - name: Change extensions directory.
-      run: |
-          cd ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}
-          cv api Setting.create extensionsDir="[cms.root]/extensions/"
-          cv api Setting.create extensionsURL="[cms.root]/extensions/"
+          sudo mv ${{ env.EXTENSION_NAME }} ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}"/sites/default/files/civicrm/ext"
 
     - name: Enable extension
       run: |
@@ -105,5 +99,5 @@ jobs:
 
     - name: Run unit tests
       run: |
-          cd ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}"/extensions/"${{ env.EXTENSION_NAME }}
+          cd ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}"/sites/default/files/civicrm/ext/"${{ env.EXTENSION_NAME }}
           phpunit
