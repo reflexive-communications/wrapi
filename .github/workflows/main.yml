@@ -98,6 +98,11 @@ jobs:
           cv api Setting.create extensionsDir="[cms.root]/extensions/"
           cv api Setting.create extensionsURL="[cms.root]/extensions/"
 
+    - name: Enable extension
+      run: |
+          cd ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}
+          cv --no-interaction --cwd=${{ env.LOCAL_DEPLOY_TARGET }}/${{ env.SITE_NAME }} ext:enable ${{ env.EXTENSION_NAME }}
+
     - name: Run unit tests
       run: |
           cd ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}"/extensions/"${{ env.EXTENSION_NAME }}
