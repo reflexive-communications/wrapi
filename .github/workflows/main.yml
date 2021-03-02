@@ -90,7 +90,7 @@ jobs:
 
     - name: Move code under extensions directory
       run: |
-          sudo mv ${{ env.EXTENSION_NAME }} ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}"/sites/default/files/civicrm/ext"
+          sudo mv ${{ env.EXTENSION_NAME }} ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}"/web/sites/default/files/civicrm/ext"
 
     - name: Enable extension
       run: |
@@ -99,5 +99,5 @@ jobs:
 
     - name: Run unit tests
       run: |
-          cd ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}"/sites/default/files/civicrm/ext/"${{ env.EXTENSION_NAME }}
+          cd ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}"/web/sites/default/files/civicrm/ext/"${{ env.EXTENSION_NAME }}
           phpunit
