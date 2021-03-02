@@ -54,7 +54,6 @@ jobs:
       with:
           repository: akosgarai/dsg
           path: dsg
-          ref: update-model
 
     - name: Build drupal site with civicrm.
       env:
