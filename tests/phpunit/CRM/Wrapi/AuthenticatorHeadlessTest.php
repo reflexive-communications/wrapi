@@ -21,7 +21,8 @@ use Civi\Test\TransactionalInterface;
  */
 class CRM_Wrapi_AuthenticatorHeadlessTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, HookInterface, TransactionalInterface {
 
-  const API_KEY = "myapikey";
+  const USER_API_KEY = "myapikey";
+  const ADMIN_API_KEY = "adminapikey";
 
   public function setUpHeadless() {
     // Civi\Test has many helpers, like install(), uninstall(), sql(), and sqlFile().
@@ -61,10 +62,13 @@ class CRM_Wrapi_AuthenticatorHeadlessTest extends \PHPUnit\Framework\TestCase im
     parent::tearDown();
   }
   /**
-   * It creates a contact with an api key using the cv command.
+   * It creates a contact with an api key and valid email address using the cv command.
+   * It returns the new contact id for further commands.
    */
-  private function createContact() {
-    cv('api Contact.create contact_type="Individual" first_name="Bobin" last_name="McGyver" api_key="'.self::API_KEY.'"');
+  private function createContact(string $apiKey): int {
+    $user = cv('api Contact.create contact_type="Individual" first_name="Bobin" last_name="McGyver" api_key="'.$apiKey.'"');
+    cv('api Email.create contact_id='.$user['id'].' email="'.$apiKey.'@email.com"');
+    return $user['id'];
   }
 
   /**
@@ -100,22 +104,71 @@ class CRM_Wrapi_AuthenticatorHeadlessTest extends \PHPUnit\Framework\TestCase im
     $this->expectExceptionMessage("Failed to authenticate key", "Invalid exception message.");
     $this->assertEmpty($this->callMethod($a, "authenticateUserKey", ["random-string"]));
   }
+  public function testAuthenticateUserKeyEmptyUserDataWithDebugFlag() {
+    $a = new CRM_Wrapi_Authenticator(true);
+    // empty user key -> exception from DAO
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("getFieldValue failed", "Invalid exception message.");
+    $this->assertEmpty($this->callMethod($a, "authenticateUserKey", [""]));
+  }
+  public function testAuthenticateUserKeyInvalidUserDataWithDebugFlag() {
+    $a = new CRM_Wrapi_Authenticator(true);
+    // something random string as user key -> exception
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("Failed to authenticate user-key", "Invalid exception message.");
+    $this->assertEmpty($this->callMethod($a, "authenticateUserKey", ["random-string"]));
+  }
   /**
    * Authenticate user-key test.
    * Valid contact data.
    */
-  public function testAuthenticateUserKeyValidUserDataWithoutDebugFlag() {
+  public function testAuthenticateUserKeyValidUserNoCmsUserDataWithoutDebugFlag() {
     $a = new CRM_Wrapi_Authenticator(false);
     // valid user key shouldn't throw exception.
     // a valid user has to be created and its api-key value has to be set.
     try {
-      $this->createContact();
+      $this->createContact(self::USER_API_KEY);
     } catch (Exception $e) {
       $this->fail("Contact creation failed.");
     }
     $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
     $this->expectExceptionMessage("Failed to authenticate key", "Invalid exception message.");
-    $this->assertEmpty($this->callMethod($a, "authenticateUserKey", [self::API_KEY]));
+    $this->assertEmpty($this->callMethod($a, "authenticateUserKey", [self::USER_API_KEY]));
   }
-
+  public function testAuthenticateUserKeyValidUserNoCmsUserDataWithDebugFlag() {
+    $a = new CRM_Wrapi_Authenticator(true);
+    // valid user key shouldn't throw exception.
+    // a valid user has to be created and its api-key value has to be set.
+    try {
+      $this->createContact(self::USER_API_KEY);
+    } catch (Exception $e) {
+      $this->fail("Contact creation failed.");
+    }
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("Failed to authenticate user-key", "Invalid exception message.");
+    $this->assertEmpty($this->callMethod($a, "authenticateUserKey", [self::USER_API_KEY]));
+  }
+  public function testAuthenticateUserKeyValidUserCmsUserDataWithoutDebugFlag() {
+    $a = new CRM_Wrapi_Authenticator(false);
+    // valid user key shouldn't throw exception.
+    // a valid user has to be created and its api-key value has to be set.
+    $contact_id = null;
+    try {
+      $contact_id = $this->createContact(self::ADMIN_API_KEY);
+    } catch (Exception $e) {
+      $this->fail("Failed to add api_key to admin.");
+    }
+    // CMS user needs to be created from the contact. How?
+    try {
+      $this->assertEmpty($this->callMethod($a, "authenticateUserKey", [self::ADMIN_API_KEY]));
+    } catch (Exception $e) {
+      $this->fail("Admin authentication has to be successful.");
+    }
+  }
+  /**
+   * Authenticate request test.
+   */
+  public function testAuthenticate() {
+    $this->markTestIncomplete("This test has not been implemented yet.");
+  }
 }

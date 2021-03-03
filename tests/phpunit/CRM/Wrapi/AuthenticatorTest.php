@@ -49,10 +49,4 @@ class CRM_Wrapi_AuthenticatorTest extends \PHPUnit\Framework\TestCase {
   public function testAuthenticateSiteKey() {
     $this->markTestIncomplete("This test has not been implemented yet.");
   }
-  /**
-   * Authenticate request test.
-   */
-  public function testAuthenticate() {
-    $this->markTestIncomplete("This test has not been implemented yet.");
-  }
 }
