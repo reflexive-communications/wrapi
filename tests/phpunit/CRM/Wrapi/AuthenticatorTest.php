@@ -25,20 +25,31 @@ class CRM_Wrapi_AuthenticatorTest extends \PHPUnit\Framework\TestCase {
    * For post method it shoudn't throw any exception.
    * For other methods, it should throw CRM_Core_Exception.
    */
-  public function testCheckHTTPRequestMethod() {
-    $invalidMethods = ["GET", "HEAD", "PUT"];
-    foreach ($invalidMethods as $method) {
-      $_SERVER["REQUEST_METHOD"] = $method;
-      $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
-      $this->expectExceptionMessage("Only POST method is allowed", "Invalid exception message.");
-      $this->assertEmpty(CRM_Wrapi_Authenticator::checkHTTPRequestMethod());
-    }
+  public function testCheckHTTPRequestPostMethod() {
     $_SERVER["REQUEST_METHOD"] = "POST";
     try {
       $this->assertEmpty(CRM_Wrapi_Authenticator::checkHTTPRequestMethod());
     } catch (Exception $e) {
       $this->fail("It shouldn't throw exception.");
     }
+  }
+  public function testCheckHTTPRequestGetMethod() {
+    $_SERVER["REQUEST_METHOD"] = "GET";
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("Only POST method is allowed", "Invalid exception message.");
+    $this->assertEmpty(CRM_Wrapi_Authenticator::checkHTTPRequestMethod());
+  }
+  public function testCheckHTTPRequestHeadMethod() {
+    $_SERVER["REQUEST_METHOD"] = "HEAD";
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("Only POST method is allowed", "Invalid exception message.");
+    $this->assertEmpty(CRM_Wrapi_Authenticator::checkHTTPRequestMethod());
+  }
+  public function testCheckHTTPRequestPutMethod() {
+    $_SERVER["REQUEST_METHOD"] = "PUT";
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("Only POST method is allowed", "Invalid exception message.");
+    $this->assertEmpty(CRM_Wrapi_Authenticator::checkHTTPRequestMethod());
   }
   /**
    * Authenticate site-key test.
