@@ -90,4 +90,4 @@ jobs:
     - name: Run unit tests
       run: |
           cd ${{ env.LOCAL_DEPLOY_TARGET }}"/"${{ env.SITE_NAME }}"/web/sites/default/files/civicrm/ext/"${{ env.EXTENSION_NAME }}
-          phpunit
+          phpunit --verbose
