@@ -38,21 +38,6 @@ class CRM_Wrapi_ConfigManagerHeadlessTest extends \PHPUnit\Framework\TestCase im
   }
 
   /**
-   * Example: Test that a version is returned.
-   */
-  public function testWellFormedVersion() {
-    $this->assertNotEmpty(E::SHORT_NAME);
-    $this->assertRegExp('/^([0-9\.]|alpha|beta)*$/', \CRM_Utils_System::version());
-  }
-
-  /**
-   * Example: Test that we're using a fake CMS.
-   */
-  public function testWellFormedUF() {
-    $this->assertEquals('UnitTests', CIVICRM_UF);
-  }
-
-  /**
    * Constructor test.
    * The config has to be the default.
    */

@@ -20,13 +20,4 @@ class CRM_Wrapi_FactoryTest extends \PHPUnit\Framework\TestCase {
     parent::tearDown();
   }
 
-  /**
-   * Simple example test case.
-   *
-   * Note how the function name begins with the word "test".
-   */
-  public function testExample() {
-    self::assertTrue(TRUE, "The argument must be true to pass the test");
-  }
-
 }
