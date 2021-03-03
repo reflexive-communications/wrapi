@@ -8,6 +8,13 @@
   <filter>
     <whitelist>
       <directory suffix=".php">./</directory>
+      <exclude>
+        <!-- Skip the test directory -->
+        <directory>./tests</directory>
+        <!-- Skip the generated files -->
+        <file>./wrapi.php</file>
+        <file>./wrapi.civix.php</file>
+      </exclude>
     </whitelist>
   </filter>
   <listeners>
