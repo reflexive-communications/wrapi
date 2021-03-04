@@ -162,4 +162,152 @@ class CRM_Wrapi_Processor_BaseUnitTest extends \PHPUnit\Framework\TestCase {
       $this->fail("Exception shouldn't be thrown for valid data.");
     }
   }
+  public function testValidateInputMissingType() {
+    $value = "testvalue";
+    $type = "";
+    $name = "testname";
+    $required = false;
+    $allowedValues = [];
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("Variable type missing", "Invalid exception message.");
+    CRM_Wrapi_Processor_Base::validateInput($value, $type, $name, $required, $allowedValues);
+  }
+  public function testValidateInputMissingName() {
+    $value = "testvalue";
+    $type = "testtype";
+    $name = "";
+    $required = false;
+    $allowedValues = [];
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("Variable name missing", "Invalid exception message.");
+    CRM_Wrapi_Processor_Base::validateInput($value, $type, $name, $required, $allowedValues);
+  }
+  public function testValidateInputEmptyRequiredValue() {
+    $value = "";
+    $type = "testtype";
+    $name = "testname";
+    $required = true;
+    $allowedValues = [];
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("Missing parameter: ".$name, "Invalid exception message.");
+    CRM_Wrapi_Processor_Base::validateInput($value, $type, $name, $required, $allowedValues);
+  }
+  public function testValidateInputNotSupportedType() {
+    $value = "testvalue";
+    $type = "invalidTypeName";
+    $name = "testname";
+    $required = false;
+    $allowedValues = [];
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("Not supported type: ".$type, "Invalid exception message.");
+    CRM_Wrapi_Processor_Base::validateInput($value, $type, $name, $required, $allowedValues);
+  }
+  public function testValidateInputInvalidValue() {
+    $value = "testvalue";
+    $type = "email";
+    $name = "testname";
+    $required = false;
+    $allowedValues = [];
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage($name." is not type of: ".$type, "Invalid exception message.");
+    CRM_Wrapi_Processor_Base::validateInput($value, $type, $name, $required, $allowedValues);
+  }
+  public function testValidateInputNotAllowedValue() {
+    $value = "invalid value";
+    $type = "string";
+    $name = "testname";
+    $required = false;
+    $allowedValues = ["ON", "OFF"];
+    $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
+    $this->expectExceptionMessage("Not allowed value for: ".$name." (".$value.")", "Invalid exception message.");
+    CRM_Wrapi_Processor_Base::validateInput($value, $type, $name, $required, $allowedValues);
+  }
+  public function testValidateInputValidValues() {
+    $testData = [
+      [
+        "value" => "",
+        "type" => "string",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+      [
+        "value" => "valid string value",
+        "type" => "string",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+      [
+        "value" => "email@addr.hu",
+        "type" => "email",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+      [
+        "value" => "12",
+        "type" => "int",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+      [
+        "value" => "-12",
+        "type" => "int",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+      [
+        "value" => -12,
+        "type" => "int",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+      [
+        "value" => 12,
+        "type" => "id",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+      [
+        "value" => 12.1,
+        "type" => "float",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+      [
+        "value" => false,
+        "type" => "bool",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+      [
+        "value" => "2020-12-01",
+        "type" => "date",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+      [
+        "value" => "2020-12-01T11:22:22.101Z",
+        "type" => "datetime",
+        "name" => "testName",
+        "required" => false,
+        "allowedValues" => [],
+      ],
+    ];
+    foreach($testData as $t) {
+      try {
+        $this->assertEmpty(CRM_Wrapi_Processor_Base::validateInput($t["value"], $t["type"], $t["name"], $t["required"], $t["allowedValues"]), "Should be empty for valid setup.");
+      } catch (Exception $e) {
+        $this->fail("Should not throw exception for valid setup.".$e->getMessage());
+      }
+    }
+  }
 }
