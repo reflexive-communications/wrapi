@@ -149,6 +149,7 @@ class CRM_Wrapi_AuthenticatorHeadlessTest extends \PHPUnit\Framework\TestCase im
     $this->assertEmpty($this->callMethod($a, "authenticateUserKey", [self::USER_API_KEY]));
   }
   public function testAuthenticateUserKeyValidUserCmsUserDataWithoutDebugFlag() {
+    $this->markTestIncomplete("This test has not been implemented yet.");
     $a = new CRM_Wrapi_Authenticator(false);
     // valid user key shouldn't throw exception.
     // a valid user has to be created and its api-key value has to be set.
