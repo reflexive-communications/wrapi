@@ -441,6 +441,74 @@ abstract class CRM_Wrapi_Handler_Base
     }
 
     /**
+     * Save contact
+     *
+     * Look up contact by email
+     * If already present in DB --> update contact
+     * If not --> create new contact
+     *
+     * @param string|null $email Email address
+     * @param array $record Contact data. For details @see saveContactByExternalID
+     *
+     * @return int Contact ID
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     * @throws UnauthorizedException
+     */
+    protected function saveContactByEmail(?string $email, array $record): int
+    {
+        if (empty($email)) {
+            throw new CRM_Core_Exception('Email address missing');
+        }
+
+        $contact_id = CRM_Wrapi_Actions_Get::contactIDFromEmail($email);
+
+        return $this->saveContact($contact_id, $record);
+    }
+
+    /**
+     * Save contact with related entities
+     *
+     * If a valid contact ID is supplied then update that contact
+     * If not then create new contact
+     *
+     * @param int|null $contact_id Contact ID
+     * @param array $record Contact data. For details @see saveContactByExternalID
+     *
+     * @return int Contact ID
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     * @throws UnauthorizedException
+     */
+    protected function saveContact(?int $contact_id, array $record): int
+    {
+        // Save Contact entity
+        // If contact ID is null here, it is not a problem, a contact will be created
+        // If contact ID is not null it won't change (hopefully :))
+        $contact_id = $this->saveContactEntity($contact_id, $record['contact']);
+
+        // Now there must be a contact ID
+        if (is_null($contact_id)) {
+            throw new CRM_Core_Exception('Failed to retrieve contact');
+        }
+
+        // Save related entities
+        $this->saveEmailEntity($contact_id, $record['email']);
+        $this->savePhoneEntity($contact_id, $record['phone']);
+        $this->saveAddressEntity($contact_id, $record['address']);
+
+        foreach ($record['relationship'] as $relationship_data) {
+            $this->saveRelationshipEntity($contact_id, $relationship_data);
+        }
+
+        return $contact_id;
+    }
+
+    /**
      * Save Contact entity
      *
      * If a valid contact ID is supplied then update that contact
@@ -450,6 +518,13 @@ abstract class CRM_Wrapi_Handler_Base
      * @param array|null $contact_data Contact data
      *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
      *   See Api Explorer v4
+     *
+     *   Example:
+     *   $contact_data = [
+     *     'first_name' => 'Janos',
+     *     'job_title' => 'Big Boss,
+     *     'preferred_language' => 'hu_HU',
+     *   ];
      *
      * @return int|null Created contact ID
      *
