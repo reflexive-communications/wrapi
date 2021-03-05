@@ -1,5 +1,8 @@
 <?php
 
+use Civi\API\Exception\NotImplementedException;
+use Civi\API\Exception\UnauthorizedException;
+
 /**
  * Base Handler
  *
@@ -349,5 +352,230 @@ abstract class CRM_Wrapi_Handler_Base
         }
 
         return $mapped_data;
+    }
+
+    /**
+     * Save contact
+     *
+     * Look up contact by external ID
+     * If already present in DB --> update contact
+     * If not --> create new contact
+     *
+     * @param string|null $external_id External ID
+     * @param array $record Contact data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     * @throws UnauthorizedException
+     */
+    protected function saveContactByExternalID(?string $external_id, array $record)
+    {
+        if (empty($external_id)) {
+            throw new CRM_Core_Exception('External ID missing');
+        }
+
+        // Retrieve contact ID
+        $contact_id = CRM_Wrapi_Actions_Get::contactIDFromExternalID($external_id);
+
+        // Save Contact entity
+        // If contact ID is null here, it is not a problem, a contact will be created
+        // If contact ID is not null it won't change (hopefully :))
+        $contact_id = $this->saveContact($contact_id, $record['contact']);
+
+        // At this point now there must be a contact ID
+        if (is_null($contact_id)) {
+            throw new CRM_Core_Exception('Failed to retrieve contact');
+        }
+
+        // Save related entities
+        $this->saveEmail($contact_id, $record['email']);
+        $this->savePhone($contact_id, $record['phone']);
+        $this->saveAddress($contact_id, $record['address']);
+
+        foreach ($record['relationship'] as $relationship_data) {
+            $this->saveRelationship($contact_id, $relationship_data);
+        }
+    }
+
+    /**
+     * Save Contact entity
+     *
+     * If a valid contact ID is supplied then update that contact
+     * If not then create new contact
+     *
+     * @param int|null $contact_id Contact ID
+     * @param array $contact_data Contact data
+     *
+     * @return int|null
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    protected function saveContact(?int $contact_id, array $contact_data): ?int
+    {
+        if (empty($contact_data)) {
+            return null;
+        }
+
+        // Create or update
+        if (is_null($contact_id)) {
+            // Null contact ID --> create new
+            $contact_id = CRM_Wrapi_Actions_Create::contact($contact_data);
+            $this->debug(sprintf('Contact created (Contact ID: %s)', $contact_id));
+        } else {
+            // Valid contact ID --> update present
+            CRM_Wrapi_Actions_Update::contact($contact_id, $contact_data);
+            $this->debug(sprintf('Contact updated (Contact ID: %s)', $contact_id));
+        }
+
+        return $contact_id;
+    }
+
+    /**
+     * Save Email entity
+     *
+     * If an email address is already present for a contact and location type pair then update that address
+     * If not present then add new email
+     *
+     * @param int $contact_id Contact ID
+     * @param array $email_data Email data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     * @throws UnauthorizedException
+     */
+    protected function saveEmail(int $contact_id, array $email_data)
+    {
+        if (empty($email_data)) {
+            return;
+        }
+
+        // Check for previous email
+        $email_id = CRM_Wrapi_Actions_Get::emailID($contact_id, $email_data['location_type_id']);
+
+        // Create or update
+        if (is_null($email_id)) {
+            // Null email ID --> create new
+            $email_id = CRM_Wrapi_Actions_Create::email($contact_id, $email_data);
+            $this->debug(sprintf('Email added (Contact ID: %s Email ID: %s)', $contact_id, $email_id));
+        } else {
+            // Valid email ID --> update present
+            CRM_Wrapi_Actions_Update::email($email_id, $email_data);
+            $this->debug(sprintf('Email updated (Email ID: %s)', $email_id));
+        }
+    }
+
+    /**
+     * Save Phone entity
+     *
+     * If a phone number is already present for a contact and location type pair then update that number
+     * If not present then add new number
+     *
+     * @param int $contact_id Contact ID
+     * @param array $phone_data Phone data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     * @throws UnauthorizedException
+     */
+    protected function savePhone(int $contact_id, array $phone_data)
+    {
+        if (empty($phone_data)) {
+            return;
+        }
+
+        // Check for previous phone
+        $phone_id = CRM_Wrapi_Actions_Get::phoneID($contact_id, $phone_data['location_type_id']);
+
+        // Create or update
+        if (is_null($phone_id)) {
+            // Null phone ID --> create new
+            $phone_id = CRM_Wrapi_Actions_Create::phone($contact_id, $phone_data);
+            $this->debug(sprintf('Phone added (Contact ID: %s Phone ID: %s)', $contact_id, $phone_id));
+        } else {
+            // Valid phone ID --> update present
+            CRM_Wrapi_Actions_Update::phone($phone_id, $phone_data);
+            $this->debug(sprintf('Phone updated (Phone ID: %s)', $phone_id));
+        }
+    }
+
+    /**
+     * Save Address entity
+     *
+     * If an address is already present for a contact and location type pair then update that address
+     * If not present then add new address
+     *
+     * @param int $contact_id Contact ID
+     * @param array $address_data Address data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     * @throws UnauthorizedException
+     */
+    protected function saveAddress(int $contact_id, array $address_data)
+    {
+        if (empty($address_data)) {
+            return;
+        }
+
+        // Check for previous address
+        $address_id = CRM_Wrapi_Actions_Get::addressID($contact_id, $address_data['location_type_id']);
+
+        // Create or update
+        if (is_null($address_id)) {
+            // Null address ID --> create new
+            $address_id = CRM_Wrapi_Actions_Create::address($contact_id, $address_data);
+            $this->debug(sprintf('Address added (Contact ID: %s Address ID: %s)', $contact_id, $address_id));
+        } else {
+            // Valid address ID --> update present
+            CRM_Wrapi_Actions_Update::address($address_id, $address_data);
+            $this->debug(sprintf('Address updated (Address ID: %s)', $address_id));
+        }
+    }
+
+    /**
+     * Save Relationship entity
+     *
+     * If a relationship type is already present between the contacts then update that relationship
+     * If not present then add new relationship
+     *
+     * @param int $contact_id Contact ID
+     * @param array $relationship_data Relationship data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     * @throws UnauthorizedException
+     */
+    protected function saveRelationship(int $contact_id, array $relationship_data)
+    {
+        if (empty($relationship_data)) {
+            return;
+        }
+
+        // Check for previous relationship
+        $relationship_id = CRM_Wrapi_Actions_Get::relationshipID(
+            $contact_id,
+            $relationship_data['contact_id_b'],
+            $relationship_data['relationship_type_id']
+        );
+
+        // Create or update
+        if (is_null($relationship_id)) {
+            // Null relationship ID --> create new
+            $relationship_id = CRM_Wrapi_Actions_Create::relationship($contact_id, $relationship_data);
+            $this->debug(
+                sprintf('Relationship added (Contact ID: %s Relation ID: %s)', $contact_id, $relationship_id)
+            );
+        } else {
+            // Valid relationship ID --> update present
+            CRM_Wrapi_Actions_Update::relationship($relationship_id, $relationship_data);
+            $this->debug(sprintf('Relationship updated (Relation ID: %s)', $relationship_id));
+        }
     }
 }
