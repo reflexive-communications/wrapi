@@ -491,15 +491,17 @@ abstract class CRM_Wrapi_Handler_Base
      *     'signature_text' => 'Regards',
      *   ];
      *
+     * @return int|null Created Email ID
+     *
      * @throws API_Exception
      * @throws CRM_Core_Exception
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function saveEmail(int $contact_id, array $email_data)
+    protected function saveEmail(int $contact_id, array $email_data): ?int
     {
         if (empty($email_data)) {
-            return;
+            return null;
         }
 
         // Check for previous email
@@ -515,6 +517,8 @@ abstract class CRM_Wrapi_Handler_Base
             CRM_Wrapi_Actions_Update::email($email_id, $email_data);
             $this->debug(sprintf('Email updated (Email ID: %s)', $email_id));
         }
+
+        return $email_id;
     }
 
     /**
@@ -535,15 +539,17 @@ abstract class CRM_Wrapi_Handler_Base
      *     'phone' => '+3611234567',
      *   ];
      *
+     * @return int|null Created Phone ID
+     *
      * @throws API_Exception
      * @throws CRM_Core_Exception
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function savePhone(int $contact_id, array $phone_data)
+    protected function savePhone(int $contact_id, array $phone_data): ?int
     {
         if (empty($phone_data)) {
-            return;
+            return null;
         }
 
         // Check for previous phone
@@ -559,6 +565,8 @@ abstract class CRM_Wrapi_Handler_Base
             CRM_Wrapi_Actions_Update::phone($phone_id, $phone_data);
             $this->debug(sprintf('Phone updated (Phone ID: %s)', $phone_id));
         }
+
+        return $phone_id;
     }
 
     /**
@@ -579,15 +587,17 @@ abstract class CRM_Wrapi_Handler_Base
      *     'phone' => '+3611234567',
      *   ];
      *
+     * @return int|null Created Address ID
+     *
      * @throws API_Exception
      * @throws CRM_Core_Exception
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function saveAddress(int $contact_id, array $address_data)
+    protected function saveAddress(int $contact_id, array $address_data): ?int
     {
         if (empty($address_data)) {
-            return;
+            return null;
         }
 
         // Check for previous address
@@ -603,6 +613,8 @@ abstract class CRM_Wrapi_Handler_Base
             CRM_Wrapi_Actions_Update::address($address_id, $address_data);
             $this->debug(sprintf('Address updated (Address ID: %s)', $address_id));
         }
+
+        return $address_id;
     }
 
     /**
@@ -624,15 +636,17 @@ abstract class CRM_Wrapi_Handler_Base
      *     'is_active' => 1,
      *   ];
      *
+     * @return int|null Created relationship ID
+     *
      * @throws API_Exception
      * @throws CRM_Core_Exception
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function saveRelationship(int $contact_id, array $relationship_data)
+    protected function saveRelationship(int $contact_id, array $relationship_data): ?int
     {
         if (empty($relationship_data)) {
-            return;
+            return null;
         }
 
         // Check for previous relationship
@@ -654,5 +668,7 @@ abstract class CRM_Wrapi_Handler_Base
             CRM_Wrapi_Actions_Update::relationship($relationship_id, $relationship_data);
             $this->debug(sprintf('Relationship updated (Relation ID: %s)', $relationship_id));
         }
+
+        return $relationship_id;
     }
 }
