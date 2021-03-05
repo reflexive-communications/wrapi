@@ -384,7 +384,7 @@ abstract class CRM_Wrapi_Handler_Base
      *         'last_name' => 'Doe',
      *         'contact_type' => 'Individual',
      *         'external_identifier' => '1234',
-     *         'job_title' => 'The Big Boss',
+     *         'job_title' => 'Big Boss',
      *       ],
      *       'email' => [
      *         'email' => 'john@big.corp',
@@ -502,7 +502,7 @@ abstract class CRM_Wrapi_Handler_Base
      *   Example:
      *   $contact_data = [
      *     'first_name' => 'Janos',
-     *     'job_title' => 'Big Boss,
+     *     'postal_greeting_id' => '1,
      *     'preferred_language' => 'hu_HU',
      *   ];
      *
