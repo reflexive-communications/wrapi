@@ -415,29 +415,9 @@ abstract class CRM_Wrapi_Handler_Base
             throw new CRM_Core_Exception('External ID missing');
         }
 
-        // Retrieve contact ID
         $contact_id = CRM_Wrapi_Actions_Get::contactIDFromExternalID($external_id);
 
-        // Save Contact entity
-        // If contact ID is null here, it is not a problem, a contact will be created
-        // If contact ID is not null it won't change (hopefully :))
-        $contact_id = $this->saveContact($contact_id, $record['contact']);
-
-        // At this point now there must be a contact ID
-        if (is_null($contact_id)) {
-            throw new CRM_Core_Exception('Failed to retrieve contact');
-        }
-
-        // Save related entities
-        $this->saveEmail($contact_id, $record['email']);
-        $this->savePhone($contact_id, $record['phone']);
-        $this->saveAddress($contact_id, $record['address']);
-
-        foreach ($record['relationship'] as $relationship_data) {
-            $this->saveRelationship($contact_id, $relationship_data);
-        }
-
-        return $contact_id;
+        return $this->saveContact($contact_id, $record);
     }
 
     /**
