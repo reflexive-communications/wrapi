@@ -457,7 +457,7 @@ abstract class CRM_Wrapi_Handler_Base
      * @throws CRM_Core_Exception
      * @throws NotImplementedException
      */
-    protected function saveContact(?int $contact_id, ?array $contact_data): ?int
+    protected function saveContactEntity(?int $contact_id, ?array $contact_data): ?int
     {
         if (empty($contact_data)) {
             return null;
@@ -502,7 +502,7 @@ abstract class CRM_Wrapi_Handler_Base
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function saveEmail(int $contact_id, ?array $email_data): ?int
+    protected function saveEmailEntity(int $contact_id, ?array $email_data): ?int
     {
         if (empty($email_data)) {
             return null;
@@ -550,7 +550,7 @@ abstract class CRM_Wrapi_Handler_Base
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function savePhone(int $contact_id, ?array $phone_data): ?int
+    protected function savePhoneEntity(int $contact_id, ?array $phone_data): ?int
     {
         if (empty($phone_data)) {
             return null;
@@ -598,7 +598,7 @@ abstract class CRM_Wrapi_Handler_Base
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function saveAddress(int $contact_id, ?array $address_data): ?int
+    protected function saveAddressEntity(int $contact_id, ?array $address_data): ?int
     {
         if (empty($address_data)) {
             return null;
@@ -647,7 +647,7 @@ abstract class CRM_Wrapi_Handler_Base
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function saveRelationship(int $contact_id, ?array $relationship_data): ?int
+    protected function saveRelationshipEntity(int $contact_id, ?array $relationship_data): ?int
     {
         if (empty($relationship_data)) {
             return null;
