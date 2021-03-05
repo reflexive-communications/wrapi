@@ -443,7 +443,7 @@ abstract class CRM_Wrapi_Handler_Base
      * If not then create new contact
      *
      * @param int|null $contact_id Contact ID
-     * @param array $contact_data Contact data
+     * @param array|null $contact_data Contact data
      *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
      *   See Api Explorer v4
      *
@@ -453,7 +453,7 @@ abstract class CRM_Wrapi_Handler_Base
      * @throws CRM_Core_Exception
      * @throws NotImplementedException
      */
-    protected function saveContact(?int $contact_id, array $contact_data): ?int
+    protected function saveContact(?int $contact_id, ?array $contact_data): ?int
     {
         if (empty($contact_data)) {
             return null;
@@ -480,7 +480,7 @@ abstract class CRM_Wrapi_Handler_Base
      * If not present then add new email
      *
      * @param int $contact_id Contact ID
-     * @param array $email_data Email data
+     * @param array|null $email_data Email data
      *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
      *   See Api Explorer v4
      *
@@ -498,7 +498,7 @@ abstract class CRM_Wrapi_Handler_Base
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function saveEmail(int $contact_id, array $email_data): ?int
+    protected function saveEmail(int $contact_id, ?array $email_data): ?int
     {
         if (empty($email_data)) {
             return null;
@@ -528,7 +528,7 @@ abstract class CRM_Wrapi_Handler_Base
      * If not present then add new number
      *
      * @param int $contact_id Contact ID
-     * @param array $phone_data Phone data
+     * @param array|null $phone_data Phone data
      *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
      *   See Api Explorer v4
      *
@@ -546,7 +546,7 @@ abstract class CRM_Wrapi_Handler_Base
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function savePhone(int $contact_id, array $phone_data): ?int
+    protected function savePhone(int $contact_id, ?array $phone_data): ?int
     {
         if (empty($phone_data)) {
             return null;
@@ -576,7 +576,7 @@ abstract class CRM_Wrapi_Handler_Base
      * If not present then add new address
      *
      * @param int $contact_id Contact ID
-     * @param array $address_data Address data
+     * @param array|null $address_data Address data
      *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
      *   See Api Explorer v4
      *
@@ -594,7 +594,7 @@ abstract class CRM_Wrapi_Handler_Base
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function saveAddress(int $contact_id, array $address_data): ?int
+    protected function saveAddress(int $contact_id, ?array $address_data): ?int
     {
         if (empty($address_data)) {
             return null;
@@ -624,7 +624,7 @@ abstract class CRM_Wrapi_Handler_Base
      * If not present then add new relationship
      *
      * @param int $contact_id Contact ID
-     * @param array $relationship_data Relationship data
+     * @param array|null $relationship_data Relationship data
      *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
      *   See Api Explorer v4
      *
@@ -643,7 +643,7 @@ abstract class CRM_Wrapi_Handler_Base
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function saveRelationship(int $contact_id, array $relationship_data): ?int
+    protected function saveRelationship(int $contact_id, ?array $relationship_data): ?int
     {
         if (empty($relationship_data)) {
             return null;
