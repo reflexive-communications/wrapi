@@ -73,6 +73,25 @@ abstract class CRM_Wrapi_Handler_Base
     }
 
     /**
+     * Process Request
+     */
+    abstract protected function process();
+
+    /**
+     * Return request parameter rules
+     *
+     * @return array Input rules
+     *
+     * Properties:
+     *   - type:     Type of field (string | email | int | id | float | bool | date | datetime | list)
+     *   - name:     Name of field
+     *   - required: Is required field (true | false)
+     *   - default:  Default value
+     *   - elements: Definition for list elements (only for list type)
+     */
+    abstract protected function inputRules(): array;
+
+    /**
      * Handle request
      *
      * @return mixed
@@ -331,23 +350,4 @@ abstract class CRM_Wrapi_Handler_Base
 
         return $mapped_data;
     }
-
-    /**
-     * Process Request
-     */
-    abstract protected function process();
-
-    /**
-     * Return request parameter rules
-     *
-     * @return array Input rules
-     *
-     * Properties:
-     *   - type:     Type of field (string | email | int | id | float | bool | date | datetime | list)
-     *   - name:     Name of field
-     *   - required: Is required field (true | false)
-     *   - default:  Default value
-     *   - elements: Definition for list elements (only for list type)
-     */
-    abstract protected function inputRules(): array;
 }
