@@ -402,12 +402,14 @@ abstract class CRM_Wrapi_Handler_Base
      *         ],
      *       ];
      *
+     * @return int Contact ID
+     *
      * @throws API_Exception
      * @throws CRM_Core_Exception
      * @throws NotImplementedException
      * @throws UnauthorizedException
      */
-    protected function saveContactByExternalID(?string $external_id, array $record)
+    protected function saveContactByExternalID(?string $external_id, array $record): int
     {
         if (empty($external_id)) {
             throw new CRM_Core_Exception('External ID missing');
@@ -434,6 +436,8 @@ abstract class CRM_Wrapi_Handler_Base
         foreach ($record['relationship'] as $relationship_data) {
             $this->saveRelationship($contact_id, $relationship_data);
         }
+
+        return $contact_id;
     }
 
     /**
