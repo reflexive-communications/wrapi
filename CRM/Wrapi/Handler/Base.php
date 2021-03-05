@@ -363,6 +363,44 @@ abstract class CRM_Wrapi_Handler_Base
      *
      * @param string|null $external_id External ID
      * @param array $record Contact data
+     *   This array is structured by entities. All relevant fields for each entity (contact, email, phone, address,
+     *   relationship) must be in separate arrays and indexed by the entity name. Not all entity have to be in the array,
+     *   say we don't want to save any address, simple don't include data. Also not all fields for a given entity is
+     *   required to be present in the array, only fields that we want to save. However there are required fields
+     *   for each entity (e.g. contact_id, location_type_id for email), but it is not checked here, it should be
+     *   enforced earlier in the validate phase, or leave it to \Civi\Api4 to complain :)
+     *
+     *   Note:
+     *     - There is no need to include contact ID for Email, Phone, etc entities (though they are required by Api4).
+     *       That will be handled by the method.
+     *     - Currently it is not possible to set different types of email, phone, address (main, work, home) in one call.
+     *       If you need to save more emails, you have to call this method again.
+     *     - It is possible to give several relationship in one call, in fact relationship data have to be given in array. See example.
+     *
+     *   Example:
+     *     $record = [
+     *       'contact' => [
+     *         'first_name' => 'John',
+     *         'last_name' => 'Doe',
+     *         'contact_type' => 'Individual',
+     *         'external_identifier' => '1234',
+     *         'job_title' => 'The Big Boss',
+     *       ],
+     *       'email' => [
+     *         'email' => 'john@big.corp',
+     *         'location_type_id' => '1',
+     *       ],
+     *       'relationship' => [
+     *           [
+     *             'contact_id_b' => '145',
+     *             'relationship_type_id' => '1',
+     *           ],
+     *           [
+     *             'contact_id_b' => '111',
+     *             'relationship_type_id' => '2',
+     *           ],
+     *         ],
+     *       ];
      *
      * @throws API_Exception
      * @throws CRM_Core_Exception
@@ -406,8 +444,10 @@ abstract class CRM_Wrapi_Handler_Base
      *
      * @param int|null $contact_id Contact ID
      * @param array $contact_data Contact data
+     *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
+     *   See Api Explorer v4
      *
-     * @return int|null
+     * @return int|null Created contact ID
      *
      * @throws API_Exception
      * @throws CRM_Core_Exception
@@ -441,6 +481,15 @@ abstract class CRM_Wrapi_Handler_Base
      *
      * @param int $contact_id Contact ID
      * @param array $email_data Email data
+     *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
+     *   See Api Explorer v4
+     *
+     *   Example:
+     *   $email_data = [
+     *     'location_type_id' => 1,
+     *     'is_primary' => 0,
+     *     'signature_text' => 'Regards',
+     *   ];
      *
      * @throws API_Exception
      * @throws CRM_Core_Exception
@@ -476,6 +525,15 @@ abstract class CRM_Wrapi_Handler_Base
      *
      * @param int $contact_id Contact ID
      * @param array $phone_data Phone data
+     *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
+     *   See Api Explorer v4
+     *
+     *   Example:
+     *   $phone_data = [
+     *     'location_type_id' => 1,
+     *     'mobile_provider_id' => 3,
+     *     'phone' => '+3611234567',
+     *   ];
      *
      * @throws API_Exception
      * @throws CRM_Core_Exception
@@ -511,6 +569,15 @@ abstract class CRM_Wrapi_Handler_Base
      *
      * @param int $contact_id Contact ID
      * @param array $address_data Address data
+     *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
+     *   See Api Explorer v4
+     *
+     *   Example:
+     *   $address_data = [
+     *     'location_type_id' => 1,
+     *     'mobile_provider_id' => 3,
+     *     'phone' => '+3611234567',
+     *   ];
      *
      * @throws API_Exception
      * @throws CRM_Core_Exception
@@ -546,6 +613,16 @@ abstract class CRM_Wrapi_Handler_Base
      *
      * @param int $contact_id Contact ID
      * @param array $relationship_data Relationship data
+     *   This contains the fields to save, it should be in a format which can be fed to civicrm_api4() calls.
+     *   See Api Explorer v4
+     *
+     *   Example:
+     *   $relationship_data = [
+     *     'contact_id_b' => 11,
+     *     'relationship_type_id' => 3,
+     *     'start_date' => '2021-03-05',
+     *     'is_active' => 1,
+     *   ];
      *
      * @throws API_Exception
      * @throws CRM_Core_Exception
