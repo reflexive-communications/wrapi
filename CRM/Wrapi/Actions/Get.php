@@ -34,7 +34,7 @@ class CRM_Wrapi_Actions_Get
     {
         $results = Email::get($check_permissions)
             ->addSelect('contact_id')
-            ->addWhere('email', 'LIKE', $email)
+            ->addWhere('email', '=', $email)
             ->setLimit(1)
             ->execute();
 
