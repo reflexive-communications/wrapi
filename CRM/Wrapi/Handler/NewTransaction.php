@@ -1,6 +1,5 @@
 <?php
 
-use Civi\API\Exception\NotImplementedException;
 use Civi\API\Exception\UnauthorizedException;
 
 /**
