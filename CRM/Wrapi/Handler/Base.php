@@ -642,8 +642,8 @@ abstract class CRM_Wrapi_Handler_Base
      *   Example:
      *   $address_data = [
      *     'location_type_id' => 1,
-     *     'mobile_provider_id' => 3,
-     *     'phone' => '+3611234567',
+     *     'street_number' => '25',
+     *     'city' => 'Budapest',
      *   ];
      *
      * @return int|null Created Address ID
