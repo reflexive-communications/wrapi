@@ -16,7 +16,12 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
      */
     public static function requiredOptions(): array
     {
-        return ['financial_type_id'];
+        return [
+            'financial_type_id',
+            'contribution_status_id_completed',
+            'contribution_status_id_pending',
+            'contribution_status_id_failed',
+        ];
     }
 
     /**
@@ -126,13 +131,13 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
         switch (strtolower($this->requestData['contribution_status'])) {
             case 'complete':
             case 'completed':
-                $contribution_data['contribution_status_id:name'] = 'Completed';
+                $contribution_data['contribution_status_id'] = $this->options['contribution_status_id_completed'];
                 break;
             case 'pending':
-                $contribution_data['contribution_status_id:name'] = 'Pending';
+                $contribution_data['contribution_status_id'] = $this->options['contribution_status_id_pending'];
                 break;
             default:
-                $contribution_data['contribution_status_id:name'] = 'Failed';
+                $contribution_data['contribution_status_id'] = $this->options['contribution_status_id_failed'];
                 $contribution_data['cancel_reason'] = $this->requestData['contribution_status'];
                 break;
         }
