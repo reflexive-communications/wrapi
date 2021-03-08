@@ -83,6 +83,69 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
     }
 
     /**
+     * Parse request data
+     * Separate mixed input fields per CiviCRM entity
+     * Relevant (and Civi compatible named) fields will be grouped together
+     *
+     * @return array Parsed data
+     *
+     * @throws API_Exception
+     * @throws UnauthorizedException
+     */
+    protected function parseData(): array
+    {
+        $parsed_data = [];
+
+        // Contact entity
+        $contact_mapping = [
+            'contact_type' => 'contact_type',
+            'first_name' => 'first_name',
+            'last_name' => 'last_name',
+            'preferred_language' => 'preferred_language',
+        ];
+        $contact_data = $this->mapFieldsString($this->requestData, $contact_mapping);
+
+        // Email entity
+        $email_mapping = [
+            'email' => 'email',
+        ];
+        $email_data = $this->mapFieldsString($this->requestData, $email_mapping);
+        // Currently use default
+        // Maybe later it will be added to the request
+        $email_data['location_type_id'] = CRM_Wrapi_Actions_Get::defaultLocationTypeID() ?? 1;
+
+        // Contribution entity
+        $contribution_mapping = [
+            'total_amount' => 'total_amount',
+            'receive_date' => 'receive_date',
+            'payment_instrument' => 'payment_instrument_id:name',
+            'payment_transaction_id' => 'trxn_id',
+            'subject' => 'source',
+        ];
+        $contribution_data = $this->mapFieldsString($this->requestData, $contribution_mapping);
+        $contribution_data['financial_type_id'] = $this->options['financial_type_id'];
+        switch (strtolower($this->requestData['contribution_status'])) {
+            case 'complete':
+            case 'completed':
+                $contribution_data['contribution_status_id:name'] = 'Completed';
+                break;
+            case 'pending':
+                $contribution_data['contribution_status_id:name'] = 'Pending';
+                break;
+            default:
+                $contribution_data['contribution_status_id:name'] = 'Failed';
+                $contribution_data['cancel_reason'] = $this->requestData['contribution_status'];
+                break;
+        }
+
+        $parsed_data['contact'] = $contact_data;
+        $parsed_data['email'] = $email_data;
+        $parsed_data['contribution'] = $contribution_data;
+
+        return $parsed_data;
+    }
+
+    /**
      * Parse contact data from request
      *
      * @return array Contact data
@@ -156,6 +219,7 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
      */
     protected function process()
     {
+        $kutya = $this->parseData();
         $contact_id = $this->processContactData();
 
         $this->addContribution($contact_id);
