@@ -219,10 +219,14 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
      */
     protected function process()
     {
-        $kutya = $this->parseData();
-        $contact_id = $this->processContactData();
+        $data = $this->parseData();
 
-        $this->addContribution($contact_id);
+        // Save contact
+        $contact_id = $this->saveContactByEmail($data['email']['email'], $data);
+
+        // Add contribution
+        $contribution_id = CRM_Wrapi_Actions_Create::contribution($contact_id, $data['contribution']);
+        $this->debug(sprintf('Contribution added (ID: %s)', $contribution_id));
 
         $this->logRequestProcessed();
 
