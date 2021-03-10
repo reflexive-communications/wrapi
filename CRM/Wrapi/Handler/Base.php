@@ -198,6 +198,74 @@ abstract class CRM_Wrapi_Handler_Base
     }
 
     /**
+     * Set default values
+     *
+     * Loop through input rules, and checks the received data,
+     * if there is default specified and data is not set then set value to default
+     *
+     * @param mixed $data Data to check
+     * @param array $rules Validation rules
+     *
+     * @return mixed Data with defaults
+     *
+     * @throws CRM_Core_Exception
+     */
+    protected function setDefaultValues($data, array $rules)
+    {
+        $data_with_defaults = null;
+
+        // Loop through input rules
+        foreach ($rules as $field => $rule) {
+            // Get rule details
+            $type = $rule['type'] ?? "";
+            $elements = $rule['elements'] ?? [];
+            $default = $rule['default'] ?? null;
+
+            // Field is a list
+            if ($type == "list") {
+                // If list is empty --> check for default --> if there is a default, use it
+                if (!isset($data[$field])) {
+                    if (isset($default)) {
+                        $data_with_defaults[$field] = $default;
+                    }
+                } else {
+                    // List not empty --> loop through elements, and recurse into children
+                    foreach ($data[$field] as $item) {
+                        $data_with_defaults[$field] = $this->setDefaultValues($item, $elements);
+                    }
+                }
+                continue;
+            }
+
+            // Data is an array
+            if (is_array($data)) {
+                if (!isset($data[$field])) {
+                    // Data not set, if there is a default --> use it
+                    // If there is no default --> then skip this field
+                    if (isset($default)) {
+                        $data_with_defaults[$field] = $default;
+                    }
+                } else {
+                    // Data set --> copy value
+                    $data_with_defaults[$field] = $data[$field];
+                }
+                continue;
+            }
+
+            // Data not a list, not an array --> primitive type
+            if (!isset($data)) {
+                if (isset($default)) {
+                    $data_with_defaults = $default;
+                }
+            } else {
+                $data_with_defaults = $data;
+            }
+        }
+
+        return $data_with_defaults;
+    }
+
+    /**
      * Log request processed
      */
     protected function logRequestProcessed()
