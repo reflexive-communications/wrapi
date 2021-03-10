@@ -47,7 +47,7 @@ Sysadmins and developers may clone the [Git](https://en.wikipedia.org/wiki/Git) 
 install it with the command-line tool [cv](https://github.com/civicrm/cv).
 
 ```bash
-git clone https://gitlab.com/semsey_sandor_civicrm/extensions/wrapi.git
+git clone https://github.com/reflexive-communications/wrapi.git
 cv en wrapi
 ```
 

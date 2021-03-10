@@ -40,45 +40,6 @@ class CRM_Wrapi_Actions_Create
     }
 
     /**
-     * Add email to contact
-     *
-     * @deprecated
-     *
-     * @param string $email Email address
-     * @param int $contact_id Contact ID
-     * @param string $type Email address type
-     *  'Home'
-     *  'Work'
-     *  'Main'
-     *  'Billing'
-     *  'Other'
-     * @param bool $check_permissions Should we check permissions (ACLs)?
-     *
-     * @return int Email ID
-     *
-     * @throws API_Exception
-     * @throws UnauthorizedException
-     * @throws CRM_Core_Exception
-     */
-    public static function emailToContact(
-        string $email,
-        int $contact_id,
-        string $type = 'Home',
-        bool $check_permissions = false
-    ): int {
-        CRM_Wrapi_Processor_Base::validateInput($email, 'string', 'Email address');
-        CRM_Wrapi_Processor_Base::validateInput($contact_id, 'id', 'Contact ID');
-
-        $results = Email::create($check_permissions)
-            ->addValue('contact_id', $contact_id)
-            ->addValue('email', $email)
-            ->addValue('location_type_id:name', $type)
-            ->execute();
-
-        return self::parseResults($results, 'add email to contact');
-    }
-
-    /**
      * Add new generic entity
      *
      * @param string $entity Name of entity

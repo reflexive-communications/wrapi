@@ -1,6 +1,5 @@
 <?php
 
-use Civi\API\Exception\NotImplementedException;
 use Civi\API\Exception\UnauthorizedException;
 
 /**
@@ -17,7 +16,12 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
      */
     public static function requiredOptions(): array
     {
-        return ['financial_type_id'];
+        return [
+            'financial_type_id',
+            'contribution_status_id_completed',
+            'contribution_status_id_pending',
+            'contribution_status_id_failed',
+        ];
     }
 
     /**
@@ -83,68 +87,66 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
     }
 
     /**
-     * Parse contact data from request
+     * Parse request data
+     * Separate mixed input fields per CiviCRM entity
+     * Relevant (and Civi compatible named) fields will be grouped together
      *
-     * @return array Contact data
+     * @return array Parsed data
+     *
+     * @throws API_Exception
+     * @throws UnauthorizedException
      */
-    protected function parseContactData(): array
+    protected function parseData(): array
     {
-        $data = [];
-        if (!empty($this->requestData['contact_type'])) {
-            $data['contact_type'] = $this->requestData['contact_type'];
-        }
-        if (!empty($this->requestData['first_name'])) {
-            $data['first_name'] = $this->requestData['first_name'];
-        }
-        if (!empty($this->requestData['last_name'])) {
-            $data['last_name'] = $this->requestData['last_name'];
-        }
-        if (!empty($this->requestData['preferred_language'])) {
-            $data['preferred_language'] = $this->requestData['preferred_language'];
-        }
+        $parsed_data = [];
 
-        return $data;
-    }
+        // Contact entity
+        $contact_mapping = [
+            'contact_type' => 'contact_type',
+            'first_name' => 'first_name',
+            'last_name' => 'last_name',
+            'preferred_language' => 'preferred_language',
+        ];
+        $contact_data = $this->mapFieldsString($this->requestData, $contact_mapping);
 
-    /**
-     * Parse contribution data from request
-     *
-     * @return array Contribution data
-     *
-     * @throws CRM_Core_Exception
-     */
-    protected function parseContributionData(): array
-    {
-        $data = [];
-        $data['total_amount'] = $this->requestData['total_amount'];
-        $data['receive_date'] = $this->requestData['receive_date'];
-        $data['payment_instrument_id:name'] = $this->requestData['payment_instrument'];
-        $data['trxn_id'] = $this->requestData['payment_transaction_id'];
+        // Email entity
+        $email_mapping = [
+            'email' => 'email',
+        ];
+        $email_data = $this->mapFieldsString($this->requestData, $email_mapping);
+        // Currently use default
+        // Maybe later it will be added to the request
+        $email_data['location_type_id'] = CRM_Wrapi_Actions_Get::defaultLocationTypeID() ?? 1;
 
-        if (empty($this->options['financial_type_id'])) {
-            throw new CRM_Core_Exception('Financial type ID option missing');
-        }
-        $data['financial_type_id'] = $this->options['financial_type_id'];
-
-        if (!empty($this->requestData['subject'])) {
-            $data['source'] = $this->requestData['subject'];
-        }
-
+        // Contribution entity
+        $contribution_mapping = [
+            'total_amount' => 'total_amount',
+            'receive_date' => 'receive_date',
+            'payment_instrument' => 'payment_instrument_id:name',
+            'payment_transaction_id' => 'trxn_id',
+            'subject' => 'source',
+        ];
+        $contribution_data = $this->mapFieldsString($this->requestData, $contribution_mapping);
+        $contribution_data['financial_type_id'] = $this->options['financial_type_id'];
         switch (strtolower($this->requestData['contribution_status'])) {
             case 'complete':
             case 'completed':
-                $data['contribution_status_id:name'] = 'Completed';
+                $contribution_data['contribution_status_id'] = $this->options['contribution_status_id_completed'];
                 break;
             case 'pending':
-                $data['contribution_status_id:name'] = 'Pending';
+                $contribution_data['contribution_status_id'] = $this->options['contribution_status_id_pending'];
                 break;
             default:
-                $data['contribution_status_id:name'] = 'Failed';
-                $data['cancel_reason'] = $this->requestData['contribution_status'];
+                $contribution_data['contribution_status_id'] = $this->options['contribution_status_id_failed'];
+                $contribution_data['cancel_reason'] = $this->requestData['contribution_status'];
                 break;
         }
 
-        return $data;
+        $parsed_data['contact'] = $contact_data;
+        $parsed_data['email'] = $email_data;
+        $parsed_data['contribution'] = $contribution_data;
+
+        return $parsed_data;
     }
 
     /**
@@ -156,81 +158,17 @@ class CRM_Wrapi_Handler_NewTransaction extends CRM_Wrapi_Handler_Base
      */
     protected function process()
     {
-        $contact_id = $this->processContactData();
+        $data = $this->parseData();
 
-        $this->addContribution($contact_id);
+        // Save contact
+        $contact_id = $this->saveContactByEmail($data['email']['email'], $data);
+
+        // Add contribution
+        $contribution_id = CRM_Wrapi_Actions_Create::contribution($contact_id, $data['contribution']);
+        $this->debug(sprintf('Contribution added (ID: %s)', $contribution_id));
 
         $this->logRequestProcessed();
 
         return CRM_Wrapi_Handler_Base::REQUEST_PROCESSED;
-    }
-
-    /**
-     * Process contact data
-     *
-     * @return int Contact data
-     *
-     * @throws API_Exception
-     * @throws CRM_Core_Exception
-     * @throws UnauthorizedException
-     */
-    protected function processContactData(): int
-    {
-        $contact_data_received = $this->parseContactData();
-
-        // Lookup email
-        $contact_id = CRM_Wrapi_Actions_Get::contactIDFromEmail($this->requestData['email']);
-
-        // Email found --> retrieve stored contact data
-        if (!is_null($contact_id)) {
-            $contact_data_stored = CRM_Wrapi_Actions_Get::contactData($contact_id);
-
-            if (is_null($contact_data_stored)) {
-                throw new CRM_Core_Exception('Contact data not found in DB');
-            }
-
-            // Compare received vs. stored contact data
-            $data_changed = false;
-            foreach ($contact_data_received as $property => $value) {
-
-                // If received is not empty and different --> update info
-                if (!empty($value) && $value != $contact_data_stored[$property]) {
-                    $contact_data_stored[$property] = $value;
-                    $data_changed = true;
-                }
-            }
-
-            // If there is a change in data --> update contact
-            if ($data_changed) {
-                CRM_Wrapi_Actions_Update::contact($contact_id, $contact_data_stored);
-                $this->debug(sprintf('Contact updated (ID: %s)', $contact_id));
-            }
-        } else {
-            // Email not found --> create new contact & add email
-            $contact_id = CRM_Wrapi_Actions_Create::contact($contact_data_received);
-            $this->debug(sprintf('Contact created (ID: %s)', $contact_id));
-
-            CRM_Wrapi_Actions_Create::emailToContact($this->requestData['email'], $contact_id);
-            $this->debug(sprintf('Email added to contact (ID: %s)', $contact_id));
-        }
-
-        return $contact_id;
-    }
-
-    /**
-     * Add new contribution
-     *
-     * @param int $contact_id Contact ID
-     *
-     * @throws API_Exception
-     * @throws CRM_Core_Exception
-     * @throws NotImplementedException
-     */
-    protected function addContribution(int $contact_id)
-    {
-        $contribution_data = $this->parseContributionData();
-
-        $contribution_id = CRM_Wrapi_Actions_Create::contribution($contact_id, $contribution_data);
-        $this->debug(sprintf('Contribution added (ID: %s)', $contribution_id));
     }
 }
