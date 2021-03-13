@@ -360,6 +360,33 @@ abstract class CRM_Wrapi_Handler_Base
     }
 
     /**
+     * Map fields in input to float fields specified by mapping
+     *
+     * @param array $request_data Input data
+     * @param array $mapping Mapping rules
+     *  format: [
+     *      'input_field_1_name => 'mapped_field_name_1,
+     *      'input_field_2_name => 'mapped_field_name_2,
+     *  ]
+     * @return array Mapped data
+     */
+    protected function mapFieldsFloat(array $request_data, array $mapping): array
+    {
+        $mapped_data = [];
+
+        // Loop through mapping
+        foreach ($mapping as $field_in_request => $field_mapped) {
+            $value = $request_data[$field_in_request];
+
+            if (isset($value)) {
+                $mapped_data[$field_mapped] = (float)$value;
+            }
+        }
+
+        return $mapped_data;
+    }
+
+    /**
      * Map Bool fields in input to fields specified by mapping
      *
      * @param array $request_data Input data
