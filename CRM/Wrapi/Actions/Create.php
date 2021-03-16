@@ -182,4 +182,24 @@ class CRM_Wrapi_Actions_Create
 
         return self::entity('Contribution', $values, $check_permissions);
     }
+
+    /**
+     * Add activity to contact
+     *
+     * @param int $contact_id Contact ID
+     * @param array $values Activity data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return int Activity ID
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    public static function activity(int $contact_id, array $values = [], bool $check_permissions = false): int
+    {
+        $values['target_contact_id'] = $contact_id;
+
+        return self::entity('Activity', $values, $check_permissions);
+    }
 }
