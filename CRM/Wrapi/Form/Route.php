@@ -57,7 +57,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         if (!$this->editMode) {
             $this->_defaults['route_enabled'] = 1;
             $this->_defaults['log_level'] = PEAR_LOG_ERR;
-            $this->_defaults['permissions'] = 'administer CiviCRM';
+            $this->_defaults['permissions'] = 'access CiviCRM';
 
             return $this->_defaults;
         }
