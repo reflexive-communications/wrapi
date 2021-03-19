@@ -262,7 +262,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             // Loop through required options
             $missing_options = [];
             foreach ($required_options as $option) {
-                $pattern = "/$option=\S+/";
+                $pattern = "/^$option=\S+$/m";
 
                 // Check for required option
                 if (!preg_match($pattern, $values['options'])) {
