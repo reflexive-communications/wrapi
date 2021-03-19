@@ -10,10 +10,12 @@
     </maintainer>
     <urls>
         <url desc="Main Extension Page">https://github.com/reflexive-communications/wrapi</url>
+        <url desc="Documentation">https://github.com/reflexive-communications/wrapi</url>
+        <url desc="Support">https://github.com/reflexive-communications/wrapi/issues</url>
         <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
     </urls>
     <releaseDate>2020-02-04</releaseDate>
-    <version>0.11.0</version>
+    <version>0.12.0</version>
     <develStage>beta</develStage>
     <compatibility>
         <ver>5.0</ver>
