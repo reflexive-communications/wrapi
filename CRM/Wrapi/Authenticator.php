@@ -33,7 +33,7 @@ class CRM_Wrapi_Authenticator
      */
     public static function checkHTTPRequestMethod()
     {
-        $method=$_SERVER['REQUEST_METHOD'] ?? "";
+        $method = $_SERVER['REQUEST_METHOD'] ?? "";
 
         if ($method != 'POST') {
             throw new CRM_Core_Exception('Only POST method is allowed');
@@ -78,7 +78,7 @@ class CRM_Wrapi_Authenticator
         }
 
         // Check if received site-key is valid
-        if ($site_key_sent !== $site_key_real) {
+        if (!hash_equals($site_key_real, $site_key_sent)) {
             // Verbose error msg in debug mode
             if ($this->debugMode) {
                 $message = 'Failed to authenticate site-key';
