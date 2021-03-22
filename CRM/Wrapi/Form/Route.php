@@ -91,6 +91,34 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     }
 
     /**
+     * Get available handlers
+     * Return defaults plus additional handlers registered by extensions
+     *
+     * @return array Handlers
+     */
+    public function getHandlers(): array
+    {
+        $handlers = [];
+
+        // Fire hook event
+        Civi::dispatcher()->dispatch(
+            "hook_civicrm_wrapiHandlers",
+            Civi\Core\Event\GenericHookEvent::create(
+                [
+                    "options" => &$handlers,
+                ]
+            )
+        );
+
+        // Default handlers
+        $handlers["CRM_Wrapi_Handler_Echo"] = "Wrapi - Echo";
+        $handlers["CRM_Wrapi_Handler_Noop"] = "Wrapi - Noop";
+        $handlers["CRM_Wrapi_Handler_NewTransaction"] = "Wrapi - New Transaction";
+
+        return $handlers;
+    }
+
+    /**
      * Build form
      *
      * @throws CRM_Core_Exception
@@ -104,7 +132,15 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
         $this->add('hidden', 'route_enabled');
         $this->add('text', 'name', ts('Route Name'), [], true);
         $this->add('text', 'selector', ts('Selector'), [], true);
-        $this->add('text', 'handler_class', ts('Handler Class'), [], true);
+        $this->addSelect(
+            'handler_class',
+            [
+                'label' => ts('Handler'),
+                'options' => $this->getHandlers(),
+                'entity' => '',
+            ],
+            true
+        );
         $this->add('textarea', 'options', ts('Options'), ['rows' => 5]);
         $this->addSelect(
             'permissions',
