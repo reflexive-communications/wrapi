@@ -163,4 +163,22 @@ class CRM_Wrapi_Actions_Update
     ): array {
         return self::entity('Relationship', $relationship_id, $values, $check_permissions);
     }
+
+    /**
+     * Update activity
+     *
+     * @param int $activity_id Activity ID
+     * @param array $values Activity data
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return array Updated Activity data
+     *
+     * @throws API_Exception
+     * @throws CRM_Core_Exception
+     * @throws NotImplementedException
+     */
+    public static function activity(int $activity_id, array $values = [], bool $check_permissions = false): array
+    {
+        return self::entity('Activity', $activity_id, $values, $check_permissions);
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Civi\API\Exception\UnauthorizedException;
+use Civi\Api4\ActivityContact;
 use Civi\Api4\Address;
 use Civi\Api4\Contact;
 use Civi\Api4\Email;
@@ -209,5 +210,44 @@ class CRM_Wrapi_Actions_Get
             ->execute();
 
         return $results->first()['id'];
+    }
+
+    /**
+     * Get All Activity for a contact, where the contact is the target of activity
+     *
+     * @param int $contact_id Contact ID
+     * @param int $activity_type_id Optionally filter activities by this type
+     * @param bool $check_permissions Should we check permissions (ACLs)?
+     *
+     * @return array Array of Activity IDs
+     *
+     * @throws API_Exception
+     * @throws UnauthorizedException
+     */
+    public static function allActivity(
+        int $contact_id,
+        int $activity_type_id = 0,
+        bool $check_permissions = false
+    ): array {
+        $activities = [];
+
+        // record_type_id=3 means contact is the target of activity
+        $query = ActivityContact::get($check_permissions)
+            ->addSelect('activity.*')
+            ->addWhere('contact_id', '=', $contact_id)
+            ->addWhere('record_type_id', '=', 3);
+
+        // Add filter
+        if ($activity_type_id > 0) {
+            $query = $query->addWhere('activity.activity_type_id', '=', $activity_type_id);
+        }
+
+        $results = $query->execute();
+
+        foreach ($results as $activity) {
+            $activities[] = $activity;
+        }
+
+        return $activities;
     }
 }
