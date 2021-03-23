@@ -1,0 +1,4 @@
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_URI} !/external/wrapi.php$
+    RewriteRule "^(.+/.*|autoload)\.php($|/)" - [F]
+</IfModule>
