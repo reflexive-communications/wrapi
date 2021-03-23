@@ -3,7 +3,7 @@
 ## Developer Notes
 
 This guide is intended for developers who wish to extend wrAPI with additional handlers. Handlers can be implemented in
-this extension or - the recommended way - in separate extensions. Basically you need the write the handler then register
+this extension or - the recommended way - in separate extensions. Basically you need to write the handler then register
 it for wrAPI. After it will be available to select for routes.
 
 ### Implementing Handler
