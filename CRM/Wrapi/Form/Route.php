@@ -19,19 +19,12 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
     protected $editMode;
 
     /**
-     * Currently registered handlers
-     *
-     * @var array
-     */
-    protected $registeredHandlers;
-
-    /**
      * Get available handlers
      * Return defaults plus additional handlers registered by extensions
      *
      * @return array Handlers
      */
-    public function getHandlers(): array
+    public static function getHandlers(): array
     {
         $handlers = [];
 
@@ -74,9 +67,6 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             // No valid ID in form or request--> add mode
             $this->editMode = false;
         }
-
-        // Get registered handlers
-        $this->registeredHandlers = $this->getHandlers();
     }
 
     /**
@@ -146,7 +136,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
             'handler_class',
             [
                 'label' => ts('Handler'),
-                'options' => $this->registeredHandlers,
+                'options' => self::getHandlers(),
                 'entity' => '',
             ],
             true
@@ -289,7 +279,7 @@ class CRM_Wrapi_Form_Route extends CRM_Wrapi_Form_Base
 
         // Check if handler is registered
         $registered = false;
-        foreach ($this->registeredHandlers as $handler_class => $handler_desc) {
+        foreach (self::getHandlers() as $handler_class => $handler_desc) {
             if ($handler == $handler_class) {
                 $registered = true;
                 break;
