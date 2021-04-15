@@ -32,6 +32,9 @@ class CRM_Wrapi_Processor_BaseUnitTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals("CRM_Wrapi_Processor_UrlEncodedForm", $result, "Invalid class reurned.");
     $testData = [
       "application/json" => "CRM_Wrapi_Processor_JSON",
+      " application/json " => "CRM_RcBase_Processor_JSON",
+      "application/json;charset=UTF-8" => "CRM_RcBase_Processor_JSON",
+      "\tapplication/json  ;\t\tcharset=UTF-8  " => "CRM_RcBase_Processor_JSON",
       "application/javascript" => "CRM_Wrapi_Processor_JSON",
       "text/xml" => "CRM_Wrapi_Processor_XML",
       "application/xml" => "CRM_Wrapi_Processor_XML",
