@@ -23,22 +23,26 @@ abstract class CRM_Wrapi_Processor_Base
      */
     public static function detectContentType(): string
     {
-        // If content-type is set use it
-        if (isset($_SERVER['CONTENT_TYPE'])) {
-            switch ($_SERVER['CONTENT_TYPE']) {
-                case 'application/json':
-                case 'application/javascript':
-                    return CRM_Wrapi_Processor_JSON::class;
-                case 'text/xml':
-                case 'application/xml':
-                    return CRM_Wrapi_Processor_XML::class;
-                default:
-                    return CRM_Wrapi_Processor_UrlEncodedForm::class;
-            }
+        // If content-type not set --> fallback to URL encoded
+        if (empty($_SERVER['CONTENT_TYPE'])) {
+            return CRM_Wrapi_Processor_UrlEncodedForm::class;
         }
 
-        // Fallback to URL encoded
-        return CRM_Wrapi_Processor_UrlEncodedForm::class;
+        // Parse header
+        $fields = explode(';', $_SERVER['CONTENT_TYPE']);
+        $media_type = trim(array_shift($fields));
+
+        switch ($media_type) {
+            case 'application/json':
+            case 'application/javascript':
+                return CRM_Wrapi_Processor_JSON::class;
+            case 'text/xml':
+            case 'application/xml':
+                return CRM_Wrapi_Processor_XML::class;
+            case 'application/x-www-form-urlencoded':
+            default:
+                return CRM_Wrapi_Processor_UrlEncodedForm::class;
+        }
     }
 
     /**
@@ -137,7 +141,6 @@ abstract class CRM_Wrapi_Processor_Base
 
         // Empty value
         if ($value === "" || $value === [] || $value === null) {
-
             if ($required) {
                 throw new CRM_Core_Exception(sprintf('Missing parameter: %s', $name));
             }
