@@ -135,28 +135,22 @@ abstract class CRM_Wrapi_Handler_Base
      */
     protected function logIncomingRequest()
     {
-        // Log only if log level is higher than notice
-        if ($this->logLevel <= PEAR_LOG_NOTICE) {
-            return;
-        }
+        $message = sprintf('%s Request received  Selector: %s', $_SERVER['REMOTE_ADDR'], $this->requestData['selector']);
 
-        // Compose message
-        $message = $_SERVER['REMOTE_ADDR'].' Request received  Selector: '.$this->requestData['selector'];
+        // Log request received
+        $this->info($message);
 
         // Also log request data for debug
-        if ($this->logLevel == PEAR_LOG_DEBUG) {
-            $data = $this->requestData;
+        $data = $this->requestData;
 
-            // Exclude sensitive data from logging
-            unset($data['site_key']);
-            unset($data['user_key']);
-            // Already logged
-            unset($data['selector']);
+        // Exclude sensitive data from logging
+        unset($data['site_key']);
+        unset($data['user_key']);
+        // Already logged
+        unset($data['selector']);
 
-            $message .= " Data: ".serialize($data);
-        }
-
-        $this->logger->log($message, $this->logLevel);
+        $message .= ' Data: '.serialize($data);
+        $this->debug($message);
     }
 
     /**
@@ -270,15 +264,8 @@ abstract class CRM_Wrapi_Handler_Base
      */
     protected function logRequestProcessed()
     {
-        // Log only if log level is higher than notice
-        if ($this->logLevel <= PEAR_LOG_NOTICE) {
-            return;
-        }
-
-        // Compose message
-        $message = $_SERVER['REMOTE_ADDR'].' Request processed Selector: '.$this->requestData['selector'];
-
-        $this->logger->log($message, $this->logLevel);
+        $message = sprintf('%s Request processed Selector: %s', $_SERVER['REMOTE_ADDR'], $this->requestData['selector']);
+        $this->info($message);
     }
 
     /**
@@ -405,7 +392,6 @@ abstract class CRM_Wrapi_Handler_Base
         foreach ($mapping as $field_in_request => $field_mapped) {
             $value = $request_data[$field_in_request];
             if (isset($value)) {
-
                 $true_values = [true, 1, 'Yes', 'yes'];
 
                 if (in_array($value, $true_values, true)) {
