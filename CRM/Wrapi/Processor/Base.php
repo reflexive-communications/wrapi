@@ -181,7 +181,13 @@ abstract class CRM_Wrapi_Processor_Base
         }
 
         if (!$valid) {
-            throw new CRM_Core_Exception(sprintf('%s is not type of: %s (value: %s)', $name, $type, $value));
+            // If value is not an array print it also
+            if (is_array($value)) {
+                $msg = sprintf('%s is not type of: %s', $name, $type);
+            } else {
+                $msg = sprintf('%s is not type of: %s (value: %s)', $name, $type, $value);
+            }
+            throw new CRM_Core_Exception($msg);
         }
 
         // Allowed values values set --> check
