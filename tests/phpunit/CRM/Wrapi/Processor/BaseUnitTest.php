@@ -222,7 +222,7 @@ class CRM_Wrapi_Processor_BaseUnitTest extends \PHPUnit\Framework\TestCase {
     $required = false;
     $allowedValues = ["ON", "OFF"];
     $this->expectException(CRM_Core_Exception::class, "Invalid exception class.");
-    $this->expectExceptionMessage("Not allowed value for: ".$name." (".$value.")", "Invalid exception message.");
+    $this->expectExceptionMessage("Not allowed value for: ".$name." (value: ".$value.")", "Invalid exception message.");
     CRM_Wrapi_Processor_Base::validateInput($value, $type, $name, $required, $allowedValues);
   }
   public function testValidateInputValidValues() {
