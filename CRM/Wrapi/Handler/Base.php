@@ -276,7 +276,9 @@ abstract class CRM_Wrapi_Handler_Base
     protected function debug(string $message)
     {
         if ($this->logLevel >= PEAR_LOG_DEBUG) {
-            $this->logger->debug($message);
+            // Message to log
+            $log = "${_SERVER['REMOTE_ADDR']} ${message}";
+            $this->logger->debug($log);
         }
     }
 
@@ -288,7 +290,23 @@ abstract class CRM_Wrapi_Handler_Base
     protected function info(string $message)
     {
         if ($this->logLevel >= PEAR_LOG_INFO) {
-            $this->logger->info($message);
+            // Message to log
+            $log = "${_SERVER['REMOTE_ADDR']} ${message}";
+            $this->logger->info($log);
+        }
+    }
+
+    /**
+     * Write error message to log if current log level at least ERROR
+     *
+     * @param string $message Message to log
+     */
+    protected function err(string $message)
+    {
+        if ($this->logLevel >= PEAR_LOG_ERR) {
+            // Message to log
+            $log = "${_SERVER['REMOTE_ADDR']} ${message}";
+            $this->logger->err($log);
         }
     }
 
@@ -301,6 +319,7 @@ abstract class CRM_Wrapi_Handler_Base
      *      'input_field_1_name => 'mapped_field_name_1,
      *      'input_field_2_name => 'mapped_field_name_2,
      *  ]
+     *
      * @return array Mapped data
      */
     protected function mapFieldsString(array $request_data, array $mapping): array
@@ -328,6 +347,7 @@ abstract class CRM_Wrapi_Handler_Base
      *      'input_field_1_name => 'mapped_field_name_1,
      *      'input_field_2_name => 'mapped_field_name_2,
      *  ]
+     *
      * @return array Mapped data
      */
     protected function mapFieldsInteger(array $request_data, array $mapping): array
@@ -355,6 +375,7 @@ abstract class CRM_Wrapi_Handler_Base
      *      'input_field_1_name => 'mapped_field_name_1,
      *      'input_field_2_name => 'mapped_field_name_2,
      *  ]
+     *
      * @return array Mapped data
      */
     protected function mapFieldsFloat(array $request_data, array $mapping): array
@@ -382,6 +403,7 @@ abstract class CRM_Wrapi_Handler_Base
      *      'input_field_1_name => 'mapped_field_name_1,
      *      'input_field_2_name => 'mapped_field_name_2,
      *  ]
+     *
      * @return array Mapped data
      */
     protected function mapFieldsBool(array $request_data, array $mapping): array
@@ -414,6 +436,7 @@ abstract class CRM_Wrapi_Handler_Base
      *      'input_field_1_name => 'mapped_field_name_1,
      *      'input_field_2_name => 'mapped_field_name_2,
      *  ]
+     *
      * @return array Mapped data
      */
     protected function mapFieldsDateTimeISO8601(array $request_data, array $mapping): array
