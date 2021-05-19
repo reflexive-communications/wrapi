@@ -293,6 +293,18 @@ abstract class CRM_Wrapi_Handler_Base
     }
 
     /**
+     * Write error message to log if current log level at least ERROR
+     *
+     * @param string $message Message to log
+     */
+    protected function err(string $message)
+    {
+        if ($this->logLevel >= PEAR_LOG_ERR) {
+            $this->logger->err($message);
+        }
+    }
+
+    /**
      * Map fields in input to fields specified by mapping
      *
      * @param array $request_data Input data
@@ -301,6 +313,7 @@ abstract class CRM_Wrapi_Handler_Base
      *      'input_field_1_name => 'mapped_field_name_1,
      *      'input_field_2_name => 'mapped_field_name_2,
      *  ]
+     *
      * @return array Mapped data
      */
     protected function mapFieldsString(array $request_data, array $mapping): array
@@ -328,6 +341,7 @@ abstract class CRM_Wrapi_Handler_Base
      *      'input_field_1_name => 'mapped_field_name_1,
      *      'input_field_2_name => 'mapped_field_name_2,
      *  ]
+     *
      * @return array Mapped data
      */
     protected function mapFieldsInteger(array $request_data, array $mapping): array
@@ -355,6 +369,7 @@ abstract class CRM_Wrapi_Handler_Base
      *      'input_field_1_name => 'mapped_field_name_1,
      *      'input_field_2_name => 'mapped_field_name_2,
      *  ]
+     *
      * @return array Mapped data
      */
     protected function mapFieldsFloat(array $request_data, array $mapping): array
@@ -382,6 +397,7 @@ abstract class CRM_Wrapi_Handler_Base
      *      'input_field_1_name => 'mapped_field_name_1,
      *      'input_field_2_name => 'mapped_field_name_2,
      *  ]
+     *
      * @return array Mapped data
      */
     protected function mapFieldsBool(array $request_data, array $mapping): array
@@ -414,6 +430,7 @@ abstract class CRM_Wrapi_Handler_Base
      *      'input_field_1_name => 'mapped_field_name_1,
      *      'input_field_2_name => 'mapped_field_name_2,
      *  ]
+     *
      * @return array Mapped data
      */
     protected function mapFieldsDateTimeISO8601(array $request_data, array $mapping): array
