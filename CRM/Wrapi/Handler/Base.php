@@ -276,7 +276,9 @@ abstract class CRM_Wrapi_Handler_Base
     protected function debug(string $message)
     {
         if ($this->logLevel >= PEAR_LOG_DEBUG) {
-            $this->logger->debug($message);
+            // Message to log
+            $log = "${_SERVER['REMOTE_ADDR']} ${message}";
+            $this->logger->debug($log);
         }
     }
 
@@ -288,7 +290,9 @@ abstract class CRM_Wrapi_Handler_Base
     protected function info(string $message)
     {
         if ($this->logLevel >= PEAR_LOG_INFO) {
-            $this->logger->info($message);
+            // Message to log
+            $log = "${_SERVER['REMOTE_ADDR']} ${message}";
+            $this->logger->info($log);
         }
     }
 
@@ -300,7 +304,9 @@ abstract class CRM_Wrapi_Handler_Base
     protected function err(string $message)
     {
         if ($this->logLevel >= PEAR_LOG_ERR) {
-            $this->logger->err($message);
+            // Message to log
+            $log = "${_SERVER['REMOTE_ADDR']} ${message}";
+            $this->logger->err($log);
         }
     }
 
