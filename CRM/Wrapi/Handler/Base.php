@@ -135,7 +135,7 @@ abstract class CRM_Wrapi_Handler_Base
      */
     protected function logIncomingRequest()
     {
-        $message = sprintf('%s Request received  Selector: %s', $_SERVER['REMOTE_ADDR'], $this->requestData['selector']);
+        $message = sprintf('Request received  Selector: %s', $this->requestData['selector']);
 
         // Log request received
         $this->info($message);
@@ -264,7 +264,7 @@ abstract class CRM_Wrapi_Handler_Base
      */
     protected function logRequestProcessed()
     {
-        $message = sprintf('%s Request processed Selector: %s', $_SERVER['REMOTE_ADDR'], $this->requestData['selector']);
+        $message = sprintf('Request processed Selector: %s', $this->requestData['selector']);
         $this->info($message);
     }
 
