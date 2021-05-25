@@ -58,7 +58,7 @@ jobs:
 
       - name: Build drupal site with civicrm.
         env:
-          PROJECT_BASE_PATH: "."
+          PROJECT_BASE_PATH: ".."
           SITE_NAME: ${{ env.SITE_NAME }}
           DB_NAME: ${{ env.MYSQL_DATABASE }}
           DB_HOST: "127.0.0.1"
